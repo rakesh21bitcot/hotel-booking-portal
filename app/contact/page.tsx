@@ -1,4 +1,4 @@
-import ContactDetails from "@/components/ContactDetails"
+import ContactDetails from "@/modules/contact/ContactDetails"
 
 export default function ContactPage() {
   return <ContactDetails />

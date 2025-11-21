@@ -1,4 +1,4 @@
-import BlogDetails from "@/components/BlogDetails"
+import BlogDetails from "@/modules/blog/BlogDetails"
 
 export default function BlogPage() {
   return <BlogDetails />
