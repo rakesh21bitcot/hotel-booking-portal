@@ -1,0 +1,855 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* EliteStay Color Palette */
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #1a1a1a;
+  --card-foreground: #ffffff;
+  --popover: #1a1a1a;
+  --popover-foreground: #ffffff;
+  --primary: #d4af37;
+  --primary-foreground: #000000;
+  --secondary: #2a2a2a;
+  --secondary-foreground: #ffffff;
+  --muted: #666666;
+  --muted-foreground: #999999;
+  --accent: #d4af37;
+  --accent-foreground: #000000;
+  --destructive: #ff6b6b;
+  --destructive-foreground: #ffffff;
+  --border: #333333;
+  --input: #2a2a2a;
+  --ring: #d4af37;
+  --chart-1: #d4af37;
+  --chart-2: #8b7355;
+  --chart-3: #5a5a5a;
+  --chart-4: #e6c200;
+  --chart-5: #c9a227;
+  --radius: 0.25rem;
+  --sidebar: #000000;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #d4af37;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #2a2a2a;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #333333;
+  --sidebar-ring: #d4af37;
+}
+
+.dark {
+  /* ... existing code ... */
+}
+
+@theme inline {
+  --font-sans: "Inter", "Poppins", "Geist", "Geist Fallback";
+  --font-serif: "Playfair Display", serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: calc(var(--radius));
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 8px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+  
+  /* Enhanced smooth scrolling */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* EliteStay Custom Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blinkCursor {
+  from, to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: var(--primary);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.6);
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes rotateIn {
+  from {
+    opacity: 0;
+    transform: rotate(-10deg) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+/* Base animation classes */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideInUp 0.4s ease-out;
+}
+
+.animate-slide-down {
+  animation: slideInDown 0.4s ease-out;
+}
+
+.animate-scale-up {
+  animation: scaleUp 0.3s ease-out;
+}
+
+.animate-fade-in-left {
+  animation: fadeInLeft 0.6s ease-out;
+}
+
+.animate-fade-in-right {
+  animation: fadeInRight 0.6s ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-zoom-in {
+  animation: zoomIn 0.5s ease-out;
+}
+
+.animate-rotate-in {
+  animation: rotateIn 0.6s ease-out;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* Scroll-triggered animation classes */
+.scroll-animate {
+  opacity: 0;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.scroll-animate.animate-in {
+  opacity: 1;
+}
+
+.scroll-fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.scroll-fade-up.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-fade-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.scroll-fade-left.animate-in {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-fade-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.scroll-fade-right.animate-in {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-zoom-in {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.scroll-zoom-in.animate-in {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.scroll-slide-up {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.scroll-slide-up.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Smooth card separation animation */
+@keyframes cardSeparate {
+  from {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  to {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+.card-separate {
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Button split hover animation */
+.button-split-hover {
+  position: relative;
+  overflow: hidden;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  transition: color 0.4s ease;
+}
+
+.button-split-hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 50%;
+  height: 100%;
+  background: white;
+  transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.button-split-hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -50%;
+  width: 50%;
+  height: 100%;
+  background: white;
+  transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.button-split-hover:hover::before {
+  left: 0;
+}
+
+.button-split-hover:hover::after {
+  right: 0;
+}
+
+.button-split-hover:hover {
+  color: var(--primary);
+}
+
+.button-split-hover > * {
+  position: relative;
+  z-index: 2;
+  transition: color 0.4s ease;
+}
+
+/* Header background transition */
+header {
+  transition: background-color 0.6s ease-out, backdrop-filter 0.6s ease-out, border-color 0.6s ease-out;
+  transition-delay: 0.2s;
+}
+
+/* Home Dropdown Menu Styles */
+.home-dropdown {
+  animation: fadeInDown 0.4s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Navigation Dropdown Styles */
+.nav-dropdown {
+  animation: fadeInDown 0.3s ease-out;
+}
+
+/* Hotel card overlay button fade-in */
+.hotel-card-overlay-button {
+  opacity: 0;
+  transform: translateY(10px) scale(0.9);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.group:hover .hotel-card-overlay-button {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition-delay: 0.1s;
+}
+
+/* Featured Destinations Card Styles */
+.destination-card {
+  width: 350px;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  will-change: transform;
+  transform-origin: center center;
+}
+
+.destination-card:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  transform: scale(1.05);
+}
+
+.destination-card-image {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.destination-card:hover .destination-card-image {
+  transform: scale(1.1);
+}
+
+.destination-card-content {
+  background: #f5f5f0;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.destination-card-name {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.destination-card-arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.destination-card:hover .destination-card-arrow {
+  background: var(--primary);
+  transform: translateX(4px);
+}
+
+.destination-card-arrow svg {
+  width: 20px;
+  height: 20px;
+  color: white;
+}
+
+/* Destination card animation container */
+.destination-card-wrapper {
+  position: absolute;
+  will-change: transform;
+  transition: transform 1.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 1.4s ease-out;
+  transform-origin: center center;
+}
+
+.destination-card-wrapper.initial-state {
+  opacity: 0.75;
+}
+
+.destination-card-wrapper.separated-state {
+  opacity: 1;
+}
+
+/* Destination cards container */
+.destinations-container {
+  position: relative;
+  min-height: 500px;
+  padding: 48px 0;
+  overflow-x: hidden;
+}
+
+.destinations-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 500px;
+}
+
+/* Amenities Section Styles */
+.amenities-section-bg {
+  background: #fffef0;
+}
+
+.amenities-container {
+  position: relative;
+  min-height: auto;
+  padding: 24px 0;
+  overflow-x: hidden;
+}
+
+@media (min-width: 768px) {
+  .amenities-container {
+    min-height: 500px;
+  }
+}
+
+.amenities-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+}
+
+@media (min-width: 768px) {
+  .amenities-inner {
+    height: 450px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .amenities-inner {
+    height: 500px;
+  }
+}
+
+/* Mobile Amenity Card */
+.amenity-card-mobile {
+  width: 100%;
+  max-width: 320px;
+  min-height: 280px;
+  padding: 32px 20px;
+}
+
+@media (min-width: 640px) {
+  .amenity-card-mobile {
+    max-width: 400px;
+    min-height: 300px;
+    padding: 40px 24px;
+  }
+}
+
+.amenity-icon-mobile {
+  width: 64px;
+  height: 64px;
+}
+
+@media (min-width: 640px) {
+  .amenity-icon-mobile {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+.amenity-title-mobile {
+  font-size: 0.9rem;
+}
+
+@media (min-width: 640px) {
+  .amenity-title-mobile {
+    font-size: 1rem;
+  }
+}
+
+.amenity-card-wrapper {
+  position: absolute;
+  will-change: transform;
+  transition: transform 1.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 1.4s ease-out;
+  transform-origin: center center;
+}
+
+.amenity-card-wrapper.initial-state {
+  opacity: 0.8;
+}
+
+.amenity-card-wrapper.separated-state {
+  opacity: 1;
+}
+
+.amenity-card {
+  width: 280px;
+  min-height: 320px;
+  background: white;
+  border-radius: 12px;
+  padding: 48px 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  will-change: transform;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 24px;
+  justify-content: center;
+}
+
+@media (max-width: 1023px) {
+  .amenity-card {
+    width: 240px;
+    min-height: 300px;
+    padding: 40px 20px;
+    gap: 20px;
+  }
+}
+
+.amenity-card:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px) scale(1.05);
+  background: var(--primary) !important;
+}
+
+.amenity-card:hover .amenity-icon {
+  color: #1a1a1a !important;
+}
+
+.amenity-card:hover .amenity-title {
+  color: #1a1a1a !important;
+  font-weight: 700 !important;
+}
+
+.amenity-card-highlighted {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.amenity-card-highlighted:hover {
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4);
+  transform: translateY(-8px) scale(1.05);
+  background: var(--primary) !important;
+}
+
+/* Selected card state */
+.amenity-card-selected {
+  background: var(--primary) !important;
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4);
+}
+
+.amenity-card-selected .amenity-icon {
+  color: #1a1a1a !important;
+}
+
+.amenity-card-selected .amenity-title {
+  color: #1a1a1a !important;
+  font-weight: 700 !important;
+}
+
+.amenity-icon {
+  color: #8b7355;
+  transition: all 0.3s ease;
+}
+
+.amenity-card:hover .amenity-icon {
+  transform: scale(1.1);
+}
+
+.amenity-icon-highlighted {
+  color: #1a1a1a;
+  stroke-width: 2;
+}
+
+.amenity-card-highlighted:hover .amenity-icon-highlighted {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.amenity-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.amenity-card-highlighted .amenity-title {
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
+/* Infinite Scroll Animation - Right to Left (Smooth) */
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 20s linear infinite;
+  display: flex;
+  width: fit-content;
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.scroll-container {
+  animation-play-state: running;
+}
+
+.scroll-container:hover {
+  animation-play-state: paused !important;
+}
+
+/* Parallax Background Effect */
+.parallax-bg {
+  will-change: transform;
+  transition: transform 0.1s ease-out;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .parallax-bg {
+    transform: translateY(0);
+  }
+}
+
+/* Form Input Animations */
+@keyframes inputGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(45, 80, 22, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(45, 80, 22, 0.1);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-input-error {
+  animation: shake 0.5s ease-in-out;
+}
+
+.form-error-message {
+  animation: slideDown 0.3s ease-out;
+}
+
+/* Input focus glow effect */
+input:focus,
+textarea:focus {
+  animation: inputGlow 2s ease-in-out infinite;
+}

@@ -1,0 +1,17 @@
+import type React from "react"
+import { Header } from "@/components/common/Header"
+import { Footer } from "@/components/common/Footer"
+
+interface PublicLayoutProps {
+  children: React.ReactNode
+}
+
+export function PublicLayout({ children }: PublicLayoutProps) {
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <main className="flex-grow">{children}</main>
+      <Footer />
+    </div>
+  )
+}
