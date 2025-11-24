@@ -1,8 +1,8 @@
 "use client"
 
 import { useAppDispatch, useAppSelector } from "@/lib/store"
-import { searchHotelsThunk, getHotelsThunk, getHotelDetailThunk } from "../store/hotelThunks"
-import { setFilters } from "../store/hotelSlice"
+import { searchHotelsThunk, getHotelsThunk, getHotelDetailThunk } from "@/Store/hotel"
+import { setFilters } from "@/Store/hotel"
 import type { HotelSearchFilters } from "../types"
 
 export function useHotels() {

@@ -1,8 +1,8 @@
 "use client"
 
 import { useAppDispatch, useAppSelector } from "@/lib/store"
-import { createBookingThunk, getBookingDetailThunk, getUserBookingsThunk } from "../store/bookingThunks"
-import { addBookingItem, removeBookingItem, clearBookingItems } from "../store/bookingSlice"
+import { createBookingThunk, getBookingDetailThunk, getUserBookingsThunk } from "@/Store/booking"
+import { addBookingItem, removeBookingItem, clearBookingItems } from "@/Store/booking"
 import type { BookingItem, GuestInfo } from "../types"
 
 export function useBooking() {

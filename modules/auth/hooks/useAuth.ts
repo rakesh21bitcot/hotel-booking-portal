@@ -1,7 +1,7 @@
 "use client"
 
 import { useAppDispatch, useAppSelector } from "@/lib/store"
-import { loginThunk, registerThunk, logoutThunk } from "../store/authThunks"
+import { loginThunk, registerThunk, logoutThunk } from "@/Store/auth"
 import type { LoginRequest, RegisterRequest, AuthUser } from "../types"
 
 export function useAuth() {

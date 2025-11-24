@@ -1,7 +1,7 @@
 import { combineReducers } from "@reduxjs/toolkit"
-import authReducer from "@/modules/auth/store/authSlice"
-import hotelReducer from "@/modules/hotel/store/hotelSlice"
-import bookingReducer from "@/modules/booking/store/bookingSlice"
+import { authReducer } from "@/Store/auth"
+import { hotelReducer } from "@/Store/hotel"
+import { bookingReducer } from "@/Store/booking"
 import commonReducer from "./common/commonSlice"
 
 export const rootReducer = combineReducers({
