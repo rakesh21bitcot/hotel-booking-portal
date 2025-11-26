@@ -1,1 +1,0 @@
-export { useHotels } from "./useHotels"
