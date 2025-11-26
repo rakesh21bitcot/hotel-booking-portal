@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useAuth } from "@/modules/auth/hooks/useAuth"
+import { useAuth } from "@/components/modules/auth/hooks/useAuth"
 import { useBooking } from "@/modules/booking/hooks/useBooking"
 import { ROUTES } from "@/utils/constants"
 import { formatCurrency } from "@/utils/formatters"

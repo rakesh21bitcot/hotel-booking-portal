@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
-import { useAuth } from "@/modules/auth/hooks/useAuth"
+import { useAuth } from "@/components/modules/auth/hooks/useAuth"
 import { ROUTES } from "@/utils/constants"
 
 interface UseAuthRedirectOptions {

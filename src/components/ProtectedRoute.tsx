@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
-import { useAuth } from "@/modules/auth/hooks/useAuth"
+import { useAuth } from "@/components/modules/auth/hooks/useAuth"
 import { Loader } from "@/components/common/Loader"
 import { ROUTES } from "@/utils/constants"
 

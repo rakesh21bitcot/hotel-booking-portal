@@ -1,4 +1,4 @@
-import HotelDetailPage from '@/modules/hotel/hotelDetails'
+import HotelDetailPage from '@/components/modules/hotel/hotelDetails'
 
 const Page = () => {
   return (

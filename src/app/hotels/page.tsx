@@ -1,4 +1,4 @@
-import HotelComponent from '@/modules/hotel'
+import HotelComponent from '@/components/modules/hotel'
 
 const HotelsPage = () => {
   return (

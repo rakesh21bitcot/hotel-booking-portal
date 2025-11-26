@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { ProtectedRouteWrapper } from "@/modules/auth/components/ProtectedRouteWrapper"
+import { ProtectedRouteWrapper } from "@/components/modules/auth/components/ProtectedRouteWrapper"
 import { ProtectedLayout } from "@/components/layouts/ProtectedLayout"
 
 export default function ProtectedLayoutGroup({

@@ -9,7 +9,7 @@ import {
   RoomDropdown, 
   DestinationDropdown, 
   BlogDropdown 
-} from "@/components/HeaderDropdowns"
+} from "@/components/modules/landingPage/components/HeaderDropdowns"
 import { useDropdown } from "@/hooks/useDropdown"
 import Image from "next/image"
 import { featuredHotels } from "@/utils/dummy-data"

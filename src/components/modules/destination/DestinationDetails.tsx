@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react"
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import { BookingWidget } from "@/modules/landingPage/components"
+import { BookingWidget } from "@/components/modules/landingPage/components"
 import { destinations, hotelPackages } from "@/utils/dummy-data"
 
 export default function DestinationDetails() {

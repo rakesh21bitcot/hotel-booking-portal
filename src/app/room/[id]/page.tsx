@@ -1,4 +1,4 @@
-import RoomPage from '@/modules/rooms';
+import RoomPage from '@/components/modules/rooms';
 interface PageProps {
   params: Promise<{ id: string }>
 }

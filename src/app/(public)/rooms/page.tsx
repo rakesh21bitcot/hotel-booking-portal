@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useHotels } from "@/modules/hotel/hooks/useHotels"
-import { HotelCard } from "@/modules/hotel/components"
+import { HotelCard } from "@/components/modules/hotel/components"
 import { Loader } from "@/components/common/Loader"
 import { EmptyState } from "@/components/common/EmptyState"
 import { dummyHotels } from "@/utils/dummy-data"

@@ -3,7 +3,7 @@
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { RoomCard, RatingDisplay } from "../components"
-import { TestimonialCard } from "@/modules/landingPage/components"
+import { TestimonialCard } from "@/components/modules/landingPage/components"
 import { useState } from "react"
 import { hotelData } from "@/utils/dummy-data"
 

@@ -3,7 +3,7 @@
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { HeroSection, BookingWidget, FeaturedDestinations, AmenitiesSection, TestimonialCard, ScrollAnimation } from "./components"
-import { HotelCard } from "@/modules/hotel/components"
+import { HotelCard } from "@/components/modules/hotel/components"
 import { featuredHotels, testimonials } from "@/utils/dummy-data"
 import { useEffect, useState } from "react"
 

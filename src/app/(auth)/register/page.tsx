@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { RegisterForm } from "@/modules/auth/components"
+import { RegisterForm } from "@/components/modules/auth/components"
 import { useAuthRedirect } from "@/hooks/useAuthRedirect"
 import { ROUTES } from "@/utils/constants"
 
