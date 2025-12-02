@@ -1,7 +1,9 @@
-"use client"
+ "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import Link from "next/link"
+import { useAppDispatch, useAppSelector } from "@/store/hook"
+import { addHotelToCart, removeHotelFromCart } from "@/store/actions/user-action"
 
 interface HotelCardProps {
   hotel?: {
@@ -36,7 +38,11 @@ export default function HotelCard({
   featured,
   delay = 0,
 }: HotelCardProps) {
-  const [isSaved, setIsSaved] = useState(false)
+  const dispatch = useAppDispatch()
+  const cart = useAppSelector((state) => state.user.cart)
+
+  const isInCart = useMemo(() => cart.some((h) => h.id === id), [cart, id])
+  const [isSaved, setIsSaved] = useState(isInCart)
 
   return (
     <Link href={`/hotel/${id}`}>
@@ -65,13 +71,28 @@ export default function HotelCard({
           <button
             onClick={(e) => {
               e.preventDefault()
-              setIsSaved(!isSaved)
+              if (isInCart) {
+                dispatch(removeHotelFromCart(id))
+              } else {
+                dispatch(
+                  addHotelToCart({
+                    id,
+                    name,
+                    location,
+                    image,
+                    price,
+                    rating,
+                    reviewCount: reviews,
+                  })
+                )
+              }
+              setIsSaved(!isInCart)
             }}
             className="absolute top-4 right-4 p-2 rounded-full bg-white/20 backdrop-blur hover:bg-white/40 transition"
           >
             <svg
-              className={`w-5 h-5 ${isSaved ? "fill-red-500 text-red-500" : "text-white"}`}
-              fill={isSaved ? "currentColor" : "none"}
+              className={`w-5 h-5 ${isInCart || isSaved ? "fill-red-500 text-red-500" : "text-white"}`}
+              fill={isInCart || isSaved ? "currentColor" : "none"}
               stroke="currentColor"
               viewBox="0 0 24 24"
             >

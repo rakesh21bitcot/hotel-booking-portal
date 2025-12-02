@@ -6,8 +6,13 @@ import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import PriceBreakdown from "./PriceBreakdown"
 import { useState } from "react"
+import { useAppDispatch } from "@/store/hook"
+import { addBookingToMyBookings } from "@/store/actions/user-action"
+import { useRouter } from "next/navigation"
 
 export default function BookingPage() {
+  const dispatch = useAppDispatch()
+  const router = useRouter()
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -40,6 +45,30 @@ export default function BookingPage() {
     } else if (step === "confirm") {
       setStep("payment")
     }
+  }
+
+  const handleCompleteBooking = () => {
+    const bookingId = `ELITE-${Date.now()}`
+
+    dispatch(
+      addBookingToMyBookings({
+        id: bookingId,
+        hotelId: "1",
+        hotelName: "Luxury Grand Hotel",
+        location: "New York, USA",
+        hotelImage: "/placeholder.svg",
+        checkIn: "Dec 20, 2024",
+        checkOut: "Dec 25, 2024",
+        nights: 5,
+        roomType: "Deluxe Room",
+        totalAmount: 250 * 5 + 125 + 50,
+        status: "Confirmed",
+        guestName: `${formData.firstName} ${formData.lastName}`.trim(),
+        email: formData.email,
+      })
+    )
+
+    router.push("/my-booking")
   }
 
   return (
@@ -243,7 +272,7 @@ export default function BookingPage() {
                     Previous
                   </button>
                   <button
-                    onClick={handleNextStep}
+                    onClick={step === "confirm" ? handleCompleteBooking : handleNextStep}
                     className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition"
                   >
                     {step === "confirm" ? "Complete Booking" : "Continue"}

@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import PriceBreakdown from "@/components/modules/booking/components/PriceBreakdown"
+import PriceBreakdown from "@/components/modules/booking/PriceBreakdown"
 import { RatingDisplay } from "@/components/modules/hotel/components"
 
 interface RoomDetailsProps {

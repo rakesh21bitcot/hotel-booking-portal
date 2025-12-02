@@ -20,7 +20,7 @@ export const ROUTES = {
   },
   PROTECTED: {
     DASHBOARD: "/dashboard",
-    BOOKING: "/booking",
+    MYBOOKING: "/my-booking",
     BOOKINGS: "/bookings",
     PROFILE: "/profile",
     WISHLIST: "/wishlist",

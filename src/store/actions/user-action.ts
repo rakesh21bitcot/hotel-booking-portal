@@ -1,6 +1,8 @@
 import { apiClient } from "@/lib/api-client"
 import { errorHandler } from "@/lib/error-handler"
 import { User } from "@/types"
+import { AppDispatch } from "@/store"
+import { CartHotel, BookingItem, addToCart, removeFromCart, addBooking, cancelBooking } from "../reducers/userReducer"
 
 // ============================================
 // GET METHOD EXAMPLES
@@ -193,3 +195,35 @@ export const uploadFile = async (file: File, additionalData?: Record<string, str
         throw error
     }
 }
+
+// ============================================
+// CART ACTIONS (Redux)
+// ============================================
+
+export const addHotelToCart =
+  (hotel: CartHotel) =>
+  (dispatch: AppDispatch) => {
+    dispatch(addToCart(hotel))
+  }
+
+export const removeHotelFromCart =
+  (hotelId: string) =>
+  (dispatch: AppDispatch) => {
+    dispatch(removeFromCart(hotelId))
+  }
+
+// ============================================
+// BOOKING ACTIONS (Redux)
+// ============================================
+
+export const addBookingToMyBookings =
+  (booking: BookingItem) =>
+  (dispatch: AppDispatch) => {
+    dispatch(addBooking(booking))
+  }
+
+export const cancelBookingFromMyBookings =
+  (bookingId: string) =>
+  (dispatch: AppDispatch) => {
+    dispatch(cancelBooking(bookingId))
+  }

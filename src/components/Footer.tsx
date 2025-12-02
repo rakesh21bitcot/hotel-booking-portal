@@ -1,6 +1,10 @@
 "use client"
 
+import { ROUTES } from "@/utils/constants"
+
 export default function Footer() {
+  const year = new Date().getFullYear()
+
   return (
     <footer className="bg-black border-t border-border mt-20">
       <div className="max-w-7xl mx-auto px-4 py-16">
@@ -29,17 +33,17 @@ export default function Footer() {
             <h5 className="font-semibold text-sm mb-4 text-foreground">Quick Links</h5>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <a href="#" className="hover:text-primary transition">
+                <a href={ROUTES.PUBLIC.HOME} className="hover:text-primary transition">
                   Home
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition">
+                <a href={ROUTES.PUBLIC.HOTELS} className="hover:text-primary transition">
                   Browse Hotels
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition">
+                <a href={ROUTES.PUBLIC.DESTINATIONS} className="hover:text-primary transition">
                   Destinations
                 </a>
               </li>
@@ -56,22 +60,12 @@ export default function Footer() {
             <h5 className="font-semibold text-sm mb-4 text-foreground">Support</h5>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <a href="#" className="hover:text-primary transition">
-                  Help Center
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition">
+                <a href={ROUTES.PUBLIC.CONTACT} className="hover:text-primary transition">
                   Contact Us
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition">
-                  FAQ
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition">
+                <a href={ROUTES.PUBLIC.BLOG} className="hover:text-primary transition">
                   Blog
                 </a>
               </li>
@@ -92,27 +86,17 @@ export default function Footer() {
                   Terms & Conditions
                 </a>
               </li>
-              <li>
-                <a href="#" className="hover:text-primary transition">
-                  Cookies
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition">
-                  Security
-                </a>
-              </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-xs text-muted-foreground">© 2025 EliteStay. All rights reserved.</p>
-          <div className="flex gap-4 text-xs text-muted-foreground mt-4 md:mt-0">
+          <p className="text-xs text-muted-foreground">© {year} Bitcot. All rights reserved.</p>
+          {/* <div className="flex gap-4 text-xs text-muted-foreground mt-4 md:mt-0">
             <span>We accept:</span>
             <span>Visa • Mastercard • American Express • PayPal</span>
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>

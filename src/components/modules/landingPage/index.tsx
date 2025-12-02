@@ -6,6 +6,7 @@ import { HeroSection, BookingWidget, FeaturedDestinations, AmenitiesSection, Tes
 import { HotelCard } from "@/components/modules/hotel/components"
 import { featuredHotels, testimonials } from "@/utils/dummy-data"
 import { useEffect, useState } from "react"
+import { ROUTES } from "@/utils/constants"
 
 export default function Home() {
   const [counters, setCounters] = useState({ hotels: 0, guests: 0, satisfaction: 0 })
@@ -68,13 +69,13 @@ export default function Home() {
       <HeroSection />
 
       {/* Booking Widget Section */}
-      <section className="relative -mt-20 pb-20 bg-gradient-to-b from-transparent via-gray-50 to-white">
+      {/* <section className="relative -mt-20 pb-20 bg-gradient-to-b from-transparent via-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-4">
           <ScrollAnimation animation="fade-up" delay={0}>
             <BookingWidget />
           </ScrollAnimation>
         </div>
-      </section>
+      </section> */}
 
       {/* Featured Destinations Section */}
       <FeaturedDestinations />
@@ -138,7 +139,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Guests review Section */}
       <section className="py-20 bg-black">
         <div className="max-w-7xl mx-auto px-4">
           <ScrollAnimation animation="fade-up" delay={0}>
@@ -158,17 +159,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-secondary to-card border-y border-border">
+      {/* CTA Section */} 
+      <section className="py-20 bg-linear-to-r from-secondary to-card border-y border-border">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <ScrollAnimation animation="zoom-in" delay={0}>
           <h2 className="font-serif text-4xl font-bold text-foreground mb-4">Ready to Book Your Dream Stay?</h2>
           <p className="text-muted-foreground mb-8 text-lg">
             Explore thousands of unique properties and find your perfect vacation destination.
           </p>
-            <button className="px-8 py-4 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition-all duration-300 text-lg hover:scale-105 hover:shadow-lg hover:shadow-primary/50">
+          <a
+            href={ROUTES.PUBLIC.HOTELS}
+            className="inline-block px-8 py-4 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition-all duration-300 text-lg hover:scale-105 hover:shadow-lg hover:shadow-primary/50"
+          >
             Start Exploring Now
-          </button>
+          </a>
           </ScrollAnimation>
         </div>
       </section>

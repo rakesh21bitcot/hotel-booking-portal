@@ -1,4 +1,4 @@
-import BookingPage from '@/components/modules/booking/components';
+import BookingPage from '@/components/modules/booking';
 
 const Booking = () => {
   return (

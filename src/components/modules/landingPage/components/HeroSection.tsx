@@ -1,4 +1,6 @@
 "use client"
+import { ROUTES } from "@/utils/constants"
+import Link from "next/link"
 import { useEffect, useState } from "react"
 
 function HeroSection() {
@@ -47,8 +49,10 @@ function HeroSection() {
           </h1>
 
           {/* Booking Button */}
-          <button 
-            className={`button-split-hover px-8 py-4 rounded font-semibold text-primary-foreground mb-8 flex items-center gap-2 transition-all duration-1000 ease-out ${
+          
+          <Link
+            href={ROUTES.PUBLIC.HOTELS}
+            className={`button-split-hover max-w-[220px] px-8 py-4 rounded font-semibold text-primary-foreground mb-8 flex items-center gap-2 transition-all duration-1000 ease-out ${
               isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
             style={{ transitionDelay: "600ms" }}
@@ -57,7 +61,7 @@ function HeroSection() {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
-          </button>
+          </Link>
 
           {/* Rating Info */}
           <div 
