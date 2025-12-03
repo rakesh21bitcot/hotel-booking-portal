@@ -6,7 +6,12 @@ import { RoomCard, RatingDisplay } from "../components"
 import { TestimonialCard } from "@/components/modules/landingPage/components"
 import { useState } from "react"
 import { hotelData } from "@/utils/dummy-data"
-
+import { useAppDispatch, useAppSelector } from "@/store/hook"
+import { addHotelToCart, removeHotelFromCart } from "@/store/actions/user-action"
+import { useRouter } from "next/navigation"
+import { ROUTES } from "@/utils/constants"
+import { toast } from "sonner"
+import { forWarning } from "@/utils/CommonService"
 
 
 export default function HotelDetailPage() {
@@ -20,6 +25,13 @@ export default function HotelDetailPage() {
   const prevImage = () => {
     setImageIndex((prev) => (prev - 1 + hotelData.images.length) % hotelData.images.length)
   }
+
+  const dispatch = useAppDispatch()
+  const cart = useAppSelector((state) => state.user.cart)
+  const authState = useAppSelector((state) => state.auth)
+  const isAuthenticated = !!authState.access_token && !!authState.user
+  const isInCart = cart.some((h) => h.id === hotelData.id)
+  const router = useRouter()
 
   return (
     <main className="bg-black min-h-screen">
@@ -111,12 +123,35 @@ export default function HotelDetailPage() {
 
             <div className="flex gap-3">
               <button
-                onClick={() => setIsSaved(!isSaved)}
+                onClick={() => {
+                  if (!isAuthenticated) {
+                    forWarning("Please login or sign up to save favourites.")
+                    router.push(ROUTES.PUBLIC.LOGIN)
+                    return
+                  }
+                  if (isInCart) {
+                    dispatch(removeHotelFromCart(hotelData.id))
+                    setIsSaved(false)
+                  } else {
+                    dispatch(
+                      addHotelToCart({
+                        id: hotelData.id,
+                        name: hotelData.name,
+                        location: hotelData.location,
+                        image: hotelData.images[0] || '',
+                        price: hotelData.price,
+                        rating: hotelData.rating,
+                        reviewCount: hotelData.reviews.length,
+                      })
+                    )
+                    setIsSaved(true)
+                  }
+                }}
                 className="p-3 border border-border rounded-lg hover:border-primary transition"
               >
                 <svg
-                  className={`w-5 h-5 ${isSaved ? "fill-red-500 text-red-500" : ""}`}
-                  fill={isSaved ? "currentColor" : "none"}
+                  className={`w-5 h-5 ${isInCart || isSaved ? "fill-red-500 text-red-500" : ""}`}
+                  fill={isInCart || isSaved ? "currentColor" : "none"}
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >

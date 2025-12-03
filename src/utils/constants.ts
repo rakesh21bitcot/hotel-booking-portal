@@ -25,6 +25,7 @@ export const ROUTES = {
     PROFILE: "/profile",
     WISHLIST: "/wishlist",
     SETTINGS: "/settings",
+    CART: "/cart"
   },
   ADMIN: {
     DASHBOARD: "/admin/dashboard",

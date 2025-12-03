@@ -1,16 +1,21 @@
- "use client"
+"use client"
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { ROUTES } from "@/utils/constants"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
+import { useAuth } from "@/components/modules/auth/hooks/useAuth"
+import { useAppSelector } from "@/store/hook"
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [lastScrollY, setLastScrollY] = useState(0)
   const [hasScrolled, setHasScrolled] = useState(false)
   const pathname = usePathname()
+  const { isAuthenticated, user, logout } = useAuth()
+  const cart = useAppSelector((state) => state.user.cart)
+
 
   const isActive = (path: string) => pathname === path
 
@@ -115,41 +120,68 @@ export default function Header() {
             Contact
           </Link>
 
-          <Link 
-            href={ROUTES.PROTECTED.MYBOOKING} 
-            className={`text-sm font-medium transition ${
-              isActive(ROUTES.PROTECTED.MYBOOKING) ? "text-primary" : "text-white hover:text-primary"
-            }`}
-          >
-            My Bookings
-          </Link>
+          {isAuthenticated && (
+            <Link 
+              href={ROUTES.PROTECTED.MYBOOKING} 
+              className={`text-sm font-medium transition ${
+                isActive(ROUTES.PROTECTED.MYBOOKING) ? "text-primary" : "text-white hover:text-primary"
+              }`}
+            >
+              My Bookings
+            </Link>
+          )}
         </div>
 
         {/* Right Icons */}
         <div className="hidden md:flex gap-4 items-center">
           {/* Shopping Bag with golden circle */}
-          <Link href='/cart' className="p-2 hover:bg-white/10 rounded transition relative" title="Cart">
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-              />
-            </svg>
-            <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
-          </Link>
-          
+          {isAuthenticated && (
+            <Link href={ROUTES.PROTECTED.CART} className="p-2 hover:bg-white/10 rounded transition relative" title="Cart">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                />
+              </svg>
+              {cart?.length ? 
+                <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
+              :""}
+            </Link>
+          )}
+
+          {isAuthenticated && (
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-full">
+                <span className="w-8 h-8 flex items-center justify-center rounded-full bg-primary/20 text-primary font-semibold text-sm">
+                  {(user?.firstName || user?.email || "U").charAt(0).toUpperCase()}
+                </span>
+                <span className="text-sm text-white">
+                  {user?.firstName || user?.email || "Profile"}
+                </span>
+              </div>
+              <button
+                onClick={logout}
+                className="text-sm text-muted-foreground hover:text-primary transition"
+              >
+                Logout
+              </button>
+            </div>
+          )}
+
           {/* Sign In / Join Button */}
-          <Link
-            href={ROUTES.PUBLIC.LOGIN}
-            className="button-split-hover px-8 py-3 rounded-lg font-semibold text-primary-foreground flex items-center justify-center gap-2 whitespace-nowrap h-[52px]"
+          {!isAuthenticated && (
+            <Link
+              href={ROUTES.PUBLIC.LOGIN}
+              className="button-split-hover px-8 py-3 rounded-lg font-semibold text-primary-foreground flex items-center justify-center gap-2 whitespace-nowrap h-[52px]"
             >
-            <span>Sign In/Join?</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </Link>
+              <span>Sign In/Join?</span>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </Link>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -223,10 +255,20 @@ export default function Header() {
             >
               Contact
             </Link>
+            {isAuthenticated && (
+              <Link
+                href={ROUTES.PROTECTED.MYBOOKING} 
+                className={`text-sm transition ${
+                  isActive(ROUTES.PROTECTED.MYBOOKING) ? "text-primary" : "text-white hover:text-primary"
+                }`}
+              >
+                My Bookings
+              </Link>
+            )}
             <Link
               href={ROUTES.PUBLIC.HOTELS}
               className="button-split-hover px-8 py-3 rounded-lg font-semibold text-primary-foreground flex items-center justify-center gap-2 whitespace-nowrap h-[52px]"
-              >
+            >
               <span>EXPLORE MORE</span>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />

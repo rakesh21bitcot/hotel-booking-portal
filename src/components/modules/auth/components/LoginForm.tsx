@@ -9,6 +9,7 @@ import { loginSchema, type LoginInput } from "@/utils/validators"
 import { errorHandler } from "@/lib/error-handler"
 import { toast } from "sonner"
 import { ROUTES } from "@/utils/constants"
+import { forSuccess } from "@/utils/CommonService"
 
 export function LoginForm() {
   const router = useRouter()
@@ -36,8 +37,8 @@ export function LoginForm() {
       const result = await login(validated)
 
       if (result.payload) {
-        toast.success("Login successful!")
-        router.push(ROUTES.PROTECTED.DASHBOARD)
+        forSuccess("Login successful!")
+        router.push(ROUTES.PUBLIC.HOTELS)
       }
     } catch (error) {
       if (error instanceof Error) {

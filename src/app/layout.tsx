@@ -1,20 +1,10 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Playfair_Display, Inter } from "next/font/google"
 import "./globals.css"
 import { ReduxProvider } from "@/store/providers"
-
-const _playfairDisplay = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-serif",
-  weight: ["400", "500", "600", "700", "900"],
-})
-
-const _inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  weight: ["300", "400", "500", "600", "700"],
-})
+import ToastProvider from "@/components/providers/ToastProvider"
+import "react-toastify/dist/ReactToastify.css"
+import DialogProvider from "@/components/providers/DialogProvider"
 
 export const metadata: Metadata = {
   title: "EliteStay - Trusted Hotels, Seamless Booking",
@@ -46,8 +36,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans antialiased`}>
-        <ReduxProvider>{children}</ReduxProvider>
+      <body>
+        <ReduxProvider>
+          {children}
+          <ToastProvider />
+          <DialogProvider />
+        </ReduxProvider>
       </body>
     </html>
   )

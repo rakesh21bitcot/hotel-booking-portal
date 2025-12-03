@@ -93,10 +93,10 @@ export const hotelData = {
   // reviews: 1250,
   price: 250,
   images: [
-    "/placeholder.svg?key=74aex",
-    "/placeholder.svg?key=h8b66",
-    "/placeholder.svg?key=quajy",
-    "/placeholder.svg?key=tlkyb",
+    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80", // Elegant hotel exterior
+    "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=80", // Modern hotel lobby
+    "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80", // Luxury hotel bedroom
+    "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80", // Cozy hotel lounge
   ],
   amenities: ["WiFi", "TV", "AC", "Restaurant", "Gym", "Pool", "Parking", "Coffee"],
   rooms: [
@@ -106,7 +106,7 @@ export const hotelData = {
       type: "Deluxe",
       capacity: 2,
       price: 250,
-      image: "/placeholder.svg?key=l1uqe",
+      image: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=800&q=80", // Stylish deluxe room
       amenities: ["WiFi", "TV", "AC"],
     },
     {
@@ -115,7 +115,7 @@ export const hotelData = {
       type: "Suite",
       capacity: 4,
       price: 450,
-      image: "/placeholder.svg?key=dqpns",
+      image: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=800&q=80", // Large suite room
       amenities: ["WiFi", "TV", "AC", "Kitchenette"],
     },
     {
@@ -124,7 +124,7 @@ export const hotelData = {
       type: "Suite",
       capacity: 6,
       price: 800,
-      image: "/placeholder.svg?key=i6vlx",
+      image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80", // Presidential luxury suite
       amenities: ["WiFi", "TV", "AC", "Kitchenette", "Jacuzzi"],
     },
   ],
@@ -361,7 +361,7 @@ export const allHotels = [
     id: "1",
     name: "Luxury Grand Hotel",
     location: "New York, USA",
-    image: "/placeholder.svg?key=lqrvc",
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80",
     price: 250,
     rating: 4.8,
     reviews: 1250,
@@ -370,7 +370,7 @@ export const allHotels = [
     id: "2",
     name: "Beachfront Paradise",
     location: "Miami, USA",
-    image: "/placeholder.svg?key=3sek7",
+    image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80",
     price: 180,
     rating: 4.9,
     reviews: 890,
@@ -379,7 +379,7 @@ export const allHotels = [
     id: "3",
     name: "Mountain Retreat",
     location: "Denver, USA",
-    image: "/placeholder.svg?key=gopnt",
+    image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=600&q=80",
     price: 220,
     rating: 4.7,
     reviews: 650,
@@ -388,7 +388,7 @@ export const allHotels = [
     id: "4",
     name: "Urban Boutique",
     location: "San Francisco, USA",
-    image: "/placeholder.svg?key=d6ew3",
+    image: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=600&q=80", // Replaced broken image URL
     price: 200,
     rating: 4.6,
     reviews: 720,
@@ -397,7 +397,7 @@ export const allHotels = [
     id: "5",
     name: "Desert Oasis",
     location: "Phoenix, USA",
-    image: "/placeholder.svg?key=hwozi",
+    image: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=600&q=80",
     price: 150,
     rating: 4.5,
     reviews: 480,
@@ -406,7 +406,7 @@ export const allHotels = [
     id: "6",
     name: "Tropical Escape",
     location: "Hawaii, USA",
-    image: "/placeholder.svg?key=qic2c",
+    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
     price: 300,
     rating: 4.9,
     reviews: 1100,
@@ -415,7 +415,7 @@ export const allHotels = [
     id: "7",
     name: "Historic Manor",
     location: "Boston, USA",
-    image: "/placeholder.svg?key=jcc0x",
+    image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80",
     price: 210,
     rating: 4.7,
     reviews: 560,
@@ -424,7 +424,7 @@ export const allHotels = [
     id: "8",
     name: "Modern Tower",
     location: "Chicago, USA",
-    image: "/placeholder.svg?key=u6rh9",
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80", // Replaced with working Unsplash image
     price: 190,
     rating: 4.6,
     reviews: 890,

@@ -2,13 +2,11 @@
 
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import { useAppSelector, useAppDispatch } from "@/store/hook"
-import { removeHotelFromCart } from "@/store/actions/user-action"
+import { useAppSelector } from "@/store/hook"
 import { HotelCard } from "@/components/modules/hotel/components"
 import Link from "next/link"
 
 export default function CartPage() {
-  const dispatch = useAppDispatch()
   const cart = useAppSelector((state) => state.user.cart)
 
   const total = cart.reduce((sum, hotel) => sum + hotel.price, 0)

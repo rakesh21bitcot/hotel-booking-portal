@@ -4,6 +4,10 @@ import { useState, useMemo } from "react"
 import Link from "next/link"
 import { useAppDispatch, useAppSelector } from "@/store/hook"
 import { addHotelToCart, removeHotelFromCart } from "@/store/actions/user-action"
+import { useRouter } from "next/navigation"
+import { ROUTES } from "@/utils/constants"
+import { toast } from "sonner"
+import { forWarning } from "@/utils/CommonService"
 
 interface HotelCardProps {
   hotel?: {
@@ -40,6 +44,9 @@ export default function HotelCard({
 }: HotelCardProps) {
   const dispatch = useAppDispatch()
   const cart = useAppSelector((state) => state.user.cart)
+  const authState = useAppSelector((state) => state.auth)
+  const isAuthenticated = !!authState.access_token && !!authState.user
+  const router = useRouter()
 
   const isInCart = useMemo(() => cart.some((h) => h.id === id), [cart, id])
   const [isSaved, setIsSaved] = useState(isInCart)
@@ -71,8 +78,15 @@ export default function HotelCard({
           <button
             onClick={(e) => {
               e.preventDefault()
+              if (!isAuthenticated) {
+                forWarning("Please login or sign up to save favourites.")
+                router.push(ROUTES.PUBLIC.LOGIN)
+                return
+              }
+
               if (isInCart) {
                 dispatch(removeHotelFromCart(id))
+                setIsSaved(false)
               } else {
                 dispatch(
                   addHotelToCart({
@@ -85,8 +99,8 @@ export default function HotelCard({
                     reviewCount: reviews,
                   })
                 )
+                setIsSaved(true)
               }
-              setIsSaved(!isInCart)
             }}
             className="absolute top-4 right-4 p-2 rounded-full bg-white/20 backdrop-blur hover:bg-white/40 transition"
           >
