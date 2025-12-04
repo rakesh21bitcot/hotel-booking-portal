@@ -36,7 +36,7 @@ export default function HotelComponent() {
       
 
       {/* Search Bar */}
-      <div className="pt-24 pb-12 bg-secondary border-b border-border">
+      <div className="pt-24 pb-12 bg-secondary border-b border-border" >
         <div className="max-w-7xl mx-auto px-4">
           <SearchBar compact />
         </div>

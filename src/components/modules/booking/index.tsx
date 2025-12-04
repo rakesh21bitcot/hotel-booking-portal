@@ -274,7 +274,7 @@ export default function BookingPage() {
                     onClick={step === "confirm" ? handleCompleteBooking : handleNextStep}
                     className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition"
                   >
-                    {step === "confirm" ? "Complete Booking" : "Continue"}
+                    {step === "confirm" ? "Go To My Booking" : "Continue"}
                   </button>
                 </div>
               </div>
@@ -306,7 +306,6 @@ export default function BookingPage() {
           </div>
         </div>
       </div>
-
     </main>
   )
 }

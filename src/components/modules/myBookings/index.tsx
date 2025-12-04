@@ -13,9 +13,7 @@ export default function MyBookingsPage() {
 
   return (
     <main className="bg-black min-h-screen">
-      
-
-      <section className="pt-24 pb-10 bg-secondary border-b border-border">
+      <section className="pt-24 pb-12 bg-secondary border-b border-border">
         <div className="max-w-7xl mx-auto px-4">
           <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-2">My Bookings</h1>
           <p className="text-muted-foreground">
@@ -115,8 +113,6 @@ export default function MyBookingsPage() {
           </div>
         )}
       </section>
-
-     
     </main>
   )
 }

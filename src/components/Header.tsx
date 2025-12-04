@@ -41,11 +41,12 @@ export default function Header() {
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out  
-        ${ hasScrolled 
-          ? "bg-black/95 backdrop-blur-md border-b border-border" 
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out 
+        before:content-[''] before:absolute before:inset-0 before:pointer-events-none before:bg-gradient-to-b before:from-[rgba(0,0,0,0.7)] before:to-[rgba(30,30,30,0)] before:backdrop-blur before:z-[-1] 
+        ${hasScrolled 
+          ? "bg-black/95 backdrop-blur-md border-b border-border"
           : "bg-transparent"
-      }`}
+        }`}
     >
       <nav className="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between h-20">
         {/* Logo */}
@@ -138,18 +139,18 @@ export default function Header() {
         <div className="hidden md:flex gap-4 items-center">
           {/* Shopping Bag with golden circle */}
           {isAuthenticated && (
-            <Link href={ROUTES.PROTECTED.CART} className="p-2 hover:bg-white/10 rounded transition relative" title="Cart">
+            <Link href={ROUTES.PROTECTED.CART} className="p-2 hover:bg-white/10 rounded transition relative" title="Liked Hotels">
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                  d="M12 21C12 21 4 13.28 4 8.5C4 5.42 6.42 3 9.5 3C11.24 3 12.91 3.81 14 5.08C15.09 3.81 16.76 3 18.5 3C21.58 3 24 5.42 24 8.5C24 13.28 16 21 16 21H12Z"
                 />
               </svg>
               {cart?.length ? 
                 <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
-              :""}
+              : ""}
             </Link>
           )}
 
