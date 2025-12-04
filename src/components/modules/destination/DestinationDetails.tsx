@@ -58,7 +58,7 @@ export default function DestinationDetails() {
             EXPERIENCE THE STORY
           </p>
           <h1 className="font-serif text-5xl md:text-7xl font-bold text-white mb-8">
-            destination
+            Destination
           </h1>
         </div>
       </section>

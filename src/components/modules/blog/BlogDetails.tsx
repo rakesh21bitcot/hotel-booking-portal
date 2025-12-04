@@ -29,7 +29,7 @@ export default function BlogDetails() {
             EXPERIENCE THE STORY
           </p>
           <h1 className="font-serif text-5xl md:text-7xl font-bold text-white mb-8">
-            blog
+            Blog
           </h1>
         </div>
       </section>
