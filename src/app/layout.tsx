@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css"
 import DialogProvider from "@/components/providers/DialogProvider"
 import { ThemeProvider } from "@/components/providers/ThemeProvider"
 import { ConditionalLayout } from "@/components/layouts/ConditionalLayout"
+import { ScrollToTop } from "@/components/common/ScrollToTop"
 
 
 export const metadata: Metadata = {
@@ -47,6 +48,7 @@ export default function RootLayout({
             </ConditionalLayout>
             <ToastProvider />
             <DialogProvider />
+            <ScrollToTop />
           </ReduxProvider>
         </ThemeProvider>
       </body>
