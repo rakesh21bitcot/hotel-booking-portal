@@ -1,9 +1,10 @@
 'use client'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaUser, FaLock, FaCog, FaBell, FaEnvelope, FaShieldAlt, FaGlobe, FaPalette, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useTheme } from "@/components/providers/ThemeProvider";
 
 const TABS = [
   { key: 'profile', label: 'Profile', icon: <FaUser /> },
@@ -36,7 +37,7 @@ export default function Profile() {
   const [bookingReminders, setBookingReminders] = useState(true);
   const [currency, setCurrency] = useState('INR');
   const [language, setLanguage] = useState('en');
-  const [theme, setTheme] = useState('system');
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const [twoFactorAuth, setTwoFactorAuth] = useState(false);
   const [profileVisibility, setProfileVisibility] = useState('public');
   const [dataSharing, setDataSharing] = useState(true);
@@ -153,7 +154,7 @@ export default function Profile() {
 
           {activeTab === 'profile' && (
             <div className="w-full space-y-6">
-              <div>
+                <div>
                 <h2 className="text-xl sm:text-2xl font-bold mb-2 text-foreground">General Information</h2>
                 <p className="text-sm text-muted-foreground mb-6">Update your personal details and preferences</p>
               </div>
@@ -171,7 +172,7 @@ export default function Profile() {
                       className="h-11 text-sm font-medium"
                       placeholder="Enter your first name"
                     />
-                  </div>
+                </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="lastName" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
@@ -184,7 +185,7 @@ export default function Profile() {
                       className="h-11 text-sm font-medium"
                       placeholder="Enter your last name"
                     />
-                  </div>
+                </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
@@ -197,7 +198,7 @@ export default function Profile() {
                       className="h-11 text-sm bg-muted/50 cursor-not-allowed"
                     />
                     <p className="text-xs text-muted-foreground">Email cannot be changed</p>
-                  </div>
+                </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="phone" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
@@ -210,7 +211,7 @@ export default function Profile() {
                       className="h-11 text-sm bg-muted/50 cursor-not-allowed"
                     />
                     <p className="text-xs text-muted-foreground">Contact support to change phone number</p>
-                  </div>
+                </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="gender" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
@@ -225,8 +226,8 @@ export default function Profile() {
                       <option value="FEMALE">Female</option>
                       <option value="OTHER">Other</option>
                       <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
-                    </select>
-                  </div>
+                  </select>
+                </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="dob" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
@@ -238,7 +239,7 @@ export default function Profile() {
                       defaultValue="2001-12-01"
                       className="h-11 text-sm"
                     />
-                  </div>
+                </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="nationality" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
@@ -249,14 +250,14 @@ export default function Profile() {
                       className="w-full h-11 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       defaultValue="India"
                     >
-                      <option value="India">India</option>
+                    <option value="India">India</option>
                       <option value="USA">United States</option>
                       <option value="UK">United Kingdom</option>
                       <option value="Canada">Canada</option>
                       <option value="Australia">Australia</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="state" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
@@ -267,15 +268,15 @@ export default function Profile() {
                       className="w-full h-11 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       defaultValue="Bihar"
                     >
-                      <option value="Bihar">Bihar</option>
-                      <option value="Maharashtra">Maharashtra</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Maharashtra">Maharashtra</option>
                       <option value="Delhi">Delhi</option>
                       <option value="Karnataka">Karnataka</option>
                       <option value="Tamil Nadu">Tamil Nadu</option>
-                      <option value="Other">Other</option>
-                    </select>
+                    <option value="Other">Other</option>
+                  </select>
                     <p className="text-xs text-muted-foreground">Required for GST purposes</p>
-                  </div>
+                </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="city" className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
@@ -287,13 +288,13 @@ export default function Profile() {
                       defaultValue=""
                     >
                       <option value="">Select City</option>
-                      <option value="Patna">Patna</option>
-                      <option value="Mumbai">Mumbai</option>
+                    <option value="Patna">Patna</option>
+                    <option value="Mumbai">Mumbai</option>
                       <option value="Delhi">Delhi</option>
                       <option value="Bangalore">Bangalore</option>
                       <option value="Chennai">Chennai</option>
                       <option value="Kolkata">Kolkata</option>
-                    </select>
+                  </select>
                     <p className="text-xs text-muted-foreground">Get customized travel recommendations</p>
                   </div>
                 </div>
@@ -319,7 +320,7 @@ export default function Profile() {
           {/* Change Password tab */}
           {activeTab === 'changePassword' && (
             <div className="w-full space-y-6">
-              <div>
+                <div>
                 <h2 className="text-xl sm:text-2xl font-bold mb-2 text-foreground">Change Password</h2>
                 <p className="text-sm text-muted-foreground mb-6">Update your password to keep your account secure</p>
               </div>
@@ -690,14 +691,19 @@ export default function Profile() {
                       <select
                         id="theme"
                         value={theme}
-                        onChange={(e) => setTheme(e.target.value)}
+                        onChange={(e) => setTheme(e.target.value as "light" | "dark" | "system")}
                         className="w-full h-11 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       >
                         <option value="light">Light</option>
                         <option value="dark">Dark</option>
                         <option value="system">System Default</option>
                       </select>
-                      <p className="text-xs text-muted-foreground mt-2">Choose your preferred color theme</p>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        Choose your preferred color theme
+                        {theme === "system" && (
+                          <span className="block mt-1">Currently using: {resolvedTheme === "dark" ? "Dark" : "Light"} (System)</span>
+                        )}
+                      </p>
                     </div>
                   </div>
                 </div>

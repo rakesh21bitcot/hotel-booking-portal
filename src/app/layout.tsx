@@ -5,6 +5,7 @@ import { ReduxProvider } from "@/store/providers"
 import ToastProvider from "@/components/providers/ToastProvider"
 import "react-toastify/dist/ReactToastify.css"
 import DialogProvider from "@/components/providers/DialogProvider"
+import { ThemeProvider } from "@/components/providers/ThemeProvider"
 import { ConditionalLayout } from "@/components/layouts/ConditionalLayout"
 
 
@@ -37,15 +38,17 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`font-sans antialiased Marcellus serif`}>
-        <ReduxProvider>
-          <ConditionalLayout>
-            {children}
-          </ConditionalLayout>
-          <ToastProvider />
-          <DialogProvider />
-        </ReduxProvider>
+        <ThemeProvider defaultTheme="system" storageKey="eliteStay-theme">
+          <ReduxProvider>
+            <ConditionalLayout>
+              {children}
+            </ConditionalLayout>
+            <ToastProvider />
+            <DialogProvider />
+          </ReduxProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
