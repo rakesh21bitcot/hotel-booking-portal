@@ -73,7 +73,6 @@ export default function BookingPage() {
 
   return (
     <main className="bg-black min-h-screen">
-      <Header />
 
       <div className="pt-24 pb-12">
         <div className="max-w-7xl mx-auto px-4">
@@ -308,7 +307,6 @@ export default function BookingPage() {
         </div>
       </div>
 
-      <Footer />
     </main>
   )
 }

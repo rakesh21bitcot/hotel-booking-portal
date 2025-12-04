@@ -13,7 +13,6 @@ export default function CartPage() {
 
   return (
     <main className="bg-black min-h-screen">
-      <Header />
 
       <section className="pt-24 pb-12 bg-secondary border-b border-border">
         <div className="max-w-7xl mx-auto px-4">
@@ -36,7 +35,7 @@ export default function CartPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-[2fr,1fr] gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-8 items-start">
             {/* Cart list */}
             <div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -59,7 +58,7 @@ export default function CartPage() {
             </div>
 
             {/* Summary */}
-            <aside className="bg-card border border-border rounded-lg p-6 h-fit lg:sticky lg:top-24 lg:self-start">
+            {/* <aside className="bg-card border border-border rounded-lg p-6 h-fit lg:sticky lg:top-24 lg:self-start">
               <h2 className="font-semibold text-lg text-foreground mb-4">Cart Summary</h2>
 
               <div className="space-y-2 mb-6">
@@ -79,12 +78,11 @@ export default function CartPage() {
               >
                 Proceed to booking
               </Link>
-            </aside>
+            </aside> */}
           </div>
         )}
       </section>
 
-      <Footer />
     </main>
   )
 }

@@ -35,7 +35,7 @@ export default function HotelDetailPage() {
 
   return (
     <main className="bg-black min-h-screen">
-      <Header />
+      
 
       <div className="pt-20">
         {/* Breadcrumb */}
@@ -230,7 +230,7 @@ export default function HotelDetailPage() {
         </section>
       </div>
 
-      <Footer />
+     
     </main>
   )
 }

@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { useAuth } from "../hooks/useAuth"
 import { loginSchema, type LoginInput } from "@/utils/validators"
 import { errorHandler } from "@/lib/error-handler"
@@ -71,9 +72,12 @@ export function LoginForm() {
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium mb-2">
-          Password
-        </label>
+        <div className="flex items-center justify-between mb-2">
+          <label htmlFor="password" className="block text-sm font-medium">
+            Password
+          </label>
+        </div>
+        
         <input
           type="password"
           id="password"
@@ -83,8 +87,25 @@ export function LoginForm() {
           placeholder="Enter your password"
           className="w-full px-4 py-2 bg-card border border-border rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
-        {errors.password && <p className="text-destructive text-sm mt-1">{errors.password}</p>}
+        <div
+          className={
+            errors.password
+              ? "flex items-center justify-between mt-1 mb-2"
+              : "flex items-center justify-end mt-1 mb-2"
+          }
+        >
+          {errors.password && (
+            <p className="text-destructive text-sm mr-2">{errors.password}</p>
+          )}
+          <Link
+            href={ROUTES.PUBLIC.FORGOT_PASSWORD}
+            className="text-sm text-primary hover:text-primary/90 font-medium"
+          >
+            Forgot password?
+          </Link>
+        </div>
       </div>
+      
 
       <button
         type="submit"

@@ -9,6 +9,8 @@ export function middleware(request: NextRequest) {
     ROUTES.PUBLIC.HOME,
     ROUTES.PUBLIC.LOGIN,
     ROUTES.PUBLIC.REGISTER,
+    ROUTES.PUBLIC.FORGOT_PASSWORD,
+    ROUTES.PUBLIC.RESET_PASSWORD,
     ROUTES.PUBLIC.HOTELS,
     ROUTES.PUBLIC.CONTACT,
     ROUTES.PUBLIC.BLOG,
@@ -17,11 +19,8 @@ export function middleware(request: NextRequest) {
 
   const protectedRoutes = [
     ROUTES.PROTECTED.DASHBOARD,
-    ROUTES.PROTECTED.BOOKING,
     ROUTES.PROTECTED.BOOKINGS,
-    ROUTES.PROTECTED.PROFILE,
     ROUTES.PROTECTED.WISHLIST,
-    ROUTES.PROTECTED.SETTINGS,
   ]
 
   const adminRoutes = [ROUTES.ADMIN.DASHBOARD, ROUTES.ADMIN.HOTELS, ROUTES.ADMIN.BOOKINGS]
@@ -36,7 +35,7 @@ export function middleware(request: NextRequest) {
   }
 
   // If token exists and trying to access auth routes, redirect to dashboard
-  if (token && (pathname === ROUTES.PUBLIC.LOGIN || pathname === ROUTES.PUBLIC.REGISTER)) {
+  if (token && (pathname === ROUTES.PUBLIC.LOGIN || pathname === ROUTES.PUBLIC.REGISTER || pathname === ROUTES.PUBLIC.FORGOT_PASSWORD || pathname === ROUTES.PUBLIC.RESET_PASSWORD)) {
     return NextResponse.redirect(new URL(ROUTES.PROTECTED.DASHBOARD, request.url))
   }
 

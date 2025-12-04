@@ -5,6 +5,8 @@ import { ReduxProvider } from "@/store/providers"
 import ToastProvider from "@/components/providers/ToastProvider"
 import "react-toastify/dist/ReactToastify.css"
 import DialogProvider from "@/components/providers/DialogProvider"
+import { ConditionalLayout } from "@/components/layouts/ConditionalLayout"
+
 
 export const metadata: Metadata = {
   title: "EliteStay - Trusted Hotels, Seamless Booking",
@@ -36,9 +38,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className={`font-sans antialiased Marcellus serif`}>
         <ReduxProvider>
-          {children}
+          <ConditionalLayout>
+            {children}
+          </ConditionalLayout>
           <ToastProvider />
           <DialogProvider />
         </ReduxProvider>

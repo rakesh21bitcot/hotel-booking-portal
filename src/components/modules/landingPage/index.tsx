@@ -63,7 +63,6 @@ export default function Home() {
 
   return (
     <main className="bg-black min-h-screen">
-      <Header />
 
       {/* Hero Section */}
       <HeroSection />
@@ -177,7 +176,6 @@ export default function Home() {
         </div>
       </section>
 
-      <Footer />
     </main>
   )
 }

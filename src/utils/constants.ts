@@ -12,6 +12,7 @@ export const ROUTES = {
     LOGIN: "/login",
     REGISTER: "/register",
     FORGOT_PASSWORD: "/forgot-password",
+    RESET_PASSWORD: "/reset-password",
     HOTELS: "/hotels",
     HOTEL_DETAIL: "/hotel",
     CONTACT: "/contact",
@@ -25,7 +26,8 @@ export const ROUTES = {
     PROFILE: "/profile",
     WISHLIST: "/wishlist",
     SETTINGS: "/settings",
-    CART: "/cart"
+    CART: "/cart",
+    CHANGEPASSWORD: "/change-password"
   },
   ADMIN: {
     DASHBOARD: "/admin/dashboard",

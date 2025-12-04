@@ -58,7 +58,6 @@ export default function ContactDetails() {
 
   return (
     <main className="bg-background min-h-screen">
-      <Header />
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">
@@ -554,7 +553,6 @@ export default function ContactDetails() {
         </div>
       </section>
 
-      <Footer />
     </main>
   )
 }

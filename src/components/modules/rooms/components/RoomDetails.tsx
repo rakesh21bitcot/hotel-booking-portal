@@ -73,7 +73,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
 
   return (
     <main className="bg-background min-h-screen">
-      <Header />
+      
 
       <div className="pt-20">
         {/* Breadcrumb */}
@@ -366,7 +366,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
         </div>
       </div>
 
-      <Footer />
+     
     </main>
   )
 }

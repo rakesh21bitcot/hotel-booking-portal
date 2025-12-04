@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { ROUTES } from "@/utils/constants"
 import Image from "next/image"
@@ -12,6 +12,8 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [lastScrollY, setLastScrollY] = useState(0)
   const [hasScrolled, setHasScrolled] = useState(false)
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname()
   const { isAuthenticated, user, logout } = useAuth()
   const cart = useAppSelector((state) => state.user.cart)
@@ -48,7 +50,7 @@ export default function Header() {
       <nav className="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between h-20">
         {/* Logo */}
         <Link href={ROUTES.PUBLIC.HOME} className="flex items-center gap-3">
-          <Image src="https://wowtheme7.com/tf/elitestay/assets/images/logo/logo.png" alt="EliteStay" width={150} height={150} />
+          <Image src="https://wowtheme7.com/tf/elitestay/assets/images/logo/logo.png" alt="Bitcot" width={150} height={150} />
         </Link>
 
         {/* Desktop Navigation - Centered */}
@@ -152,8 +154,8 @@ export default function Header() {
           )}
 
           {isAuthenticated && (
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-full">
+            <div className="relative">
+              <div className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-full cursor-pointer" onClick={() => setShowProfileDropdown((v) => !v)} ref={profileRef}>
                 <span className="w-8 h-8 flex items-center justify-center rounded-full bg-primary/20 text-primary font-semibold text-sm">
                   {(user?.firstName || user?.email || "U").charAt(0).toUpperCase()}
                 </span>
@@ -161,12 +163,15 @@ export default function Header() {
                   {user?.firstName || user?.email || "Profile"}
                 </span>
               </div>
-              <button
-                onClick={logout}
-                className="text-sm text-muted-foreground hover:text-primary transition"
-              >
-                Logout
-              </button>
+              {showProfileDropdown && (
+                <div className="absolute right-0 mt-2 w-44 bg-black/95 text-white rounded-lg shadow-lg py-2 z-50 animate-fade-in border border-border">
+                  <Link href={ROUTES.PROTECTED.PROFILE} className="block px-4 py-2 hover:bg-primary/10">Profile</Link>
+                  <button
+                    onClick={logout}
+                    className="w-full text-left px-4 py-2 text-muted-foreground hover:bg-destructive hover:text-white rounded-b"
+                  >Logout</button>
+                </div>
+              )}
             </div>
           )}
 

@@ -33,7 +33,7 @@ export default function HotelComponent() {
 
   return (
     <main className="bg-black min-h-screen">
-      <Header />
+      
 
       {/* Search Bar */}
       <div className="pt-24 pb-12 bg-secondary border-b border-border">
@@ -160,7 +160,7 @@ export default function HotelComponent() {
         </div>
       </div>
 
-      <Footer />
+     
     </main>
   )
 }

@@ -8,7 +8,6 @@ import { dummyBlogPosts } from "@/utils/dummy-data"
 export default function BlogDetails() {
   return (
     <main className="bg-background min-h-screen">
-      <Header />
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">
@@ -155,7 +154,6 @@ export default function BlogDetails() {
         </div>
       </section>
 
-      <Footer />
     </main>
   )
 }
