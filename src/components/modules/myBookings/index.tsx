@@ -5,11 +5,30 @@ import Footer from "@/components/Footer"
 import { useAppSelector, useAppDispatch } from "@/store/hook"
 import { cancelBookingFromMyBookings } from "@/store/actions/user-action"
 import { useRouter } from "next/navigation"
+import { openConfirmDialog } from "@/utils/CommonService"
 
 export default function MyBookingsPage() {
   const dispatch = useAppDispatch()
   const bookings = useAppSelector((state) => state.user.bookings)
   const router = useRouter()
+
+  const handleCancelBooking = (bookingId: string) => {
+    openConfirmDialog({
+      data: {
+        title: "Cancel Booking",
+        message: "Are you sure you want to cancel this booking?",
+      },
+      confirmText: "Yes",
+      cancelText: "Cancel",
+      onConfirm: () => {
+        dispatch(cancelBookingFromMyBookings(bookingId))
+      },
+      onCancel: () => {
+        console.log("Canceled")
+      },
+    })
+  }
+  
 
   return (
     <main className="bg-black min-h-screen">
@@ -99,7 +118,7 @@ export default function MyBookingsPage() {
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
-                          dispatch(cancelBookingFromMyBookings(booking.id))
+                          handleCancelBooking(booking.id as string)
                         }}
                         className="px-4 py-2 border border-border rounded-lg text-xs font-semibold text-muted-foreground hover:border-red-500 hover:text-red-500 transition"
                       >
