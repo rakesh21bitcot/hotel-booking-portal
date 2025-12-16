@@ -36,10 +36,10 @@ export function RegisterForm() {
     try {
       const validated = registerSchema.parse(formData)
       const result = await register(validated)
-
+      
       if (result.payload) {
         toast.success("Account created successfully!")
-        router.push(ROUTES.PROTECTED.DASHBOARD)
+        router.push(ROUTES.PUBLIC.LOGIN)
       }
     } catch (error) {
       if (error instanceof Error) {

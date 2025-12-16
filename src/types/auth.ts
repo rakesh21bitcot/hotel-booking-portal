@@ -7,6 +7,7 @@ export interface User {
   role: "user" | "admin"
   createdAt: string
   updatedAt: string
+  phone: string
 }
 
 export interface AuthCredentials {

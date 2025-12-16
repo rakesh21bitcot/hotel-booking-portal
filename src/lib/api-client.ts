@@ -1,4 +1,5 @@
 import type { ApiResponse } from "@/types/api"
+import { API_CONFIG } from "./config"
 
 /**
  * Custom API Error class for handling API errors
@@ -78,7 +79,7 @@ export interface RequestConfig extends RequestInit {
  * API Client class for making HTTP requests with error handling
  */
 class ApiClient {
-  private baseURL: string = ""
+  private baseURL: string = API_CONFIG.baseURL
   private defaultTimeout: number = 30000 // 30 seconds
   private defaultHeaders: HeadersInit = {
     "Content-Type": "application/json",
@@ -112,7 +113,7 @@ class ApiClient {
 
     // Try to get from localStorage (if using access_token)
     try {
-      const accessToken = localStorage.getItem("elitestay_token")
+      const accessToken = localStorage.getItem("auth_token")
       return accessToken
     } catch {
       return null

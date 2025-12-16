@@ -9,13 +9,7 @@ import type { RegisterInput } from "@/utils/validators"
 import type { ForgotPasswordInput, ResetPasswordInput } from "@/utils/validators"
 import { openConfirmDialog } from "@/utils/CommonService"
 import { ROUTES } from "@/utils/constants"
-
-// Stores signup credentials (used only for validating future logins)
-const SIGNUP_KEY = "eliteStaySignupUser"
-// Stores current logged-in user details to keep the user logged in
-const SESSION_KEY = "eliteStayLoggedInUser"
-// Stores password reset tokens
-const RESET_TOKEN_KEY = "eliteStayResetTokens"
+import { authApis } from "@/lib/APIs/authApis"
 
 export function useAuth() {
   const dispatch = useAppDispatch()
@@ -30,66 +24,58 @@ export function useAuth() {
   const login = async (credentials: LoginInput) => {
     setIsLoading(true)
     try {
-      if (typeof window === "undefined") {
-        return { payload: null }
-      }
+      const response: any = await authApis.login({
+        email: credentials.email,
+        password: credentials.password,
+      })
 
-      // Read signup data from sessionStorage only
-      const stored = window.sessionStorage.getItem(SIGNUP_KEY)
-      if (!stored) {
-        // No registered user
+      if (!response.success || !response.data) {
+        const errorMessage = response.error?.message || "Login failed. Please try again."
+        const errorPath = response.error?.code === "401" || response.error?.code === "404" 
+          ? ["password"] 
+          : ["email"]
+        
         throw new Error(
           JSON.stringify([
-            { path: ["email"], message: "No account found with this email. Please sign up first." },
+            { path: errorPath, message: errorMessage },
           ])
         )
       }
 
-      const storedUser = JSON.parse(stored) as {
-        email: string
-        password: string
-        firstName?: string
-        lastName?: string
-      }
-
-      if (storedUser.email !== credentials.email || storedUser.password !== credentials.password) {
-        throw new Error(
-          JSON.stringify([
-            { path: ["password"], message: "Email or password is incorrect." },
-          ])
-        )
-      }
-
-      const fakeToken = "local-session-token"
+      const { user, token, refreshToken } = response.data.data
 
       dispatch(
         loginAction({
-          access_token: fakeToken,
-          refresh_token: fakeToken,
-          user: {
-            email: storedUser.email,
-            firstName: storedUser.firstName,
-            lastName: storedUser.lastName,
-          },
-          token: fakeToken,
+          access_token: token,
+          refresh_token: refreshToken,
+          user: user,
+          token: token,
         })
       )
 
-      // Mark active login session (separate from signup credentials)
-      const session = {
-        email: storedUser.email,
-        firstName: storedUser.firstName,
-        lastName: storedUser.lastName,
+      // Also save to localStorage as backup
+      if (typeof window !== "undefined") {
+        localStorage.setItem("user_data", JSON.stringify(user))
       }
-      window.localStorage.setItem(SESSION_KEY, JSON.stringify(session))
 
       return {
         payload: {
-          email: storedUser.email,
-          firstName: storedUser.firstName,
-          lastName: storedUser.lastName,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
         },
       }
+    } catch (error: any) {
+      // Re-throw validation errors as-is
+      if (error.message && error.message.startsWith("[")) {
+        throw error
+      }
+      // Wrap other errors in the expected format
+      throw new Error(
+        JSON.stringify([
+          { path: ["email"], message: error.message || "An unexpected error occurred" },
+        ])
+      )
     } finally {
       setIsLoading(false)
     }
@@ -98,56 +84,48 @@ export function useAuth() {
   const register = async (userData: RegisterInput) => {
     setIsLoading(true)
     try {
-      if (typeof window === "undefined") {
-        return { payload: null }
+      const response: any = await authApis.register(userData)
+      
+
+      if (!response.success || !response.data) {
+        const errorMessage = response.error?.message || "Registration failed. Please try again."
+        const errorPath = response.error?.code === "409" 
+          ? ["email"] 
+          : ["email"]
+        
+        throw new Error(
+          JSON.stringify([
+            { path: errorPath, message: errorMessage },
+          ])
+        )
       }
 
-      const userToStore = {
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        email: userData.email,
-        password: userData.password,
-      }
-
-      // Persist signup credentials ONLY in sessionStorage for future logins
-      window.sessionStorage.setItem(SIGNUP_KEY, JSON.stringify(userToStore))
-
-      // Also create an active session on successful signup
-      const session = {
-        email: userData.email,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-      }
-      window.localStorage.setItem(SESSION_KEY, JSON.stringify(session))
-
-      const fakeToken = "local-session-token"
-
-      dispatch(
-        loginAction({
-          access_token: fakeToken,
-          refresh_token: fakeToken,
-          user: {
-            email: userData.email,
-            firstName: userData.firstName,
-            lastName: userData.lastName,
-          },
-          token: fakeToken,
-        })
-      )
-
+      const { user } = response.data?.data
+      
       return {
         payload: {
-          email: userData.email,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
         },
       }
+    } catch (error: any) {
+      // Re-throw validation errors as-is
+      if (error.message && error.message.startsWith("[")) {
+        throw error
+      }
+      // Wrap other errors in the expected format
+      throw new Error(
+        JSON.stringify([
+          { path: ["email"], message: error.message || "An unexpected error occurred" },
+        ])
+      )
     } finally {
       setIsLoading(false)
     }
   }
 
-  const logout = () => {
+  const logout = async () => {
     openConfirmDialog({
       data: {
         title: "Sign out",
@@ -155,35 +133,41 @@ export function useAuth() {
       },
       confirmText: "Logout",
       cancelText: "Stay",
-      onConfirm: () => {
-        if (typeof window !== "undefined") {
-          // Clear only the active login session in localStorage; keep signup data in sessionStorage
-          window.localStorage.removeItem(SESSION_KEY)
-        }
-        dispatch(logoutAction())
-        
-        // Check if user is on a protected route and redirect to home
-        const protectedRoutes = [
-          ROUTES.PROTECTED.DASHBOARD,
-          ROUTES.PROTECTED.MYBOOKING,
-          ROUTES.PROTECTED.BOOKINGS,
-          ROUTES.PROTECTED.PROFILE,
-          ROUTES.PROTECTED.WISHLIST,
-          ROUTES.PROTECTED.SETTINGS,
-          ROUTES.PROTECTED.CART,
-          ROUTES.PROTECTED.CHANGEPASSWORD,
-          ROUTES.ADMIN.DASHBOARD,
-          ROUTES.ADMIN.HOTELS,
-          ROUTES.ADMIN.BOOKINGS,
-          ROUTES.ADMIN.USERS,
-        ]
-        
-        const isOnProtectedRoute = protectedRoutes.some((route) => 
-          pathname.startsWith(route)
-        )
-        
-        if (isOnProtectedRoute) {
-          router.push(ROUTES.PUBLIC.HOME)
+      onConfirm: async () => {
+        setIsLoading(true)
+        try {
+          // Call logout API (this will clear storage on the API side)
+          await authApis.logout()
+        } catch (error) {
+          // Even if API call fails, clear local state
+          console.error("Logout API error:", error)
+        } finally {
+          dispatch(logoutAction())
+          setIsLoading(false)
+          
+          // Check if user is on a protected route and redirect to home
+          const protectedRoutes = [
+            ROUTES.PROTECTED.DASHBOARD,
+            ROUTES.PROTECTED.MYBOOKING,
+            ROUTES.PROTECTED.BOOKINGS,
+            ROUTES.PROTECTED.PROFILE,
+            ROUTES.PROTECTED.WISHLIST,
+            ROUTES.PROTECTED.SETTINGS,
+            ROUTES.PROTECTED.CART,
+            ROUTES.PROTECTED.CHANGEPASSWORD,
+            ROUTES.ADMIN.DASHBOARD,
+            ROUTES.ADMIN.HOTELS,
+            ROUTES.ADMIN.BOOKINGS,
+            ROUTES.ADMIN.USERS,
+          ]
+          
+          const isOnProtectedRoute = protectedRoutes.some((route) => 
+            pathname.startsWith(route)
+          )
+          
+          if (isOnProtectedRoute) {
+            router.push(ROUTES.PUBLIC.HOME)
+          }
         }
       },
     })
@@ -192,56 +176,38 @@ export function useAuth() {
   const forgotPassword = async (data: ForgotPasswordInput) => {
     setIsLoading(true)
     try {
-      if (typeof window === "undefined") {
-        return { payload: null }
-      }
+      const response = await authApis.forgotPassword(data)
 
-      // Check if user exists
-      const stored = window.sessionStorage.getItem(SIGNUP_KEY)
-      if (!stored) {
+      if (!response.success) {
+        const errorMessage = response.error?.message || "Failed to send password reset email. Please try again."
+        const errorPath = response.error?.code === "404" 
+          ? ["email"] 
+          : ["email"]
+        
         throw new Error(
           JSON.stringify([
-            { path: ["email"], message: "No account found with this email address." },
+            { path: errorPath, message: errorMessage },
           ])
         )
       }
-
-      const storedUser = JSON.parse(stored) as {
-        email: string
-        password: string
-        firstName?: string
-        lastName?: string
-      }
-
-      if (storedUser.email !== data.email) {
-        throw new Error(
-          JSON.stringify([
-            { path: ["email"], message: "No account found with this email address." },
-          ])
-        )
-      }
-
-      // Generate reset token (in real app, this would be sent via email)
-      const resetToken = `reset_${Date.now()}_${Math.random().toString(36).substring(7)}`
-      
-      // Store reset tokens (in real app, this would be in database)
-      const resetTokens = JSON.parse(window.localStorage.getItem(RESET_TOKEN_KEY) || "{}")
-      resetTokens[resetToken] = {
-        email: data.email,
-        expiresAt: Date.now() + 3600000, // 1 hour from now
-      }
-      window.localStorage.setItem(RESET_TOKEN_KEY, JSON.stringify(resetTokens))
-
-      // In a real app, you would send an email with the reset link
-      // For demo purposes, we'll log it to console
-      console.log(`Password reset link: ${window.location.origin}/reset-password?token=${resetToken}`)
 
       return {
         payload: {
           email: data.email,
-          message: "Password reset link sent to your email",
+          message: response.data?.message || "Password reset link sent to your email",
         },
       }
+    } catch (error: any) {
+      // Re-throw validation errors as-is
+      if (error.message && error.message.startsWith("[")) {
+        throw error
+      }
+      // Wrap other errors in the expected format
+      throw new Error(
+        JSON.stringify([
+          { path: ["email"], message: error.message || "An unexpected error occurred" },
+        ])
+      )
     } finally {
       setIsLoading(false)
     }
@@ -250,74 +216,37 @@ export function useAuth() {
   const resetPassword = async (data: ResetPasswordInput) => {
     setIsLoading(true)
     try {
-      if (typeof window === "undefined") {
-        return { payload: null }
-      }
+      const response = await authApis.resetPassword(data)
 
-      // Validate reset token
-      const resetTokens = JSON.parse(window.localStorage.getItem(RESET_TOKEN_KEY) || "{}")
-      const tokenData = resetTokens[data.token]
-
-      if (!tokenData) {
+      if (!response.success) {
+        const errorMessage = response.error?.message || "Failed to reset password. Please try again."
+        const errorPath = response.error?.code === "400" || response.error?.code === "404"
+          ? ["token"]
+          : ["password"]
+        
         throw new Error(
           JSON.stringify([
-            { path: ["token"], message: "Invalid or expired reset token. Please request a new one." },
+            { path: errorPath, message: errorMessage },
           ])
         )
       }
-
-      // Check if token is expired
-      if (Date.now() > tokenData.expiresAt) {
-        delete resetTokens[data.token]
-        window.localStorage.setItem(RESET_TOKEN_KEY, JSON.stringify(resetTokens))
-        throw new Error(
-          JSON.stringify([
-            { path: ["token"], message: "Reset token has expired. Please request a new one." },
-          ])
-        )
-      }
-
-      // Update password in stored user data
-      const stored = window.sessionStorage.getItem(SIGNUP_KEY)
-      if (!stored) {
-        throw new Error(
-          JSON.stringify([
-            { path: ["token"], message: "User account not found." },
-          ])
-        )
-      }
-
-      const storedUser = JSON.parse(stored) as {
-        email: string
-        password: string
-        firstName?: string
-        lastName?: string
-      }
-
-      if (storedUser.email !== tokenData.email) {
-        throw new Error(
-          JSON.stringify([
-            { path: ["token"], message: "Invalid reset token." },
-          ])
-        )
-      }
-
-      // Update password
-      const updatedUser = {
-        ...storedUser,
-        password: data.password,
-      }
-      window.sessionStorage.setItem(SIGNUP_KEY, JSON.stringify(updatedUser))
-
-      // Remove used token
-      delete resetTokens[data.token]
-      window.localStorage.setItem(RESET_TOKEN_KEY, JSON.stringify(resetTokens))
 
       return {
         payload: {
-          message: "Password reset successfully",
+          message: response.data?.message || "Password reset successfully",
         },
       }
+    } catch (error: any) {
+      // Re-throw validation errors as-is
+      if (error.message && error.message.startsWith("[")) {
+        throw error
+      }
+      // Wrap other errors in the expected format
+      throw new Error(
+        JSON.stringify([
+          { path: ["password"], message: error.message || "An unexpected error occurred" },
+        ])
+      )
     } finally {
       setIsLoading(false)
     }

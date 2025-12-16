@@ -6,9 +6,9 @@ let access_token = null
 let refresh_token = null
 let user = null
 
-access_token = Cookies.get("access_token");
+access_token = Cookies.get("auth_token");
 refresh_token = Cookies.get("refresh_token");
-user = Cookies.get("user") ? JSON.parse(Cookies.get("user") || "{}") : null;
+user = localStorage.getItem("user_data") ? JSON.parse(localStorage.getItem("user_data") || "{}") : null;
 
 interface AuthState {
   access_token: string | null;
@@ -29,9 +29,9 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state :any, action: PayloadAction<any>) => {
-      Cookies.set("access_token", action.payload.access_token);
+      Cookies.set("auth_token", action.payload.access_token);
       Cookies.set("refresh_token", action.payload.refresh_token);
-      Cookies.set("user", JSON.stringify(action.payload.user))
+      localStorage.setItem("user_data", JSON.stringify(action.payload.user))
       state.access_token = action.payload.access_token;
       state.refresh_token = action.payload.refresh_token;
       state.user = action.payload.user;
@@ -39,17 +39,16 @@ export const authSlice = createSlice({
       
     },
     updateUser: (state:any, action: PayloadAction<any>) => {
-      Cookies.set("user", JSON.stringify({ ...state.user, ...action.payload.user }))
+      localStorage.setItem("user", JSON.stringify({ ...state.user, ...action.payload.user }))
       state.user = { ...state.user, ...action.payload.user };
     },
     updateToken: (state:any, action: PayloadAction<any>) => {
       state.token = action.payload
     },
     logout: (state:any) => {
-      Cookies.remove("access_token");
+      Cookies.remove("auth_token");
       Cookies.remove("refresh_token");
-      Cookies.remove("user");
-      Cookies.remove("token");
+      localStorage.remove("user_data");
       state.access_token = "";
       state.refresh_token = "";
       state.user = "";
@@ -57,6 +56,6 @@ export const authSlice = createSlice({
     },
   }
 });
-export const { login, updateUser, logout,updateToken } = authSlice.actions;
+export const { login, updateUser, logout, updateToken } = authSlice.actions;
 
 export default authSlice.reducer;
