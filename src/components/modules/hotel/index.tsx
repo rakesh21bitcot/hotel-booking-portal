@@ -1,35 +1,82 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useAppSelector, useAppDispatch } from "@/store/hook"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { HotelCard, SearchBar } from "./components"
-import { allHotels } from "@/utils/dummy-data"
+import { fetchHotels, HotelFilters } from "@/store/actions/hotel-actions"
+import { useAuth } from "../auth/hooks/useAuth"
 
 
 export default function HotelComponent() {
+  const dispatch = useAppDispatch()
+  const {
+    hotels,
+    hotelsLoading,
+    hotelsTotal,
+    hotelsPage,
+    hotelsPageSize,
+    hotelsTotalPages,
+    error
+  } = useAppSelector((state) => state.hotel)
+  const { user } = useAuth()
   const [showFilters, setShowFilters] = useState(false)
-  const [priceRange, setPriceRange] = useState([0, 500])
-  const [selectedRating, setSelectedRating] = useState<number | null>(null)
-  const [sortBy, setSortBy] = useState("featured")
-  
-  
-
-  // Filter hotels
-  const filteredHotels = allHotels.filter((hotel) => {
-    const priceMatch = hotel.price >= priceRange[0] && hotel.price <= priceRange[1]
-    const ratingMatch = selectedRating === null || hotel.rating >= selectedRating
-    return priceMatch && ratingMatch
+  const [filters, setFilters] = useState<HotelFilters>({
+    userId: user?.id,
+    minPrice: 0,
+    maxPrice: 500,
+    maxRating: 5,
+    sortBy: 'featured'
   })
+  const [selectedRating, setSelectedRating] = useState<number | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [isFeatured, setIsFeatured] = useState<boolean | null>(null)
 
-  // Sort hotels
-  if (sortBy === "price-low") {
-    filteredHotels.sort((a, b) => a.price - b.price)
-  } else if (sortBy === "price-high") {
-    filteredHotels.sort((a, b) => b.price - a.price)
-  } else if (sortBy === "rating") {
-    filteredHotels.sort((a, b) => b.rating - a.rating)
+  // Fetch hotels on component mount and when filters change
+  useEffect(() => {
+    const hotelFilters: HotelFilters = {
+      ...filters,
+      maxRating: selectedRating || undefined,
+      isFeatured: isFeatured || undefined
+    }
+
+    dispatch(fetchHotels(hotelFilters, currentPage, 12))
+  }, [dispatch, filters, selectedRating, isFeatured, currentPage])
+
+  // Handle filter changes
+  const handlePriceRangeChange = (minPrice: number, maxPrice: number) => {
+    setFilters(prev => ({
+      ...prev,
+      minPrice,
+      maxPrice
+    }))
+    setCurrentPage(1) // Reset to first page when filters change
   }
+
+  const handleRatingChange = (rating: number | null) => {
+    setSelectedRating(rating)
+    setCurrentPage(1) // Reset to first page when filters change
+  }
+
+  const handleFeaturedChange = (featured: boolean | null) => {
+    setIsFeatured(featured)
+    setCurrentPage(1) // Reset to first page when filters change
+  }
+
+  const clearFilters = () => {
+    setFilters({
+      minPrice: 0,
+      maxPrice: 500,
+      minRating: 0,
+      maxRating: 5,
+      sortBy: 'featured'
+    })
+    setSelectedRating(null)
+    setIsFeatured(null)
+    setCurrentPage(1)
+  }
+
 
   return (
     <main className="bg-black min-h-screen">
@@ -43,6 +90,13 @@ export default function HotelComponent() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-12">
+        {/* Error Message */}
+        {error && (
+          <div className="mb-6 p-4 bg-red-500/10 border border-red-500 rounded-lg">
+            <p className="text-red-600 font-medium">{error}</p>
+          </div>
+        )}
+
         <div className="flex gap-8">
           {/* Sidebar */}
           <div className={`${showFilters ? "block" : "hidden"} md:block w-full md:w-64`}>
@@ -56,14 +110,14 @@ export default function HotelComponent() {
                   <input
                     type="range"
                     min="0"
-                    max="500"
-                    value={priceRange[1]}
-                    onChange={(e) => setPriceRange([priceRange[0], Number.parseInt(e.target.value)])}
+                    max="1000"
+                    value={filters.maxPrice || 500}
+                    onChange={(e) => handlePriceRangeChange(filters.minPrice || 0, Number.parseInt(e.target.value))}
                     className="w-full"
                   />
                   <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>${priceRange[0]}</span>
-                    <span>${priceRange[1]}</span>
+                    <span>${filters.minPrice || 0}</span>
+                    <span>${filters.maxPrice || 500}</span>
                   </div>
                 </div>
               </div>
@@ -78,7 +132,7 @@ export default function HotelComponent() {
                         type="radio"
                         name="rating"
                         checked={selectedRating === rating}
-                        onChange={() => setSelectedRating(rating)}
+                        onChange={() => handleRatingChange(rating)}
                         className="w-4 h-4"
                       />
                       <span className="text-sm">{rating}+ Stars</span>
@@ -87,12 +141,25 @@ export default function HotelComponent() {
                 </div>
               </div>
 
+              {/* Featured Hotels */}
+              <div className="mb-8">
+                <h4 className="font-semibold text-sm mb-4 text-foreground">Special Filters</h4>
+                <div className="space-y-3">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isFeatured === true}
+                      onChange={(e) => handleFeaturedChange(e.target.checked ? true : null)}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-sm">Featured Hotels Only</span>
+                  </label>
+                </div>
+              </div>
+
               {/* Clear Filters */}
               <button
-                onClick={() => {
-                  setPriceRange([0, 500])
-                  setSelectedRating(null)
-                }}
+                onClick={clearFilters}
                 className="w-full px-4 py-2 border border-border rounded text-sm font-semibold hover:border-primary hover:text-primary transition"
               >
                 Clear Filters
@@ -105,21 +172,30 @@ export default function HotelComponent() {
             {/* Controls */}
             <div className="flex justify-between items-center mb-8">
               <div>
-                <p className="text-muted-foreground">
-                  Showing <span className="font-semibold text-foreground">{filteredHotels.length}</span> results
-                </p>
+                {hotelsLoading ? (
+                  <p className="text-muted-foreground">Loading hotels...</p>
+                ) : (
+                  <p className="text-muted-foreground">
+                    Showing <span className="font-semibold text-foreground">{hotels.length}</span> of <span className="font-semibold text-foreground">{hotelsTotal}</span> results
+                  </p>
+                )}
               </div>
 
               <div className="flex items-center gap-4">
                 <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
+                  value={filters.sortBy}
+                  onChange={(e) => {
+                    const sortBy = e.target.value as "featured" | "price_low_to_high" | "price_high_to_low" | "highest_rating"
+                    setFilters(prev => ({ ...prev, sortBy }))
+                    setCurrentPage(1)
+                  }}
                   className="px-4 py-2 bg-card border border-border rounded text-sm"
+                  disabled={hotelsLoading}
                 >
                   <option value="featured">Featured</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="rating">Highest Rating</option>
+                  <option value="price_low_to_high">Price: Low to High</option>
+                  <option value="price_high_to_low">Price: High to Low</option>
+                  <option value="highest_rating">Highest Rating</option>
                 </select>
 
                 <button
@@ -140,22 +216,85 @@ export default function HotelComponent() {
             </div>
 
             {/* Hotels Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredHotels.map((hotel) => (
-                <HotelCard key={hotel.id} {...hotel} />
-              ))}
-            </div>
+            {hotelsLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div key={index} className="bg-card border border-border rounded-lg p-6 animate-pulse">
+                    <div className="h-48 bg-muted rounded-lg mb-4"></div>
+                    <div className="h-4 bg-muted rounded mb-2"></div>
+                    <div className="h-4 bg-muted rounded w-3/4 mb-4"></div>
+                    <div className="h-6 bg-muted rounded w-1/2"></div>
+                  </div>
+                ))}
+              </div>
+            ) : hotels.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {hotels.map((hotel: any) => (
+                  <HotelCard
+                    key={hotel.id}
+                    id={hotel.id}
+                    name={hotel.name}
+                    location={`${hotel.location.city}, ${hotel.location.country}`}
+                    rating={hotel.rating}
+                    price={hotel.price}
+                    image={hotel.images[0]}
+                    reviews={hotel.reviewCount}
+                    featured={hotel.is_featured}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground text-lg">No hotels found matching your criteria.</p>
+                <button
+                  onClick={clearFilters}
+                  className="mt-4 px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition"
+                >
+                  Clear Filters
+                </button>
+              </div>
+            )}
 
             {/* Pagination */}
-            <div className="flex justify-center gap-2 mt-12">
-              <button className="px-4 py-2 border border-border rounded hover:border-primary transition">
-                Previous
-              </button>
-              <button className="px-4 py-2 bg-primary text-primary-foreground rounded">1</button>
-              <button className="px-4 py-2 border border-border rounded hover:border-primary transition">2</button>
-              <button className="px-4 py-2 border border-border rounded hover:border-primary transition">3</button>
-              <button className="px-4 py-2 border border-border rounded hover:border-primary transition">Next</button>
-            </div>
+            {hotelsTotalPages > 1 && (
+              <div className="flex justify-center gap-2 mt-12">
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1 || hotelsLoading}
+                  className="px-4 py-2 border border-border rounded hover:border-primary transition disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Previous
+                </button>
+
+                {Array.from({ length: Math.min(5, hotelsTotalPages) }, (_, i) => {
+                  const pageNum = Math.max(1, Math.min(hotelsTotalPages - 4, currentPage - 2)) + i
+                  if (pageNum > hotelsTotalPages) return null
+
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      disabled={hotelsLoading}
+                      className={`px-4 py-2 rounded transition ${
+                        currentPage === pageNum
+                          ? 'bg-primary text-primary-foreground'
+                          : 'border border-border hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  )
+                })}
+
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(hotelsTotalPages, prev + 1))}
+                  disabled={currentPage === hotelsTotalPages || hotelsLoading}
+                  className="px-4 py-2 border border-border rounded hover:border-primary transition disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

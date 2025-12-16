@@ -9,20 +9,25 @@ import { ROUTES } from "@/utils/constants"
 import { toast } from "sonner"
 import { forWarning } from "@/utils/CommonService"
 
+interface Images {
+  url: string;
+  alt: string;
+}
 interface HotelCardProps {
   hotel?: {
     id: string
     name: string
     location: string
-    image: string
+    image: Images
     price: number
     rating: number
-    reviewCount: number
+    reviewCount: number | any
+    featured: boolean
   }
   id?: string
   name?: string
   location?: string
-  image?: string
+  image?: Images
   price?: number
   rating?: number
   reviews?: number
@@ -35,11 +40,11 @@ export default function HotelCard({
   id = hotel?.id || "",
   name = hotel?.name || "",
   location = hotel?.location || "",
-  image = hotel?.image || "",
+  image = hotel?.image,
   price = hotel?.price || 0,
   rating = hotel?.rating || 0,
   reviews = hotel?.reviewCount || 0,
-  featured,
+  featured = hotel?.featured,
   delay = 0,
 }: HotelCardProps) {
   const dispatch = useAppDispatch()
@@ -57,8 +62,8 @@ export default function HotelCard({
         <div className="relative overflow-hidden rounded-lg mb-4 bg-secondary aspect-video">
           {/* Image */}
           <img
-            src={image || "/placeholder.svg"}
-            alt={name}
+            src={image?.url}
+            alt={image?.alt}
             className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
           />
 

@@ -5,8 +5,8 @@ export interface CartHotel {
   id: string;
   name: string;
   location: string;
-  image: string;
-  price: number;
+  image: string | any;
+  price: number | string;
   rating: number;
   reviewCount: number;
 }

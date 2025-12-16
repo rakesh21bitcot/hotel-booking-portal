@@ -13,12 +13,12 @@ interface RoomCardProps {
   name: string
   type: string
   capacity: number
-  price: number
+  price: number | string
   image: string
   amenities: string[]
 }
 
-export default function RoomCard({ id, name, type, capacity, price, image, amenities }: RoomCardProps) {
+export default function RoomCard({ id, name, type, capacity, price, image }: RoomCardProps) {
   const dispatch = useAppDispatch()
   const cart = useAppSelector((state) => state.user.cart)
   const authState = useAppSelector((state) => state.auth)

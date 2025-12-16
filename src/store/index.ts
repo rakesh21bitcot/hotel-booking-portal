@@ -1,6 +1,7 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import authReducer from "./reducers/authReducer";
 import userReducer from "./reducers/userReducer";
+import hotelReducer from "./reducers/hotelReducer";
 
 
 
@@ -8,6 +9,7 @@ export const store = configureStore({
   reducer: {
     auth: authReducer,
     user: userReducer,
+    hotel: hotelReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

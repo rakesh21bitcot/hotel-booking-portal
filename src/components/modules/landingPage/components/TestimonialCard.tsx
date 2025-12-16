@@ -3,17 +3,17 @@
 interface TestimonialCardProps {
   testimonial?: {
     id: string
-    name: string
+    user_name: string
     role: string
     rating: number
-    message: string
+    comment?: string
     avatar: string
   }
-  name?: string
+  user_name?: string
   role?: string
   avatar?: string
   rating?: number
-  text?: string
+  comment?: string
   message?: string
   date?: string
   delay?: number
@@ -21,12 +21,11 @@ interface TestimonialCardProps {
 
 function TestimonialCard({
   testimonial,
-  name = testimonial?.name || "",
-  role = testimonial?.role || "",
+  user_name = testimonial?.user_name || "",
+  role = testimonial?.role || "Verified Guest",
   avatar = testimonial?.avatar || "",
   rating = testimonial?.rating || 5,
-  text = testimonial?.message || "",
-  message,
+  comment = testimonial?.comment || "",
   date = new Date().toLocaleDateString(),
   delay = 0,
 }: TestimonialCardProps) {
@@ -37,9 +36,9 @@ function TestimonialCard({
     >
       {/* Header */}
       <div className="flex items-center gap-4 mb-4">
-        <img src={avatar || "/placeholder.svg"} alt={name} className="w-12 h-12 rounded-full object-cover" />
+        <img src={avatar || "/placeholder.svg"} alt={user_name} className="w-12 h-12 rounded-full object-cover" />
         <div>
-          <h4 className="font-semibold text-foreground">{name}</h4>
+          <h4 className="font-semibold text-foreground">{user_name}</h4>
           <p className="text-xs text-muted-foreground">{role}</p>
         </div>
       </div>
@@ -54,7 +53,7 @@ function TestimonialCard({
       </div>
 
       {/* Text */}
-      <p className="text-foreground text-sm mb-4 leading-relaxed">"{text || message}"</p>
+      <p className="text-foreground text-sm mb-4 leading-relaxed">"{comment}"</p>
 
       {/* Date */}
       <p className="text-xs text-muted-foreground">{date}</p>
