@@ -75,26 +75,22 @@ export interface Reviews {
 
 export interface Room {
   id: string
-  hotelId: string
+  beds: beds[]
+  view: string
   title: string
-  type: string
-  description: string
-  images: Images[]
+  addons: any[]
+  images: { url: string }[]
   quantity: number
-  bedType: string
-  size: string
   amenities: string[]
-  price: number | string
-  base_price: string
-  availability: {
-    isAvailable: boolean
-    availableRooms: number
-  }
-  beds: beds[];
-  policies: {
-    smoking: boolean
-    pets: boolean
-    cancellation: string
+  size_sqft: number
+  base_price: number
+  description: string
+  air_conditioned: boolean
+  capacity_adults: number
+  capacity_children: number
+  hotel: {
+    id: string
+    name: string
   }
 }
 
@@ -177,7 +173,7 @@ export const getHotelDetails = async (hotelId: string): Promise<HotelDetailsResp
  * Get room details within a hotel
  */
 export const getRoomDetails = async (hotelId: string, roomId: string): Promise<RoomDetailsResponse> => {
-  const response = await errorHandler.handleApiCall(
+  const response: any = await errorHandler.handleApiCall(
     () => apiClient.get<RoomDetailsResponse>(`/hotel/${hotelId}/${roomId}`),
     "Fetch Room Details"
   )
@@ -185,7 +181,6 @@ export const getRoomDetails = async (hotelId: string, roomId: string): Promise<R
   if (!response || !response.success || !response.data) {
     throw new Error("Failed to fetch room details")
   }
-
   return response.data
 }
 

@@ -95,7 +95,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
                 <span className="mx-2">/</span>
               </>
             )}
-            <span>{room.name}</span>
+            <span>{room?.name}</span>
           </div>
         </div>
 
@@ -107,12 +107,12 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
               <div className="relative aspect-video bg-secondary rounded-lg overflow-hidden group">
                 <img
                   src={currentImage}
-                  alt={room.name}
+                  alt={room?.name}
                   className="w-full h-full object-cover"
                 />
 
                 {/* Navigation Buttons */}
-                {images.length > 1 && (
+                {images?.length > 1 && (
                   <>
                     <button
                       onClick={prevImage}
@@ -133,7 +133,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
 
                     {/* Image Counter */}
                     <div className="absolute bottom-4 right-4 bg-black/60 px-3 py-1 rounded text-sm text-white">
-                      {imageIndex + 1} / {images.length}
+                      {imageIndex + 1} / {images?.length}
                     </div>
                   </>
                 )}
@@ -142,7 +142,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
               {/* Thumbnail Strip */}
               {images.length > 1 && (
                 <div className="flex gap-4 overflow-x-auto pb-2">
-                  {images.map((image, i) => (
+                  {images?.map((image, i) => (
                     <button
                       key={i}
                       onClick={() => setImageIndex(i)}
@@ -173,7 +173,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
                           d="M12 4.354a4 4 0 110 5.292M15 12H9m6 0a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                       </svg>
-                      <span>Up to {room.capacity} guests</span>
+                      <span>Up to {room?.capacity} guests</span>
                     </div>
                   </div>
                   {hotel && (
@@ -186,7 +186,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
                           d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
                         />
                       </svg>
-                      <span>{hotel.location}</span>
+                      <span>{hotel?.location}</span>
                     </div>
                   )}
                 </div>
@@ -224,11 +224,11 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
               </div>
 
               {/* Description */}
-              {room.description && (
+              {room?.description && (
                 <section>
                   <h2 className="font-serif text-2xl font-semibold text-foreground mb-4">About This Room</h2>
                   <p className="text-muted-foreground text-lg leading-relaxed">
-                    {room.description}
+                    {room?.description}
                   </p>
                 </section>
               )}
@@ -237,7 +237,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
               <section>
                 <h2 className="font-serif text-2xl font-semibold text-foreground mb-6">Room Amenities</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                  {room.amenities.map((amenity, i) => (
+                  {room?.amenities?.map((amenity, i) => (
                     <div key={i} className="flex items-center gap-3">
                       <div className="text-primary text-xl">✓</div>
                       <span className="text-muted-foreground">{amenity}</span>
@@ -254,13 +254,13 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
                     <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 12H9m6 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span className="text-muted-foreground">Capacity: {room.capacity} guests</span>
+                    <span className="text-muted-foreground">Capacity: {room?.capacity} guests</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                     </svg>
-                    <span className="text-muted-foreground">Room Type: {room.type}</span>
+                    <span className="text-muted-foreground">Room Type: {room?.type}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -284,7 +284,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
                 {/* Price Display */}
                 <div className="bg-card border border-border rounded-lg p-6">
                   <div className="mb-4">
-                    <span className="text-4xl font-bold text-primary">${room.price}</span>
+                    <span className="text-4xl font-bold text-primary">${room?.price}</span>
                     <span className="text-muted-foreground ml-2">per night</span>
                   </div>
                   <RatingDisplay rating={4.5} reviewCount={128} />

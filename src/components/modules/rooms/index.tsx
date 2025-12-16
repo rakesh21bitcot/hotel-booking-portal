@@ -6,11 +6,11 @@ import { RoomDetails } from "./components"
 import { fetchRoomDetails } from "@/store/actions/hotel-actions"
 
 interface PageProps {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string; roomId?: string }>
 }
 
 export default function RoomPage({ params }: PageProps) {
-  const { id: roomId } = use(params)
+  const { id: hotelId, roomId } = use(params)
   const dispatch = useAppDispatch()
 
   const {
@@ -22,11 +22,11 @@ export default function RoomPage({ params }: PageProps) {
 
   useEffect(() => {
     // Try to get room details if we have both hotel and room IDs
-    if (currentHotel?.id && roomId) {
-      dispatch(fetchRoomDetails(currentHotel.id, roomId))
+    if (hotelId && roomId) {
+      dispatch(fetchRoomDetails(hotelId, roomId))
     }
-  }, [dispatch, currentHotel?.id, roomId])
-
+  }, [dispatch, hotelId, roomId])
+console.log(currentRoom, currentHotel)
   // Show loading state
   if (roomDetailsLoading) {
     return (
@@ -41,7 +41,7 @@ export default function RoomPage({ params }: PageProps) {
   }
 
   // Show error if no hotel context
-  if (!currentHotel) {
+  if (!currentRoom) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
@@ -68,7 +68,7 @@ export default function RoomPage({ params }: PageProps) {
           <h1 className="font-serif text-3xl font-bold text-foreground mb-4">Error Loading Room</h1>
           <p className="text-muted-foreground mb-6">{error}</p>
           <a
-            href={`/hotel/${currentHotel.id}`}
+            href={`/hotel/${hotelId}`}
             className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-accent transition inline-block mr-4"
           >
             Back to Hotel
@@ -92,7 +92,7 @@ export default function RoomPage({ params }: PageProps) {
           <h1 className="font-serif text-3xl font-bold text-foreground mb-4">Room Not Found</h1>
           <p className="text-muted-foreground mb-6">The room you're looking for doesn't exist.</p>
           <a
-            href={`/hotel/${currentHotel.id}`}
+            href={`/hotel/${hotelId}`}
             className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-accent transition inline-block mr-4"
           >
             Back to Hotel
@@ -111,21 +111,21 @@ export default function RoomPage({ params }: PageProps) {
   // Convert API room data to component format
   const roomData = {
     id: currentRoom.id,
-    name: currentRoom.name,
-    type: currentRoom.type,
-    capacity: currentRoom.maxOccupancy,
-    price: currentRoom.pricePerNight,
-    image: currentRoom.images[0] || "/placeholder.svg",
+    name: currentRoom.title,
+    type: currentRoom.view || "Standard",
+    capacity: currentRoom.quantity,
+    price: currentRoom.base_price,
+    image: currentRoom.images[0]?.url || "/placeholder.svg",
     amenities: currentRoom.amenities,
     description: currentRoom.description,
-    images: currentRoom.images,
-    hotelId: currentHotel.id,
+    images: currentRoom.images.map(img => img.url),
+    hotelId: currentRoom.hotel.id,
   }
 
   const hotelData = {
-    id: currentHotel.id,
-    name: currentHotel.name,
-    location: `${currentHotel.location.city}, ${currentHotel.location.country}`
+    id: currentRoom.hotel.id,
+    name: currentRoom.hotel.name,
+    location: currentHotel ? `${currentHotel.location.city}, ${currentHotel.location.country}` : ""
   }
 
   return <RoomDetails room={roomData} hotel={hotelData} />

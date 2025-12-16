@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { useAppSelector, useAppDispatch } from "@/store/hook"
-import Header from "@/components/Header"
-import Footer from "@/components/Footer"
 import { HotelCard, SearchBar } from "./components"
 import { fetchHotels, HotelFilters } from "@/store/actions/hotel-actions"
 import { useAuth } from "../auth/hooks/useAuth"
@@ -172,13 +170,9 @@ export default function HotelComponent() {
             {/* Controls */}
             <div className="flex justify-between items-center mb-8">
               <div>
-                {hotelsLoading ? (
-                  <p className="text-muted-foreground">Loading hotels...</p>
-                ) : (
-                  <p className="text-muted-foreground">
-                    Showing <span className="font-semibold text-foreground">{hotels.length}</span> of <span className="font-semibold text-foreground">{hotelsTotal}</span> results
-                  </p>
-                )}
+                <p className="text-muted-foreground">
+                  Showing <span className="font-semibold text-foreground">{hotels.length}</span> of <span className="font-semibold text-foreground">{hotelsTotal}</span> results
+                </p>
               </div>
 
               <div className="flex items-center gap-4">

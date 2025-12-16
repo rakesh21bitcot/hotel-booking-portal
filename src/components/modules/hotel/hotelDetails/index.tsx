@@ -28,7 +28,7 @@ export default function HotelDetailPage() {
   const authState = useAppSelector((state) => state.auth)
   const isAuthenticated = !!authState.access_token && !!authState.user
   const isInCart = currentHotel ? cart.some((h) => h.id === currentHotel.id) : false
-  console.log(currentHotel)
+  
   // Fetch hotel details on component mount
   useEffect(() => {
     if (hotelId) {
@@ -279,6 +279,7 @@ export default function HotelDetailPage() {
               <RoomCard
                 key={room.id}
                 id={room.id}
+                hotelId={currentHotel.id}
                 name={room.title}
                 type={room?.beds[0]?.type}
                 price={room?.base_price}
