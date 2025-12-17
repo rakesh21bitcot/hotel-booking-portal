@@ -1,3 +1,5 @@
+"use client"
+
 import type { ApiResponse } from "@/types/api"
 import { API_CONFIG } from "./config"
 
