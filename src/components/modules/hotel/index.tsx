@@ -111,7 +111,7 @@ export default function HotelComponent() {
         {/* Error Message */}
         {error && (
           <div className="mb-6 p-4 bg-red-500/10 border border-red-500 rounded-lg">
-            <p className="text-red-600 font-medium">{error} {process.env.NEXT_PUBLIC_API_BASE_URL}</p>
+            <p className="text-red-600 font-medium">{error}</p>
           </div>
         )}
 
