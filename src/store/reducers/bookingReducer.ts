@@ -53,6 +53,12 @@ export const bookingReducer = (state: BookingState = initialState, action: any):
         error: null
       }
 
+    case BOOKING_ACTIONS.CLEAR_BOOKINGS:
+      return {
+        ...state,
+        bookings: []
+      }
+
     default:
       return state
   }

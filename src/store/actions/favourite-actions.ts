@@ -83,7 +83,8 @@ export const FAVOURITE_ACTIONS = {
   ADD_TO_FAVOURITES: 'ADD_TO_FAVOURITES',
   REMOVE_FROM_FAVOURITES: 'REMOVE_FROM_FAVOURITES',
   SET_FAVOURITE_ERROR: 'SET_FAVOURITE_ERROR',
-  CLEAR_FAVOURITE_ERROR: 'CLEAR_FAVOURITE_ERROR'
+  CLEAR_FAVOURITE_ERROR: 'CLEAR_FAVOURITE_ERROR',
+  CLEAR_FAVOURITES: 'CLEAR_FAVOURITES'
 } as const
 
 // ============================================
@@ -117,6 +118,10 @@ export const setFavouriteError = (error: string) => ({
 
 export const clearFavouriteError = () => ({
   type: FAVOURITE_ACTIONS.CLEAR_FAVOURITE_ERROR
+})
+
+export const clearFavourites = () => ({
+  type: FAVOURITE_ACTIONS.CLEAR_FAVOURITES
 })
 
 // ============================================

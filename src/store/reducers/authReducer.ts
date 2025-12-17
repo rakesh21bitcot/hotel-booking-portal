@@ -56,12 +56,19 @@ export const authSlice = createSlice({
       state.token = action.payload
     },
     logout: (state:any) => {
+      // Clear all cookies
       Cookies.remove("auth_token");
       Cookies.remove("refresh_token");
-      localStorage.remove("user_data");
-      state.access_token = "";
-      state.refresh_token = "";
-      state.user = "";
+
+      // Clear all localStorage
+      if (typeof window !== "undefined") {
+        localStorage.clear();
+      }
+
+      // Reset state
+      state.access_token = null;
+      state.refresh_token = null;
+      state.user = null;
       state.token = ""
     },
   }

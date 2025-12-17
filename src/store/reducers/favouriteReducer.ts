@@ -51,6 +51,12 @@ export const favouriteReducer = (state: FavouriteState = initialState, action: a
         error: null
       }
 
+    case FAVOURITE_ACTIONS.CLEAR_FAVOURITES:
+      return {
+        ...state,
+        favourites: []
+      }
+
     default:
       return state
   }

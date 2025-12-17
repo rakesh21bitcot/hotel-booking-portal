@@ -119,7 +119,8 @@ export const BOOKING_ACTIONS = {
   ADD_BOOKING: 'ADD_BOOKING',
   UPDATE_BOOKING: 'UPDATE_BOOKING',
   SET_BOOKING_ERROR: 'SET_BOOKING_ERROR',
-  CLEAR_BOOKING_ERROR: 'CLEAR_BOOKING_ERROR'
+  CLEAR_BOOKING_ERROR: 'CLEAR_BOOKING_ERROR',
+  CLEAR_BOOKINGS: 'CLEAR_BOOKINGS'
 } as const
 
 // ============================================
@@ -153,6 +154,10 @@ export const setBookingError = (error: string) => ({
 
 export const clearBookingError = () => ({
   type: BOOKING_ACTIONS.CLEAR_BOOKING_ERROR
+})
+
+export const clearBookings = () => ({
+  type: BOOKING_ACTIONS.CLEAR_BOOKINGS
 })
 
 // ============================================

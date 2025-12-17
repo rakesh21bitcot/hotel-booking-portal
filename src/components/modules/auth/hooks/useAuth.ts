@@ -4,10 +4,13 @@ import { useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { useAppDispatch, useAppSelector } from "@/store/hook"
 import { login as loginAction, logout as logoutAction } from "@/store/reducers/authReducer"
+import { clearCart } from "@/store/reducers/userReducer"
+import { clearFavourites } from "@/store/actions/favourite-actions"
+import { clearBookings } from "@/store/actions/booking-actions"
 import type { LoginInput } from "@/utils/validators"
 import type { RegisterInput } from "@/utils/validators"
 import type { ForgotPasswordInput, ResetPasswordInput } from "@/utils/validators"
-import { openConfirmDialog } from "@/utils/CommonService"
+import { forSuccess, openConfirmDialog } from "@/utils/CommonService"
 import { ROUTES } from "@/utils/constants"
 import { authApis } from "@/lib/APIs/authApis"
 
@@ -138,11 +141,16 @@ export function useAuth() {
         try {
           // Call logout API (this will clear storage on the API side)
           await authApis.logout()
+          forSuccess("Logged out successfully")
         } catch (error) {
           // Even if API call fails, clear local state
           console.error("Logout API error:", error)
         } finally {
+          // Clear all user-specific data from Redux store
           dispatch(logoutAction())
+          dispatch(clearCart())
+          dispatch(clearFavourites())
+          dispatch(clearBookings())
           setIsLoading(false)
           
           // Check if user is on a protected route and redirect to home
@@ -166,7 +174,7 @@ export function useAuth() {
           )
           
           if (isOnProtectedRoute) {
-            router.push(ROUTES.PUBLIC.HOME)
+            router.push(ROUTES.PUBLIC.HOTELS)
           }
         }
       },
