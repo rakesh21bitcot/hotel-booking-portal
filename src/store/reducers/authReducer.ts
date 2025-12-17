@@ -8,7 +8,17 @@ let user = null
 
 access_token = Cookies.get("auth_token");
 refresh_token = Cookies.get("refresh_token");
-user = localStorage.getItem("user_data") ? JSON.parse(localStorage.getItem("user_data") || "{}") : null;
+user = (() => {
+  let stored = null;
+  if (typeof window !== "undefined" && window.localStorage) {
+    stored = window.localStorage.getItem("user_data");
+  }
+  try {
+    return stored ? JSON.parse(stored) : null;
+  } catch {
+    return null;
+  }
+})();
 
 interface AuthState {
   access_token: string | null;
