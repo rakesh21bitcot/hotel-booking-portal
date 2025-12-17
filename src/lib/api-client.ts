@@ -230,6 +230,7 @@ class ApiClient {
   async get<T>(endpoint: string, config: RequestConfig = {}): Promise<ApiResponse<T>> {
     const url = `${this.baseURL}${endpoint}`
     const headers = this.buildHeaders(config.headers)
+    console.log(this.baseURL, url)
     try {
       const response = await this.fetchWithTimeout(url, {
         ...config,
