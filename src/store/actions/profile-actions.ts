@@ -31,19 +31,13 @@ export interface ChangePasswordRequest {
 }
 
 export interface SettingsData {
-  notifications: boolean
+  enableNotifications: boolean
   emailNotifications: boolean
   pushNotifications: boolean
   bookingReminders: boolean
   newsletter: boolean
-  offers: boolean
+  specialOffers: boolean
   marketingEmails: boolean
-  twoFactorAuth: boolean
-  profileVisibility: 'public' | 'friends' | 'private'
-  dataSharing: boolean
-  currency: string
-  language: string
-  theme: 'light' | 'dark' | 'system'
 }
 
 export interface UpdateSettingsRequest extends Partial<SettingsData> {
@@ -58,28 +52,28 @@ export interface UpdateSettingsRequest extends Partial<SettingsData> {
  * Get user profile by ID
  */
 export const getProfile = async (userId: string): Promise<User> => {
-  const response = await errorHandler.handleApiCall(
+  const response: any = await errorHandler.handleApiCall(
     () => apiClient.get<User>(`/profile/${userId}`),
     "Fetch Profile"
   )
   if (!response || !response.success || !response.data) {
     throw new Error("Failed to fetch profile")
   }
-  return response.data
+  return response.data.profile
 }
 
 /**
  * Update user profile
  */
 export const updateProfile = async (profileData: UpdateProfileRequest): Promise<User> => {
-  const response = await errorHandler.handleApiCall(
+  const response: any = await errorHandler.handleApiCall(
     () => apiClient.put<User>(`/update-profile/${profileData.id}`, profileData),
     "Update Profile"
   )
   if (!response || !response.success || !response.data) {
     throw new Error("Failed to update profile")
   }
-  return response.data
+  return response.data.profile
 }
 
 /**
@@ -100,23 +94,25 @@ export const updateProfileWithRedux =
 /**
  * Get user settings by user ID
  */
-export const getSettings = async (userId: string): Promise<SettingsData> => {
-  const response = await errorHandler.handleApiCall(
+export const getSettings = async (userId: string): Promise<SettingsData | any> => {
+  const response: any = await errorHandler.handleApiCall(
     () => apiClient.get<SettingsData>(`/settings/${userId}`),
     "Fetch Settings"
   )
   if (!response || !response.success || !response.data) {
     throw new Error("Failed to fetch settings")
   }
-  return response.data
+  
+  return response.data.settings
 }
 
 /**
  * Update user settings
  */
 export const updateSettings = async (settingsData: UpdateSettingsRequest): Promise<SettingsData> => {
+  const { userId, ...payload } = settingsData
   const response = await errorHandler.handleApiCall(
-    () => apiClient.put<SettingsData>(`/update-settings/${settingsData.userId}`, settingsData),
+    () => apiClient.put<SettingsData>(`/update-settings/${userId}`, payload),
     "Update Settings"
   )
   if (!response || !response.success || !response.data) {
@@ -268,22 +264,8 @@ export const validatePasswordData = (data: ChangePasswordRequest): string[] => {
 export const validateSettingsData = (data: Partial<SettingsData>): string[] => {
   const errors: string[] = []
 
-  // Add any specific validation rules for settings if needed
-  if (data.currency && !['USD', 'EUR', 'GBP', 'INR', 'JPY', 'AUD', 'CAD'].includes(data.currency)) {
-    errors.push("Invalid currency selected")
-  }
-
-  if (data.language && !['en', 'hi', 'es', 'fr', 'de', 'zh', 'ja'].includes(data.language)) {
-    errors.push("Invalid language selected")
-  }
-
-  if (data.theme && !['light', 'dark', 'system'].includes(data.theme)) {
-    errors.push("Invalid theme selected")
-  }
-
-  if (data.profileVisibility && !['public', 'friends', 'private'].includes(data.profileVisibility)) {
-    errors.push("Invalid profile visibility selected")
-  }
+  // All fields are boolean, so no specific validation needed
+  // Add any specific validation rules for settings if needed in the future
 
   return errors
 }

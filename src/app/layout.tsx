@@ -41,7 +41,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`font-sans antialiased Marcellus serif`}>
-        <ThemeProvider defaultTheme="system" storageKey="eliteStay-theme">
+        <ThemeProvider defaultTheme="dark" storageKey="eliteStay-theme">
           <ReduxProvider>
             <ConditionalLayout>
               {children}

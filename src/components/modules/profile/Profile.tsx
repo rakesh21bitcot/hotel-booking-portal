@@ -23,9 +23,6 @@ export default function Profile() {
   const dispatch = useAppDispatch()
   const [activeTab, setActiveTab] = useState('profile');
 
-  console.log('Profile component - User from Redux:', user);
-  console.log('Profile component - Is authenticated:', isAuthenticated);
-console.log(user)
   // Profile states
   const [profileData, setProfileData] = useState<ProfileData>({
     firstName: user?.firstName || '',
@@ -52,19 +49,13 @@ console.log(user)
 
   // Settings states
   const [settingsData, setSettingsData] = useState<SettingsData>({
-    notifications: true,
-    emailNotifications: true,
+    enableNotifications: false,
+    emailNotifications: false,
     pushNotifications: false,
-    bookingReminders: true,
-    newsletter: true,
-    offers: false,
-    marketingEmails: false,
-    twoFactorAuth: false,
-    profileVisibility: 'public',
-    dataSharing: true,
-    currency: 'INR',
-    language: 'en',
-    theme: 'system'
+    bookingReminders: false,
+    newsletter: false,
+    specialOffers: false,
+    marketingEmails: false
   });
 
   // Loading and error states
@@ -78,11 +69,11 @@ console.log(user)
 
   // Load profile and settings data on component mount
   useEffect(() => {
-    if (user?.profile?.id) {
+    if (user?.id) {
       loadProfileData();
       loadSettingsData();
     }
-  }, [user?.profile?.id]);
+  }, []);
 
   // Initialize user data from localStorage if Redux state is empty
   const initializeUserData = () => {
@@ -126,7 +117,7 @@ console.log(user)
   }, [theme]);
 
   const loadProfileData = async () => {
-    if (!user?.profile?.id) return;
+    if (!user?.id) return;
     try {
       setIsLoading(true);
       console.log('Loading profile data for user ID:', user.id);
@@ -185,7 +176,7 @@ console.log(user)
   };
 
   const loadSettingsData = async () => {
-    if (!user?.profile?.id) return;
+    if (!user?.id) return;
     try {
       setIsLoading(true);
       const settings = await getSettings(user.id);
@@ -201,7 +192,7 @@ console.log(user)
   // Form handlers
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user?.profile?.id) return;
+    if (!user?.id) return;
 
     setProfileErrors([]);
     setSuccessMessage('');
@@ -260,7 +251,7 @@ console.log(user)
 
   const handleSettingsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user?.profile?.id) return;
+    if (!user?.id) return;
 
     setSettingsErrors([]);
     setSuccessMessage('');
@@ -278,10 +269,6 @@ console.log(user)
         ...settingsData
       });
 
-      // Update theme if changed
-      if (settingsData.theme !== theme) {
-        setTheme(settingsData.theme);
-      }
 
       setSuccessMessage('Settings updated successfully!');
       setTimeout(() => setSuccessMessage(''), 3000);
@@ -296,7 +283,7 @@ console.log(user)
     setSettingsData(prev => ({ ...prev, [key]: value }));
 
     // Handle dependent settings
-    if (key === 'notifications' && !value) {
+    if (key === 'enableNotifications' && !value) {
       setSettingsData(prev => ({
         ...prev,
         [key]: value,
@@ -306,7 +293,7 @@ console.log(user)
       }));
     }
   };
-  console.log(user)
+  
   // Manual refresh function for user data
   const refreshUserData = async () => {
     if (isAuthenticated && user?.profile?.id) {
@@ -845,8 +832,8 @@ console.log(user)
                       </div>
                       <Switch
                         id="notifications"
-                        checked={settingsData.notifications}
-                        onCheckedChange={(value) => handleSettingsChange('notifications', value)}
+                        checked={settingsData.enableNotifications}
+                        onCheckedChange={(value) => handleSettingsChange('enableNotifications', value)}
                       />
                     </div>
 
@@ -861,7 +848,7 @@ console.log(user)
                         id="emailNotifications"
                         checked={settingsData.emailNotifications}
                         onCheckedChange={(value) => handleSettingsChange('emailNotifications', value)}
-                        disabled={!settingsData.notifications}
+                        disabled={!settingsData.enableNotifications}
                       />
                     </div>
 
@@ -876,7 +863,7 @@ console.log(user)
                         id="pushNotifications"
                         checked={settingsData.pushNotifications}
                         onCheckedChange={(value) => handleSettingsChange('pushNotifications', value)}
-                        disabled={!settingsData.notifications}
+                        disabled={!settingsData.enableNotifications}
                       />
                     </div>
 
@@ -891,7 +878,7 @@ console.log(user)
                         id="bookingReminders"
                         checked={settingsData.bookingReminders}
                         onCheckedChange={(value) => handleSettingsChange('bookingReminders', value)}
-                        disabled={!settingsData.notifications}
+                        disabled={!settingsData.enableNotifications}
                       />
                     </div>
                   </div>
@@ -928,8 +915,8 @@ console.log(user)
                       </div>
                       <Switch
                         id="offers"
-                        checked={settingsData.offers}
-                        onCheckedChange={(value) => handleSettingsChange('offers', value)}
+                        checked={settingsData.specialOffers}
+                        onCheckedChange={(value) => handleSettingsChange('specialOffers', value)}
                       />
                     </div>
 
@@ -949,144 +936,8 @@ console.log(user)
                   </div>
                 </div>
                 
-                {/* Privacy & Security Section */}
-                <div className="space-y-5">
-                  <div className="flex items-center gap-3 pb-2 border-b border-border">
-                    <FaShieldAlt className="w-5 h-5 text-primary" />
-                    <h3 className="text-lg font-semibold text-foreground">Privacy & Security</h3>
-                  </div>
-
-                  <div className="space-y-4 pl-8">
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-border bg-muted/30 hover:bg-muted/50 transition-colors">
-                      <div className="flex-1">
-                        <Label htmlFor="twoFactorAuth" className="text-sm font-semibold text-foreground cursor-pointer">
-                          Two-Factor Authentication
-                        </Label>
-                        <p className="text-xs text-muted-foreground mt-1">Add an extra layer of security to your account</p>
-                      </div>
-                      <Switch
-                        id="twoFactorAuth"
-                        checked={settingsData.twoFactorAuth}
-                        onCheckedChange={(value) => handleSettingsChange('twoFactorAuth', value)}
-                      />
-                    </div>
-
-                    <div className="p-4 rounded-lg border border-border bg-muted/30">
-                      <Label htmlFor="profileVisibility" className="text-sm font-semibold text-foreground mb-2 block">
-                        Profile Visibility
-                      </Label>
-                      <select
-                        id="profileVisibility"
-                        value={settingsData.profileVisibility}
-                        onChange={(e) => handleSettingsChange('profileVisibility', e.target.value)}
-                        className="w-full h-10 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      >
-                        <option value="public">Public - Visible to everyone</option>
-                        <option value="friends">Friends Only - Visible to connections</option>
-                        <option value="private">Private - Only visible to you</option>
-                      </select>
-                      <p className="text-xs text-muted-foreground mt-2">Control who can see your profile information</p>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-border bg-muted/30 hover:bg-muted/50 transition-colors">
-                      <div className="flex-1">
-                        <Label htmlFor="dataSharing" className="text-sm font-semibold text-foreground cursor-pointer">
-                          Data Sharing for Personalization
-                        </Label>
-                        <p className="text-xs text-muted-foreground mt-1">Allow us to use your data to personalize your experience</p>
-                      </div>
-                      <Switch
-                        id="dataSharing"
-                        checked={settingsData.dataSharing}
-                        onCheckedChange={(value) => handleSettingsChange('dataSharing', value)}
-                      />
-                    </div>
-                  </div>
-                </div>
                 
-                {/* Regional Settings Section */}
-                <div className="space-y-5">
-                  <div className="flex items-center gap-3 pb-2 border-b border-border">
-                    <FaGlobe className="w-5 h-5 text-primary" />
-                    <h3 className="text-lg font-semibold text-foreground">Regional Settings</h3>
-                  </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pl-8">
-                    <div className="space-y-2">
-                      <Label htmlFor="currency" className="text-sm font-semibold text-foreground">
-                        Preferred Currency
-                      </Label>
-                      <select
-                        id="currency"
-                        value={settingsData.currency}
-                        onChange={(e) => handleSettingsChange('currency', e.target.value)}
-                        className="w-full h-11 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      >
-                        <option value="USD">USD - US Dollar ($)</option>
-                        <option value="EUR">EUR - Euro (€)</option>
-                        <option value="GBP">GBP - British Pound (£)</option>
-                        <option value="INR">INR - Indian Rupee (₹)</option>
-                        <option value="JPY">JPY - Japanese Yen (¥)</option>
-                        <option value="AUD">AUD - Australian Dollar (A$)</option>
-                        <option value="CAD">CAD - Canadian Dollar (C$)</option>
-                      </select>
-                      <p className="text-xs text-muted-foreground">Prices will be displayed in this currency</p>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="language" className="text-sm font-semibold text-foreground">
-                        Language
-                      </Label>
-                      <select
-                        id="language"
-                        value={settingsData.language}
-                        onChange={(e) => handleSettingsChange('language', e.target.value)}
-                        className="w-full h-11 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      >
-                        <option value="en">English</option>
-                        <option value="hi">हिंदी (Hindi)</option>
-                        <option value="es">Español (Spanish)</option>
-                        <option value="fr">Français (French)</option>
-                        <option value="de">Deutsch (German)</option>
-                        <option value="zh">中文 (Chinese)</option>
-                        <option value="ja">日本語 (Japanese)</option>
-                      </select>
-                      <p className="text-xs text-muted-foreground">Interface language preference</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Appearance Section */}
-                <div className="space-y-5">
-                  <div className="flex items-center gap-3 pb-2 border-b border-border">
-                    <FaPalette className="w-5 h-5 text-primary" />
-                    <h3 className="text-lg font-semibold text-foreground">Appearance</h3>
-                  </div>
-
-                  <div className="pl-8">
-                    <div className="p-4 rounded-lg border border-border bg-muted/30">
-                      <Label htmlFor="theme" className="text-sm font-semibold text-foreground mb-2 block">
-                        Theme
-                      </Label>
-                      <select
-                        id="theme"
-                        value={settingsData.theme}
-                        onChange={(e) => handleSettingsChange('theme', e.target.value)}
-                        className="w-full h-11 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      >
-                        <option value="light">Light</option>
-                        <option value="dark">Dark</option>
-                        <option value="system">System Default</option>
-                      </select>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        Choose your preferred color theme
-                        {settingsData.theme === "system" && (
-                          <span className="block mt-1">Currently using: {resolvedTheme === "dark" ? "Dark" : "Light"} (System)</span>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                </div>
 
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-3 sm:justify-end pt-6 border-t border-border">
@@ -1095,19 +946,13 @@ console.log(user)
                     onClick={() => {
                       // Reset to default settings
                       setSettingsData({
-                        notifications: true,
+                        enableNotifications: true,
                         emailNotifications: true,
                         pushNotifications: false,
                         bookingReminders: true,
                         newsletter: true,
-                        offers: false,
-                        marketingEmails: false,
-                        twoFactorAuth: false,
-                        profileVisibility: 'public',
-                        dataSharing: true,
-                        currency: 'INR',
-                        language: 'en',
-                        theme: 'system'
+                        specialOffers: false,
+                        marketingEmails: false
                       });
                       setSettingsErrors([]);
                     }}
