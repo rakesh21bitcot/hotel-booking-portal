@@ -2,6 +2,7 @@ import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import authReducer from "./reducers/authReducer";
 import userReducer from "./reducers/userReducer";
 import hotelReducer from "./reducers/hotelReducer";
+import favouriteReducer from "./reducers/favouriteReducer";
 
 
 
@@ -10,6 +11,7 @@ export const store = configureStore({
     auth: authReducer,
     user: userReducer,
     hotel: hotelReducer,
+    favourite: favouriteReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

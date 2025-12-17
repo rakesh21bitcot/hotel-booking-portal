@@ -13,8 +13,6 @@ export default function HotelComponent() {
     hotels,
     hotelsLoading,
     hotelsTotal,
-    hotelsPage,
-    hotelsPageSize,
     hotelsTotalPages,
     error
   } = useAppSelector((state) => state.hotel)
@@ -22,12 +20,13 @@ export default function HotelComponent() {
   const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState<HotelFilters>({
     location: "",
-    userId: user?.id,
+    userId: user?.profile?.id,
     minPrice: 0,
     maxPrice: 500,
     maxRating: 5,
     sortBy: 'featured'
   })
+
   const [selectedRating, setSelectedRating] = useState<number | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [isFeatured, setIsFeatured] = useState<boolean | null>(null)
@@ -243,17 +242,18 @@ export default function HotelComponent() {
               </div>
             ) : hotels.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {hotels.map((hotel: any) => (
+                {hotels?.map((hotel: any) => (
                   <HotelCard
-                    key={hotel.id}
-                    id={hotel.id}
-                    name={hotel.name}
-                    location={`${hotel.location.city}, ${hotel.location.country}`}
-                    rating={hotel.rating}
-                    price={hotel.price}
-                    image={hotel.images[0]}
-                    reviews={hotel.reviewCount}
-                    featured={hotel.is_featured}
+                    key={hotel?.id}
+                    id={hotel?.id}
+                    name={hotel?.name}
+                    location={`${hotel?.location?.city}, ${hotel?.location?.country}`}
+                    rating={hotel?.rating}
+                    price={hotel?.price}
+                    image={hotel?.images[0]}
+                    reviews={hotel?.reviewCount}
+                    featured={hotel?.is_featured}
+                    favourite={hotel?.isFavourite}
                   />
                 ))}
               </div>

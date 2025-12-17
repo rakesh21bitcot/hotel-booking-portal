@@ -16,7 +16,13 @@ export interface AuthCredentials {
 }
 
 export interface AuthResponse {
-  user: User
-  token: string
-  refreshToken: string
+  data: {
+    user: Profile
+    token: string
+    refreshToken: string
+  }
+}
+
+interface Profile {
+  profile: User
 }

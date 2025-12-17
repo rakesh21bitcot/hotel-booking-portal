@@ -1,13 +1,14 @@
  "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import Link from "next/link"
 import { useAppDispatch, useAppSelector } from "@/store/hook"
-import { addHotelToCart, removeHotelFromCart } from "@/store/actions/user-action"
+import { addFavourite, removeFavourite } from "@/store/actions/favourite-actions"
 import { useRouter } from "next/navigation"
 import { ROUTES } from "@/utils/constants"
 import { toast } from "sonner"
 import { forWarning } from "@/utils/CommonService"
+import { fetchHotels } from "@/store/actions/hotel-actions"
 
 interface Images {
   url: string;
@@ -33,6 +34,7 @@ interface HotelCardProps {
   reviews?: number
   featured?: boolean
   delay?: number
+  favourite: boolean
 }
 
 export default function HotelCard({
@@ -46,15 +48,45 @@ export default function HotelCard({
   reviews = hotel?.reviewCount || 0,
   featured = hotel?.featured,
   delay = 0,
+  favourite
 }: HotelCardProps) {
   const dispatch = useAppDispatch()
-  const cart = useAppSelector((state) => state.user.cart)
+  const favourites = useAppSelector((state) => state.favourite.favourites)
   const authState = useAppSelector((state) => state.auth)
   const isAuthenticated = !!authState.access_token && !!authState.user
   const router = useRouter()
 
-  const isInCart = useMemo(() => cart.some((h) => h.id === id), [cart, id])
-  const [isSaved, setIsSaved] = useState(isInCart)
+  const isFavourite = useMemo(() => favourites.some((fav) => fav.hotelId === id), [favourites, id])
+  const [isSaved, setIsSaved] = useState(isFavourite)
+
+  // Update local state when favourites change
+  useEffect(() => {
+    setIsSaved(isFavourite)
+  }, [isFavourite])
+
+
+  const handlefavourite = async (e: any) => {
+    e.preventDefault()
+    if (!isAuthenticated) {
+      forWarning("Please login or sign up to save favourites.")
+      router.push(ROUTES.PUBLIC.LOGIN)
+      return
+    }
+
+    // Optimistically update UI state for immediate visual feedback
+    setIsSaved(!isSaved)
+
+    try {
+      if (isFavourite) {
+        await dispatch(removeFavourite(id))
+      } else {
+        await dispatch(addFavourite(id))
+      }
+    } catch (error) {
+      // Revert UI state if API call fails
+      setIsSaved(isFavourite)
+    }
+  }
 
   return (
     <Link href={`/hotel/${id}`}>
@@ -81,37 +113,12 @@ export default function HotelCard({
 
           {/* Wishlist Button */}
           <button
-            onClick={(e) => {
-              e.preventDefault()
-              if (!isAuthenticated) {
-                forWarning("Please login or sign up to save favourites.")
-                router.push(ROUTES.PUBLIC.LOGIN)
-                return
-              }
-
-              if (isInCart) {
-                dispatch(removeHotelFromCart(id))
-                setIsSaved(false)
-              } else {
-                dispatch(
-                  addHotelToCart({
-                    id,
-                    name,
-                    location,
-                    image,
-                    price,
-                    rating,
-                    reviewCount: reviews,
-                  })
-                )
-                setIsSaved(true)
-              }
-            }}
+            onClick={(e) => handlefavourite(e)}
             className="absolute top-4 right-4 p-2 rounded-full bg-white/20 backdrop-blur hover:bg-white/40 transition"
           >
             <svg
-              className={`w-5 h-5 ${isInCart || isSaved ? "fill-red-500 text-red-500" : "text-white"}`}
-              fill={isInCart || isSaved ? "currentColor" : "none"}
+              className={`w-5 h-5 ${isFavourite || favourite || isSaved ? "fill-red-500 text-red-500" : "text-white"}`}
+              fill={isFavourite || favourite || isSaved ? "currentColor" : "none"}
               stroke="currentColor"
               viewBox="0 0 24 24"
             >

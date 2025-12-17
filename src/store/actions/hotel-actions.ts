@@ -58,6 +58,7 @@ export interface Hotel {
   createdAt: string
   updatedAt: string
   reviews: Reviews[]
+  isFavourite: boolean
 }
 
 export interface beds {

@@ -78,11 +78,11 @@ console.log(user)
 
   // Load profile and settings data on component mount
   useEffect(() => {
-    if (user?.id) {
+    if (user?.profile?.id) {
       loadProfileData();
       loadSettingsData();
     }
-  }, [user?.id]);
+  }, [user?.profile?.id]);
 
   // Initialize user data from localStorage if Redux state is empty
   const initializeUserData = () => {
@@ -126,7 +126,7 @@ console.log(user)
   }, [theme]);
 
   const loadProfileData = async () => {
-    if (!user?.id) return;
+    if (!user?.profile?.id) return;
     try {
       setIsLoading(true);
       console.log('Loading profile data for user ID:', user.id);
@@ -185,7 +185,7 @@ console.log(user)
   };
 
   const loadSettingsData = async () => {
-    if (!user?.id) return;
+    if (!user?.profile?.id) return;
     try {
       setIsLoading(true);
       const settings = await getSettings(user.id);
@@ -201,7 +201,7 @@ console.log(user)
   // Form handlers
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user?.id) return;
+    if (!user?.profile?.id) return;
 
     setProfileErrors([]);
     setSuccessMessage('');
@@ -260,7 +260,7 @@ console.log(user)
 
   const handleSettingsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user?.id) return;
+    if (!user?.profile?.id) return;
 
     setSettingsErrors([]);
     setSuccessMessage('');
@@ -309,7 +309,7 @@ console.log(user)
   console.log(user)
   // Manual refresh function for user data
   const refreshUserData = async () => {
-    if (isAuthenticated && user?.id) {
+    if (isAuthenticated && user?.profile?.id) {
       try {
         setIsLoading(true);
         await loadProfileData();

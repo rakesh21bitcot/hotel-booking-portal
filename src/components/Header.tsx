@@ -16,8 +16,7 @@ export default function Header() {
   const profileRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname()
   const { isAuthenticated, user, logout } = useAuth()
-  const cart = useAppSelector((state) => state.user.cart)
-
+  const favourites = useAppSelector((state) => state.favourite.favourites)
 
   const isActive = (path: string) => pathname === path
 
@@ -148,7 +147,7 @@ export default function Header() {
                   d="M12 21C12 21 4 13.28 4 8.5C4 5.42 6.42 3 9.5 3C11.24 3 12.91 3.81 14 5.08C15.09 3.81 16.76 3 18.5 3C21.58 3 24 5.42 24 8.5C24 13.28 16 21 16 21H12Z"
                 />
               </svg>
-              {cart?.length ? 
+              {favourites?.length ? 
                 <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
               : ""}
             </Link>

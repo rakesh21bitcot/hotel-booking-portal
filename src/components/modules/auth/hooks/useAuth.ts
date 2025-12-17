@@ -19,7 +19,7 @@ export function useAuth() {
   const [isLoading, setIsLoading] = useState(false)
 
   const isAuthenticated = !!authState.access_token && !!authState.user
-  const user = authState.user
+  const user: any = authState.user
 
   const login = async (credentials: LoginInput) => {
     setIsLoading(true)
