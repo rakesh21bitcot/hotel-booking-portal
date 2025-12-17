@@ -5,6 +5,7 @@ import { useAppSelector, useAppDispatch } from "@/store/hook"
 import { HotelCard, SearchBar } from "./components"
 import { fetchHotels, HotelFilters } from "@/store/actions/hotel-actions"
 import { useAuth } from "../auth/hooks/useAuth"
+import { API_CONFIG } from "@/lib/config"
 
 
 export default function HotelComponent() {
@@ -110,7 +111,7 @@ export default function HotelComponent() {
         {/* Error Message */}
         {error && (
           <div className="mb-6 p-4 bg-red-500/10 border border-red-500 rounded-lg">
-            <p className="text-red-600 font-medium">{error}</p>
+            <p className="text-red-600 font-medium">{error} {API_CONFIG.baseURL}</p>
           </div>
         )}
 
