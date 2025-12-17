@@ -22,7 +22,7 @@ export const ROUTES = {
   PROTECTED: {
     DASHBOARD: "/dashboard",
     MYBOOKING: "/my-booking",
-    BOOKINGS: "/bookings",
+    BOOKINGS: "/booking",
     PROFILE: "/profile",
     WISHLIST: "/wishlist",
     SETTINGS: "/settings",

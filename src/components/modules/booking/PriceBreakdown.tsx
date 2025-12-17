@@ -31,7 +31,7 @@ export default function PriceBreakdown({ roomPrice, nights, tax, fees, discount 
 
         <div className="flex justify-between">
           <span className="text-muted-foreground">Service Fees</span>
-          <span className="text-foreground font-medium">${fees.toFixed(2)}</span>
+          <span className="text-foreground font-medium">${fees?.toFixed(2)}</span>
         </div>
 
         {discount > 0 && (

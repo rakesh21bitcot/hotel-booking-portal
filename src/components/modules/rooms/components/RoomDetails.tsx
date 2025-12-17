@@ -4,6 +4,8 @@ import { useState } from "react"
 import Link from "next/link"
 import PriceBreakdown from "@/components/modules/booking/PriceBreakdown"
 import { RatingDisplay } from "@/components/modules/hotel/components"
+import { ROUTES } from "@/utils/constants"
+import { useRouter } from "next/navigation"
 
 interface RoomDetailsProps {
   room: {
@@ -33,7 +35,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
   const [checkOut, setCheckOut] = useState("")
   const [guests, setGuests] = useState(1)
   const [isSaved, setIsSaved] = useState(false)
-
+  const router = useRouter()
   // Calculate nights
   const nights = checkIn && checkOut 
     ? Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24))
@@ -43,7 +45,6 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
   const subtotal = room.price * nights
   const tax = subtotal * 0.1 // 10% tax
   const fees = 25 // Service fee
-  const total = subtotal + tax + fees
 
   // Use room.images if available, otherwise use room.image
   const images = room.images || [room.image]
@@ -58,17 +59,33 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
   }
 
   const handleBookNow = () => {
-    // Navigate to booking page with room details
-    const params = new URLSearchParams({
+    // Calculate total price
+    const nights = checkIn && checkOut ?
+      Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / (1000 * 60 * 60 * 24)) : 1
+    const subtotal = room.price * nights
+    const tax = subtotal * 0.1 // 10% tax
+    const total = subtotal + tax
+
+    // Store booking details in localStorage
+    const bookingDetails = {
       roomId: room.id,
+      hotelId: hotel.id,
       checkIn,
       checkOut,
       guests: guests.toString(),
-    })
-    if (hotel) {
-      params.append("hotelId", hotel.id)
+      price: room.price.toString(),
+      totalPrice: total.toString(),
+      nights: nights.toString(),
+      roomName: room.name,
+      hotelName: hotel.name,
+      hotelLocation: hotel.location,
+      timestamp: Date.now() // To manage expiration
     }
-    window.location.href = `/booking?${params.toString()}`
+
+    localStorage.setItem('bookingDetails', JSON.stringify(bookingDetails))
+
+    // Navigate to booking page
+    router.push(ROUTES.PROTECTED.BOOKINGS)
   }
 
   return (
@@ -146,7 +163,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
                     <button
                       key={i}
                       onClick={() => setImageIndex(i)}
-                      className={`h-20 w-28 rounded-lg overflow-hidden flex-shrink-0 border-2 transition ${
+                      className={`h-20 w-28 rounded-lg overflow-hidden shrink-0 border-2 transition ${
                         i === imageIndex ? "border-primary" : "border-border"
                       }`}
                     >

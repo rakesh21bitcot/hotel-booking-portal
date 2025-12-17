@@ -1,41 +1,140 @@
 "use client"
 
 import type React from "react"
-
-import Header from "@/components/Header"
-import Footer from "@/components/Footer"
 import PriceBreakdown from "./PriceBreakdown"
 import { useState } from "react"
-import { useAppDispatch } from "@/store/hook"
-import { addBookingToMyBookings } from "@/store/actions/user-action"
+import { useAppDispatch, useAppSelector } from "@/store/hook"
+import { createBookingWithRedux } from "@/store/actions/booking-actions"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+import { forSuccess } from "@/utils/CommonService"
+import { ROUTES } from "@/utils/constants"
 
 export default function BookingPage() {
   const dispatch = useAppDispatch()
   const router = useRouter()
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
+
+  // Get booking details from localStorage (stored by RoomDetails)
+  const bookingDetails = (() => {
+    try {
+      const stored = localStorage.getItem('bookingDetails')
+      return stored ? JSON.parse(stored) : null
+    } catch {
+      return null
+    }
+  })()
+
+  const roomId = bookingDetails?.roomId || ''
+  const hotelId = bookingDetails?.hotelId || ''
+  const checkIn = bookingDetails?.checkIn || ''
+  const checkOut = bookingDetails?.checkOut || ''
+  const guests = bookingDetails?.guests || '1'
+  const roomPrice = parseFloat(bookingDetails?.price || '0')
+
+  const { user } = useAppSelector((state) => state.auth)
+
+  const [userDetails, setUserDetails] = useState({
+    firstName: user?.firstName || "",
+    lastName: user?.lastName || "",
+    email: user?.email || "",
+    phoneNumber: user?.phone || "",
     specialRequests: "",
+  })
+
+  const [cardDetails, setCardDetails] = useState({
     cardNumber: "",
-    expiryDate: "",
+    expiryMonth: "",
+    expiryYear: "",
     cvv: "",
+    cardholderName: "",
   })
 
   const [step, setStep] = useState<"personal" | "payment" | "confirm">("personal")
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [bookingCompleted, setBookingCompleted] = useState(false)
+  const [createdBooking, setCreatedBooking] = useState<any>(null)
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  // Use pre-calculated total price from localStorage
+  const nights = bookingDetails?.nights ? parseInt(bookingDetails.nights) : 1
+  const subtotal = roomPrice * nights
+  const tax = subtotal * 0.1 // 10% tax
+  const fees = 25
+
+  // Validation functions
+  const validateUserDetails = () => {
+    const newErrors: Record<string, string> = {}
+
+    if (!userDetails.firstName.trim()) newErrors.firstName = "First name is required"
+    if (!userDetails.lastName.trim()) newErrors.lastName = "Last name is required"
+    if (!userDetails.email.trim()) newErrors.email = "Email is required"
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userDetails.email)) newErrors.email = "Invalid email format"
+    if (!userDetails.phoneNumber.trim()) newErrors.phoneNumber = "Phone number is required"
+    else if (!/^\d{10}$/.test(userDetails.phoneNumber.replace(/\s/g, ''))) newErrors.phoneNumber = "Phone number must be exactly 10 digits"
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const validateCardDetails = () => {
+    const newErrors: Record<string, string> = {}
+
+    if (!cardDetails.cardNumber.trim()) newErrors.cardNumber = "Card number is required"
+    else if (!/^\d{16}$/.test(cardDetails.cardNumber.replace(/\s/g, ''))) newErrors.cardNumber = "Card number must be exactly 16 digits"
+
+    if (!cardDetails.expiryMonth) newErrors.expiryMonth = "Expiry month is required"
+    if (!cardDetails.expiryYear) newErrors.expiryYear = "Expiry year is required"
+
+    const currentYear = new Date().getFullYear()
+    const currentMonth = new Date().getMonth() + 1
+    const expiryYear = parseInt(cardDetails.expiryYear)
+    const expiryMonth = parseInt(cardDetails.expiryMonth)
+
+    if (expiryYear < currentYear || (expiryYear === currentYear && expiryMonth < currentMonth)) {
+      newErrors.expiryMonth = "Card has expired"
+    }
+
+    if (!cardDetails.cvv.trim()) newErrors.cvv = "CVV is required"
+    else if (!/^\d{3}$/.test(cardDetails.cvv)) newErrors.cvv = "CVV must be exactly 3 digits"
+
+    if (!cardDetails.cardholderName.trim()) newErrors.cardholderName = "Cardholder name is required"
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleUserDetailsChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setUserDetails((prev) => ({ ...prev, [name]: value }))
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }))
+    }
+  }
+
+  const handleCardDetailsChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+
+    // Format card number with spaces
+    if (name === 'cardNumber') {
+      const formatted = value.replace(/\s/g, '').replace(/(\d{4})/g, '$1 ').trim()
+      setCardDetails((prev) => ({ ...prev, [name]: formatted }))
+    } else {
+      setCardDetails((prev) => ({ ...prev, [name]: value }))
+    }
+
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }))
+    }
   }
 
   const handleNextStep = () => {
     if (step === "personal") {
-      setStep("payment")
+      if (validateUserDetails()) {
+        setStep("payment")
+      }
     } else if (step === "payment") {
-      setStep("confirm")
+      if (validateCardDetails()) {
+        setStep("confirm")
+      }
     }
   }
 
@@ -47,28 +146,39 @@ export default function BookingPage() {
     }
   }
 
-  const handleCompleteBooking = () => {
-    const bookingId = `ELITE-${Date.now()}`
+  const handleCompleteBooking = async () => {
+    if (!user?.id || !hotelId || !roomId || !checkIn || !checkOut) {
+      toast.error("Missing booking information")
+      return
+    }
 
-    dispatch(
-      addBookingToMyBookings({
-        id: bookingId,
-        hotelId: "1",
-        hotelName: "Luxury Grand Hotel",
-        location: "New York, USA",
-        hotelImage: "/placeholder.svg",
-        checkIn: "Dec 20, 2024",
-        checkOut: "Dec 25, 2024",
-        nights: 5,
-        roomType: "Deluxe Room",
-        totalAmount: 250 * 5 + 125 + 50,
-        status: "Confirmed",
-        guestName: `${formData.firstName} ${formData.lastName}`.trim(),
-        email: formData.email,
-      })
-    )
+    try {
+      const bookingData = {
+        userId: parseInt(user.id),
+        hotelId,
+        roomId,
+        checkIn,
+        checkOut,
+        guestCount: parseInt(guests),
+        firstName: userDetails.firstName,
+        lastName: userDetails.lastName,
+        email: userDetails.email,
+        phoneNumber: userDetails.phoneNumber,
+      }
 
-    router.push("/my-booking")
+      const booking = await dispatch(createBookingWithRedux(bookingData))
+
+      // Clear booking details from localStorage after successful booking
+      localStorage.removeItem('bookingDetails')
+
+      // Set booking completed state and store booking details
+      setCreatedBooking(booking)
+      setBookingCompleted(true)
+
+      forSuccess("Booking confirmed successfully!")
+    } catch (error: any) {
+      toast.error(error.message || "Failed to create booking")
+    }
   }
 
   return (
@@ -113,8 +223,8 @@ export default function BookingPage() {
                         <input
                           type="text"
                           name="firstName"
-                          value={formData.firstName}
-                          onChange={handleInputChange}
+                          value={userDetails.firstName}
+                          onChange={handleUserDetailsChange}
                           placeholder="John"
                           className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
                         />
@@ -124,8 +234,8 @@ export default function BookingPage() {
                         <input
                           type="text"
                           name="lastName"
-                          value={formData.lastName}
-                          onChange={handleInputChange}
+                          value={userDetails.lastName}
+                          onChange={handleUserDetailsChange}
                           placeholder="Doe"
                           className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
                         />
@@ -137,8 +247,8 @@ export default function BookingPage() {
                       <input
                         type="email"
                         name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
+                        value={userDetails.email}
+                        onChange={handleUserDetailsChange}
                         placeholder="john@example.com"
                         className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
                       />
@@ -148,10 +258,11 @@ export default function BookingPage() {
                       <label className="block text-sm font-semibold text-muted-foreground mb-2">Phone Number</label>
                       <input
                         type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        placeholder="+1 (555) 000-0000"
+                        name="phoneNumber"
+                        value={userDetails.phoneNumber}
+                        onChange={handleUserDetailsChange}
+                        placeholder="1234567890"
+                        maxLength={10}
                         className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
                       />
                     </div>
@@ -160,8 +271,8 @@ export default function BookingPage() {
                       <label className="block text-sm font-semibold text-muted-foreground mb-2">Special Requests</label>
                       <textarea
                         name="specialRequests"
-                        value={formData.specialRequests}
-                        onChange={handleInputChange}
+                        value={userDetails.specialRequests}
+                        onChange={handleUserDetailsChange}
                         placeholder="Any special requests?"
                         rows={4}
                         className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
@@ -179,36 +290,77 @@ export default function BookingPage() {
                       <input
                         type="text"
                         name="cardNumber"
-                        value={formData.cardNumber}
-                        onChange={handleInputChange}
-                        placeholder="1234 5678 9012 3456"
+                        value={cardDetails.cardNumber}
+                        onChange={(e) => handleCardDetailsChange(e)}
+                        placeholder="123456789012"
+                        maxLength={19}
                         className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
                       />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-semibold text-muted-foreground mb-2">Expiry Date</label>
-                        <input
-                          type="text"
-                          name="expiryDate"
-                          value={formData.expiryDate}
-                          onChange={handleInputChange}
-                          placeholder="MM/YY"
+                        <label className="block text-sm font-semibold text-muted-foreground mb-2">Expiry Month</label>
+                        <select
+                          name="expiryMonth"
+                          value={cardDetails.expiryMonth}
+                          onChange={(e) => handleCardDetailsChange(e)}
                           className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
-                        />
+                        >
+                          <option value="">Month</option>
+                          {Array.from({ length: 12 }, (_, i) => (
+                            <option key={i + 1} value={(i + 1).toString().padStart(2, '0')}>
+                              {(i + 1).toString().padStart(2, '0')}
+                            </option>
+                          ))}
+                        </select>
                       </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-muted-foreground mb-2">Expiry Year</label>
+                        <select
+                          name="expiryYear"
+                          value={cardDetails.expiryYear}
+                          onChange={(e) => handleCardDetailsChange(e)}
+                          className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
+                        >
+                          <option value="">Year</option>
+                          {Array.from({ length: 10 }, (_, i) => {
+                            const year = new Date().getFullYear() + i
+                            return (
+                              <option key={year} value={year.toString()}>
+                                {year}
+                              </option>
+                            )
+                          })}
+                        </select>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 mt-4">
+                      <div></div>
                       <div>
                         <label className="block text-sm font-semibold text-muted-foreground mb-2">CVV</label>
                         <input
                           type="text"
                           name="cvv"
-                          value={formData.cvv}
-                          onChange={handleInputChange}
+                          value={cardDetails.cvv}
+                          onChange={(e) => handleCardDetailsChange(e)}
                           placeholder="123"
+                          maxLength={3}
                           className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
                         />
                       </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-muted-foreground mb-2">Cardholder Name</label>
+                      <input
+                        type="text"
+                        name="cardholderName"
+                        value={cardDetails.cardholderName}
+                        onChange={(e) => handleCardDetailsChange(e)}
+                        placeholder="John Doe"
+                        className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
+                      />
                     </div>
 
                     <label className="flex items-center gap-3">
@@ -218,7 +370,7 @@ export default function BookingPage() {
                   </div>
                 )}
 
-                {step === "confirm" && (
+                {step === "confirm" && !bookingCompleted && (
                   <div className="space-y-6">
                     <h2 className="font-serif text-2xl font-semibold text-foreground">Confirm Booking</h2>
 
@@ -226,63 +378,124 @@ export default function BookingPage() {
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Guest Name:</span>
                         <span className="text-foreground font-semibold">
-                          {formData.firstName} {formData.lastName}
+                          {userDetails.firstName} {userDetails.lastName}
                         </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Email:</span>
-                        <span className="text-foreground font-semibold">{formData.email}</span>
+                        <span className="text-foreground font-semibold">{userDetails.email}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Phone:</span>
-                        <span className="text-foreground font-semibold">{formData.phone}</span>
+                        <span className="text-foreground font-semibold">{userDetails.phoneNumber}</span>
                       </div>
                       <div className="border-t border-border pt-3 flex justify-between">
                         <span className="text-muted-foreground">Check-in Date:</span>
-                        <span className="text-foreground font-semibold">Dec 20, 2024</span>
+                        <span className="text-foreground font-semibold">{checkIn ? new Date(checkIn).toLocaleDateString() : 'Not selected'}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Check-out Date:</span>
-                        <span className="text-foreground font-semibold">Dec 25, 2024</span>
+                        <span className="text-foreground font-semibold">{checkOut ? new Date(checkOut).toLocaleDateString() : 'Not selected'}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Room Type:</span>
-                        <span className="text-foreground font-semibold">Deluxe Room</span>
+                        <span className="text-foreground font-semibold">{bookingDetails?.roomName || 'Room'}</span>
+                      </div>
+                      <div className="border-t border-border pt-3 flex justify-between">
+                        <span className="text-muted-foreground">Hotel:</span>
+                        <span className="text-foreground font-semibold">{bookingDetails?.hotelName || 'Hotel'}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Guests:</span>
+                        <span className="text-foreground font-semibold">{guests} Guest{guests !== '1' ? 's' : ''}</span>
                       </div>
                     </div>
+                  </div>
+                )}
+
+                {bookingCompleted && createdBooking && (
+                  <div className="space-y-6">
+                    <h2 className="font-serif text-2xl font-semibold text-foreground">Booking Confirmed!</h2>
 
                     <div className="bg-green-500/10 border border-green-500/30 rounded p-6 text-center">
-                      <p className="text-green-400 font-semibold mb-2">Booking Confirmed!</p>
-                      <p className="text-sm text-muted-foreground">
-                        A confirmation email has been sent to {formData.email}
+                      <p className="text-green-400 font-semibold mb-2">Your booking has been confirmed</p>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        A confirmation email has been sent to {userDetails.email}
                       </p>
-                      <p className="text-sm text-foreground font-semibold mt-3">Booking Reference: ELITE-2024-12345</p>
+                      <div className="space-y-2">
+                        <p className="text-sm text-muted-foreground">Booking Reference:</p>
+                        <p className="text-lg text-foreground font-semibold">{createdBooking.id}</p>
+                      </div>
                     </div>
+                    {!bookingCompleted && (
+                      <div className="bg-secondary border border-border rounded p-6 space-y-3">
+                        <h3 className="font-semibold text-foreground mb-4">Booking Details</h3>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Guest Name:</span>
+                          <span className="text-foreground font-semibold">
+                            {userDetails.firstName} {userDetails.lastName}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Hotel:</span>
+                          <span className="text-foreground font-semibold">{bookingDetails?.hotelName || 'Hotel'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Room Type:</span>
+                          <span className="text-foreground font-semibold">{bookingDetails?.roomName || 'Room'}</span>
+                        </div>
+                        <div className="border-t border-border pt-3 flex justify-between">
+                          <span className="text-muted-foreground">Check-in:</span>
+                          <span className="text-foreground font-semibold">{checkIn ? new Date(checkIn).toLocaleDateString() : 'Not selected'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Check-out:</span>
+                          <span className="text-foreground font-semibold">{checkOut ? new Date(checkOut).toLocaleDateString() : 'Not selected'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Total Amount:</span>
+                          <span className="text-foreground font-semibold">${createdBooking.totalPrice || (subtotal + tax + fees).toFixed(2)}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {/* Navigation Buttons */}
                 <div className="flex gap-4 mt-8 pt-8 border-t border-border">
-                  <button
-                    onClick={handlePrevStep}
-                    disabled={step === "personal"}
-                    className="px-6 py-3 border border-border rounded font-semibold hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition"
-                  >
-                    Previous
-                  </button>
-                  <button
-                    onClick={step === "confirm" ? handleCompleteBooking : handleNextStep}
-                    className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition"
-                  >
-                    {step === "confirm" ? "Go To My Booking" : "Continue"}
-                  </button>
+                  {!bookingCompleted && (
+                    <>
+                      <button
+                        onClick={handlePrevStep}
+                        disabled={step === "personal"}
+                        className="px-6 py-3 border border-border rounded font-semibold hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition"
+                      >
+                        Previous
+                      </button>
+                      <button
+                        onClick={step === "confirm" ? handleCompleteBooking : handleNextStep}
+                        className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition"
+                      >
+                        {step === "confirm" ? "Confirm Booking" : "Continue"}
+                      </button>
+                    </>
+                  )}
+                  {bookingCompleted && (
+                    <button
+                      type="button"
+                      onClick={() => router.push(ROUTES.PROTECTED.MYBOOKING)}
+                      className="w-full px-6 py-3 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition"
+                    >
+                      View My Bookings
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
 
             {/* Sidebar - Price Breakdown */}
             <div>
-              <PriceBreakdown roomPrice={250} nights={5} tax={125} fees={50} discount={0} />
+              <PriceBreakdown roomPrice={roomPrice} nights={nights} tax={tax} fees={fees} discount={0} />
 
               {/* Hotel Summary */}
               <div className="bg-card border border-border rounded-lg p-6 mt-8">
@@ -290,15 +503,19 @@ export default function BookingPage() {
                 <div className="space-y-4 text-sm">
                   <div>
                     <p className="text-muted-foreground mb-1">Hotel</p>
-                    <p className="text-foreground font-semibold">Luxury Grand Hotel</p>
+                    <p className="text-foreground font-semibold">{bookingDetails?.hotelName || 'Hotel'}</p>
                   </div>
                   <div>
                     <p className="text-muted-foreground mb-1">Room Type</p>
-                    <p className="text-foreground font-semibold">Deluxe Room</p>
+                    <p className="text-foreground font-semibold">{bookingDetails?.roomName || 'Room'}</p>
                   </div>
                   <div>
                     <p className="text-muted-foreground mb-1">Duration</p>
-                    <p className="text-foreground font-semibold">5 Nights</p>
+                    <p className="text-foreground font-semibold">{nights} Night{nights !== 1 ? 's' : ''}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground mb-1">Guests</p>
+                    <p className="text-foreground font-semibold">{guests} Guest{guests !== '1' ? 's' : ''}</p>
                   </div>
                 </div>
               </div>

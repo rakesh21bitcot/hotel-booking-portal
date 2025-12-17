@@ -285,7 +285,6 @@ export const fetchHotelDetails = (hotelId: string) => {
       dispatch(clearHotelError())
 
       const hotelData = await getHotelDetails(hotelId)
-debugger
       dispatch(setHotelDetails(hotelData))
     } catch (error: any) {
       dispatch(setHotelError(error.message || 'Failed to fetch hotel details'))

@@ -3,6 +3,7 @@ import authReducer from "./reducers/authReducer";
 import userReducer from "./reducers/userReducer";
 import hotelReducer from "./reducers/hotelReducer";
 import favouriteReducer from "./reducers/favouriteReducer";
+import bookingReducer from "./reducers/bookingReducer";
 
 
 
@@ -12,6 +13,7 @@ export const store = configureStore({
     user: userReducer,
     hotel: hotelReducer,
     favourite: favouriteReducer,
+    booking: bookingReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
