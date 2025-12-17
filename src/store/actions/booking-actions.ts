@@ -27,7 +27,7 @@ export interface BookingResponse {
   lastName: string
   email: string
   phoneNumber: string
-  price: number
+  totalPrice: number;
   status: 'confirmed' | 'cancelled' | 'pending'
   createdAt: string
   updatedAt: string

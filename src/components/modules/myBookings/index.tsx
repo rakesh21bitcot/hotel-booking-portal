@@ -144,7 +144,7 @@ export default function MyBookingsPage() {
                   <div className="flex items-center justify-between pt-2">
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">Total amount</p>
-                      <p className="text-xl font-bold text-primary">${booking?.price?.toFixed(2) || '100'}</p>
+                      <p className="text-xl font-bold text-primary">${booking?.totalPrice?.toFixed(2) || '100'}</p>
                     </div>
 
                     {booking.status === "confirmed" && (

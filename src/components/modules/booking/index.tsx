@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { forSuccess } from "@/utils/CommonService"
 import { ROUTES } from "@/utils/constants"
+import { Loader2 } from "lucide-react"
 
 export default function BookingPage() {
   const dispatch = useAppDispatch()
@@ -53,6 +54,7 @@ export default function BookingPage() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [bookingCompleted, setBookingCompleted] = useState(false)
   const [createdBooking, setCreatedBooking] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   // Use pre-calculated total price from localStorage
   const nights = bookingDetails?.nights ? parseInt(bookingDetails.nights) : 1
@@ -151,7 +153,7 @@ export default function BookingPage() {
       toast.error("Missing booking information")
       return
     }
-
+    setIsLoading(true)
     try {
       const bookingData = {
         userId: parseInt(user.id),
@@ -164,10 +166,11 @@ export default function BookingPage() {
         lastName: userDetails.lastName,
         email: userDetails.email,
         phoneNumber: userDetails.phoneNumber,
+        totalPrice: (subtotal + tax + fees).toFixed(2),
       }
 
       const booking = await dispatch(createBookingWithRedux(bookingData))
-
+      setIsLoading(false)
       // Clear booking details from localStorage after successful booking
       localStorage.removeItem('bookingDetails')
 
@@ -177,7 +180,10 @@ export default function BookingPage() {
 
       forSuccess("Booking confirmed successfully!")
     } catch (error: any) {
+      setIsLoading(false)
       toast.error(error.message || "Failed to create booking")
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -473,10 +479,11 @@ export default function BookingPage() {
                         Previous
                       </button>
                       <button
+                       disabled={isLoading}
                         onClick={step === "confirm" ? handleCompleteBooking : handleNextStep}
-                        className="flex-1 px-6 py-3 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition"
+                        className="flex-1 flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition"
                       >
-                        {step === "confirm" ? "Confirm Booking" : "Continue"}
+                        {step === "confirm" ? "Confirm Booking" : "Continue"} {isLoading && <Loader2 className="w-4 h-4 animate-spin ml-2" />}
                       </button>
                     </>
                   )}
