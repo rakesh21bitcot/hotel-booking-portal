@@ -79,7 +79,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<A
   }
 }
 
-const persistSession = (payload: AuthResponse) => {
+const persistSession = (payload: AuthResponse | any) => {
   storage.setToken(payload.token)
   storage.setRefreshToken(payload.refreshToken)
   storage.setUser(payload.user as unknown as Record<string, unknown>)
