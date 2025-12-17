@@ -21,6 +21,7 @@ export default function HotelComponent() {
   const { user } = useAuth()
   const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState<HotelFilters>({
+    location: "",
     userId: user?.id,
     minPrice: 0,
     maxPrice: 500,
@@ -30,6 +31,7 @@ export default function HotelComponent() {
   const [selectedRating, setSelectedRating] = useState<number | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [isFeatured, setIsFeatured] = useState<boolean | null>(null)
+  const [searchLocation, setSearchLocation] = useState("")
 
   // Fetch hotels on component mount and when filters change
   useEffect(() => {
@@ -62,6 +64,18 @@ export default function HotelComponent() {
     setCurrentPage(1) // Reset to first page when filters change
   }
 
+  const handleSearch = (searchFilters: { location: string; checkIn: string; checkOut: string; guests: string }) => {
+    setFilters(prev => ({
+      ...prev,
+      location: searchFilters.location
+    }))
+    setCurrentPage(1) // Reset to first page when search changes
+  }
+
+  const handleLocationChange = (location: string) => {
+    setSearchLocation(location)
+  }
+
   const clearFilters = () => {
     setFilters({
       minPrice: 0,
@@ -72,6 +86,7 @@ export default function HotelComponent() {
     })
     setSelectedRating(null)
     setIsFeatured(null)
+    setSearchLocation("")
     setCurrentPage(1)
   }
 
@@ -83,7 +98,12 @@ export default function HotelComponent() {
       {/* Search Bar */}
       <div className="pt-24 pb-12 bg-secondary border-b border-border" >
         <div className="max-w-7xl mx-auto px-4">
-          <SearchBar compact />
+          <SearchBar
+            compact
+            location={searchLocation}
+            onLocationChange={handleLocationChange}
+            onSearch={handleSearch}
+          />
         </div>
       </div>
 

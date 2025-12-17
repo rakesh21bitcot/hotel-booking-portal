@@ -2,14 +2,34 @@
 
 import { useState } from "react"
 
-export default function SearchBar({ compact = false }) {
-  const [location, setLocation] = useState("")
+interface SearchBarProps {
+  compact?: boolean
+  location?: string
+  onLocationChange?: (location: string) => void
+  onSearch?: (filters: { location: string; checkIn: string; checkOut: string; guests: string }) => void
+}
+
+export default function SearchBar({
+  compact = false,
+  location: externalLocation,
+  onLocationChange,
+  onSearch
+}: SearchBarProps) {
+  const [internalLocation, setInternalLocation] = useState("")
   const [checkIn, setCheckIn] = useState("")
   const [checkOut, setCheckOut] = useState("")
   const [guests, setGuests] = useState("1")
 
+  // Use external location if provided, otherwise use internal state
+  const location = externalLocation !== undefined ? externalLocation : internalLocation
+  const setLocation = onLocationChange || setInternalLocation
+
   const handleSearch = () => {
-    console.log("[v0] Searching for hotels:", { location, checkIn, checkOut, guests })
+    if (onSearch) {
+      onSearch({ location, checkIn, checkOut, guests })
+    } else {
+      console.log("[v0] Searching for hotels:", { location, checkIn, checkOut, guests })
+    }
   }
 
   if (compact) {

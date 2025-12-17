@@ -19,8 +19,8 @@ export default function RatingDisplay({ rating, reviewCount, showLabel = true }:
 
       {showLabel && (
         <div className="flex items-center gap-2">
-          <span className="font-bold text-foreground">{rating.toFixed(1)}</span>
-          <span className="text-sm text-muted-foreground">({reviewCount.toLocaleString()} reviews)</span>
+          <span className="font-bold text-foreground">{rating?.toFixed(1)}</span>
+          <span className="text-sm text-muted-foreground">({reviewCount?.toLocaleString()} reviews)</span>
         </div>
       )}
     </div>

@@ -91,6 +91,9 @@ export interface Room {
   hotel: {
     id: string
     name: string
+    location: any;
+    rating: number
+    reviewCount: number
   }
 }
 

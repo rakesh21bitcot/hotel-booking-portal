@@ -26,7 +26,7 @@ export default function RoomPage({ params }: PageProps) {
       dispatch(fetchRoomDetails(hotelId, roomId))
     }
   }, [dispatch, hotelId, roomId])
-console.log(currentRoom, currentHotel)
+
   // Show loading state
   if (roomDetailsLoading) {
     return (
@@ -125,7 +125,9 @@ console.log(currentRoom, currentHotel)
   const hotelData = {
     id: currentRoom.hotel.id,
     name: currentRoom.hotel.name,
-    location: currentHotel ? `${currentHotel.location.city}, ${currentHotel.location.country}` : ""
+    location: currentRoom.hotel.location,
+    rating: currentRoom.hotel.rating,
+    reviewCount: currentRoom.hotel.reviewCount
   }
 
   return <RoomDetails room={roomData} hotel={hotelData} />

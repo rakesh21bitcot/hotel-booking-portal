@@ -2,8 +2,6 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import Header from "@/components/Header"
-import Footer from "@/components/Footer"
 import PriceBreakdown from "@/components/modules/booking/PriceBreakdown"
 import { RatingDisplay } from "@/components/modules/hotel/components"
 
@@ -20,10 +18,12 @@ interface RoomDetailsProps {
     images?: string[]
     hotelId?: string
   }
-  hotel?: {
+  hotel: {
     id: string
     name: string
-    location: string
+    location: any
+    rating: number;
+    reviewCount: number;
   }
 }
 
@@ -186,7 +186,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
                           d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
                         />
                       </svg>
-                      <span>{hotel?.location}</span>
+                      <span>{hotel?.location?.address}, {hotel?.location?.city}, {hotel?.location?.country}</span>
                     </div>
                   )}
                 </div>
@@ -287,7 +287,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
                     <span className="text-4xl font-bold text-primary">${room?.price}</span>
                     <span className="text-muted-foreground ml-2">per night</span>
                   </div>
-                  <RatingDisplay rating={4.5} reviewCount={128} />
+                  <RatingDisplay rating={hotel?.rating} reviewCount={hotel?.reviewCount} />
                 </div>
 
                 {/* Booking Form */}
