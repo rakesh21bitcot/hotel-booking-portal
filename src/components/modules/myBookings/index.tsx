@@ -32,6 +32,7 @@ export default function MyBookingsPage() {
         try {
           await dispatch(cancelBookingWithRedux(bookingId))
           toast.success("Booking cancelled successfully")
+          await dispatch(fetchUserBookings())
         } catch (error: any) {
           toast.error(error.message || "Failed to cancel booking")
         }
@@ -147,7 +148,7 @@ export default function MyBookingsPage() {
                       <p className="text-xl font-bold text-primary">${booking?.totalPrice?.toFixed(2) || '100'}</p>
                     </div>
 
-                    {booking.status === "confirmed" && (
+                    {booking.status !== "cancelled" && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
