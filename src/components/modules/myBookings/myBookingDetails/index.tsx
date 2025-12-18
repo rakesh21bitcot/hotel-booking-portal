@@ -107,7 +107,7 @@ export default function MyBookingDetailsPage() {
           </button>
           <h1 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-2">Booking Details</h1>
           <p className="text-muted-foreground">
-            Complete information about your booking #{booking?.id}
+            Complete information about your booking #{booking?.bookingId}
           </p>
         </div>
       </section>
