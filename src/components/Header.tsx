@@ -13,10 +13,15 @@ export default function Header() {
   const [lastScrollY, setLastScrollY] = useState(0)
   const [hasScrolled, setHasScrolled] = useState(false)
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname()
   const { isAuthenticated, user, logout } = useAuth()
   const favourites = useAppSelector((state) => state.favourite.favourites)
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isActive = (path: string) => pathname === path
 
@@ -122,9 +127,9 @@ export default function Header() {
             Contact
           </Link>
 
-          {isAuthenticated && (
-            <Link 
-              href={ROUTES.PROTECTED.MYBOOKING} 
+          {mounted && isAuthenticated && (
+            <Link
+              href={ROUTES.PROTECTED.MYBOOKING}
               className={`text-sm font-medium transition ${
                 isActive(ROUTES.PROTECTED.MYBOOKING) ? "text-primary" : "text-white hover:text-primary"
               }`}
@@ -137,7 +142,7 @@ export default function Header() {
         {/* Right Icons */}
         <div className="hidden md:flex gap-4 items-center">
           {/* Shopping Bag with golden circle */}
-          {isAuthenticated && (
+          {mounted && isAuthenticated && (
             <Link href={ROUTES.PROTECTED.CART} className="p-2 hover:bg-white/10 rounded transition relative" title="Liked Hotels">
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -147,13 +152,13 @@ export default function Header() {
                   d="M12 21C12 21 4 13.28 4 8.5C4 5.42 6.42 3 9.5 3C11.24 3 12.91 3.81 14 5.08C15.09 3.81 16.76 3 18.5 3C21.58 3 24 5.42 24 8.5C24 13.28 16 21 16 21H12Z"
                 />
               </svg>
-              {favourites?.length ? 
+              {favourites?.length ?
                 <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
               : ""}
             </Link>
           )}
 
-          {isAuthenticated && (
+          {mounted && isAuthenticated && (
             <div className="relative">
               <div className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-full cursor-pointer" onClick={() => setShowProfileDropdown((v) => !v)} ref={profileRef}>
                 <span className="w-8 h-8 flex items-center justify-center rounded-full bg-primary/20 text-primary font-semibold text-sm">
@@ -180,7 +185,7 @@ export default function Header() {
           )}
 
           {/* Sign In / Join Button */}
-          {!isAuthenticated && (
+          {mounted && !isAuthenticated && (
             <Link
               href={ROUTES.PUBLIC.LOGIN}
               className="button-split-hover px-8 py-3 rounded-lg font-semibold text-primary-foreground flex items-center justify-center gap-2 whitespace-nowrap h-[52px]"
@@ -256,9 +261,9 @@ export default function Header() {
             >
               Contact
             </Link>
-            {isAuthenticated && (
+            {mounted && isAuthenticated && (
               <Link
-                href={ROUTES.PROTECTED.MYBOOKING} 
+                href={ROUTES.PROTECTED.MYBOOKING}
                 className={`text-sm transition ${
                   isActive(ROUTES.PROTECTED.MYBOOKING) ? "text-primary" : "text-white hover:text-primary"
                 }`}
@@ -266,7 +271,7 @@ export default function Header() {
                 My Bookings
               </Link>
             )}
-            {isAuthenticated && (
+            {mounted && isAuthenticated && (
             <div className="relative">
               <div className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-full cursor-pointer" onClick={() => setShowProfileDropdown((v) => !v)} ref={profileRef}>
                 <span className="w-8 h-8 flex items-center justify-center rounded-full bg-primary/20 text-primary font-semibold text-sm">
@@ -293,7 +298,7 @@ export default function Header() {
           )}
 
           {/* Sign In / Join Button */}
-          {!isAuthenticated && (
+          {mounted && !isAuthenticated && (
             <Link
               href={ROUTES.PUBLIC.LOGIN}
               className="button-split-hover px-8 py-3 rounded-lg font-semibold text-primary-foreground flex items-center justify-center gap-2 whitespace-nowrap h-[52px]"

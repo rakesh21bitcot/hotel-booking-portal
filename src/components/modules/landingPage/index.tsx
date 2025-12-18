@@ -2,14 +2,23 @@
 
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import { HeroSection, BookingWidget, FeaturedDestinations, AmenitiesSection, TestimonialCard, ScrollAnimation } from "./components"
+import { HeroSection, FeaturedDestinations, AmenitiesSection, ScrollAnimation } from "./components"
 import { HotelCard } from "@/components/modules/hotel/components"
-import { featuredHotels, testimonials } from "@/utils/dummy-data"
 import { useEffect, useState } from "react"
 import { ROUTES } from "@/utils/constants"
+import { useAppDispatch, useAppSelector } from "@/store/hook"
+import { fetchHotels, HotelFilters } from "@/store/actions/hotel-actions"
+import { useAuth } from "../auth/hooks/useAuth"
+import Link from "next/link"
 
 export default function Home() {
   const [counters, setCounters] = useState({ hotels: 0, guests: 0, satisfaction: 0 })
+  const dispatch = useAppDispatch()
+  const {
+    hotels,
+    hotelsLoading,
+  } = useAppSelector((state) => state.hotel)
+  const { user } = useAuth()
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -61,6 +70,15 @@ export default function Home() {
     }
   }, [])
 
+
+  useEffect(() => {
+    const hotelFilters: HotelFilters = {
+      isFeatured: true,
+      userId: user?.id
+    }
+    dispatch(fetchHotels(hotelFilters, 1, 4))
+  },[])
+
   return (
     <main className="bg-black min-h-screen">
 
@@ -98,9 +116,31 @@ export default function Home() {
           </ScrollAnimation>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {featuredHotels.map((hotel: any, index) => (
+            {hotelsLoading ? 
+              <>
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index} className="bg-card border border-border rounded-lg p-6 animate-pulse">
+                    <div className="h-48 bg-muted rounded-lg mb-4"></div>
+                    <div className="h-4 bg-muted rounded mb-2"></div>
+                    <div className="h-4 bg-muted rounded w-3/4 mb-4"></div>
+                    <div className="h-6 bg-muted rounded w-1/2"></div>
+                  </div>
+                ))}
+              </>
+            :  hotels?.map((hotel: any, index: any) => (
               <ScrollAnimation key={hotel.id} animation="zoom-in" delay={index * 100}>
-                <HotelCard delay={index * 120} hotel={hotel} />
+                <HotelCard
+                    key={hotel?.id}
+                    id={hotel?.id}
+                    name={hotel?.name}
+                    location={`${hotel?.location?.city}, ${hotel?.location?.country}`}
+                    rating={hotel?.rating}
+                    price={hotel?.price}
+                    image={hotel?.images[0]}
+                    reviews={hotel?.reviewCount}
+                    featured={hotel?.is_featured}
+                    favourite={hotel?.isFavourite}
+                  />
               </ScrollAnimation>
             ))}
           </div>
@@ -138,40 +178,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Guests review Section */}
-      <section className="py-20 bg-black">
-        <div className="max-w-7xl mx-auto px-4">
-          <ScrollAnimation animation="fade-up" delay={0}>
-          <div className="text-center mb-16">
-            <p className="text-primary text-sm font-semibold tracking-wide mb-4">WHAT GUESTS SAY</p>
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground">Guest Reviews</h2>
-          </div>
-          </ScrollAnimation>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, i) => (
-              <ScrollAnimation key={i} animation="slide-up" delay={i * 100}>
-                <TestimonialCard {...testimonial} delay={i * 120} />
-              </ScrollAnimation>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* CTA Section */} 
-      <section className="py-20 bg-linear-to-r from-secondary to-card border-y border-border">
+      <section className="py-20 mt-15 from-secondary to-card border-border">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <ScrollAnimation animation="zoom-in" delay={0}>
           <h2 className="font-serif text-4xl font-bold text-foreground mb-4">Ready to Book Your Dream Stay?</h2>
           <p className="text-muted-foreground mb-8 text-lg">
             Explore thousands of unique properties and find your perfect vacation destination.
           </p>
-          <a
+          <Link
             href={ROUTES.PUBLIC.HOTELS}
             className="inline-block px-8 py-4 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition-all duration-300 text-lg hover:scale-105 hover:shadow-lg hover:shadow-primary/50"
           >
             Start Exploring Now
-          </a>
+          </Link>
           </ScrollAnimation>
         </div>
       </section>

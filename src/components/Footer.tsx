@@ -1,6 +1,7 @@
 "use client"
 
 import { ROUTES } from "@/utils/constants"
+import Link from "next/link"
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -33,24 +34,24 @@ export default function Footer() {
             <h5 className="font-semibold text-sm mb-4 text-foreground">Quick Links</h5>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <a href={ROUTES.PUBLIC.HOME} className="hover:text-primary transition">
+                <Link href={ROUTES.PUBLIC.HOME} className="hover:text-primary transition">
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a href={ROUTES.PUBLIC.HOTELS} className="hover:text-primary transition">
+                <Link href={ROUTES.PUBLIC.HOTELS} className="hover:text-primary transition">
                   Browse Hotels
-                </a>
+                </Link>
               </li>
               <li>
-                <a href={ROUTES.PUBLIC.DESTINATIONS} className="hover:text-primary transition">
+                <Link href={ROUTES.PUBLIC.DESTINATIONS} className="hover:text-primary transition">
                   Destinations
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition">
+                <Link href={ROUTES.PROTECTED.MYBOOKING} className="hover:text-primary transition">
                   My Bookings
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -60,14 +61,14 @@ export default function Footer() {
             <h5 className="font-semibold text-sm mb-4 text-foreground">Support</h5>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <a href={ROUTES.PUBLIC.CONTACT} className="hover:text-primary transition">
+                <Link href={ROUTES.PUBLIC.CONTACT} className="hover:text-primary transition">
                   Contact Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href={ROUTES.PUBLIC.BLOG} className="hover:text-primary transition">
+                <Link href={ROUTES.PUBLIC.BLOG} className="hover:text-primary transition">
                   Blog
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
