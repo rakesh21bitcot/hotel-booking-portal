@@ -17,6 +17,7 @@ export interface BookingData {
 
 export interface BookingResponse {
   id: string
+  bookingId: string
   userId: number
   hotelId: string
   roomId: string

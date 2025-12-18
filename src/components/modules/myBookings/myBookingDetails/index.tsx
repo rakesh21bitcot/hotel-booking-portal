@@ -230,15 +230,15 @@ export default function MyBookingDetailsPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center p-4 bg-muted/50 rounded-lg">
                   <p className="text-sm text-muted-foreground mb-1">Booking ID</p>
-                  <p className="font-mono text-sm font-medium">{booking.id}</p>
+                  <p className="font-mono text-sm font-medium">{booking?.bookingId}</p>
                 </div>
                 <div className="text-center p-4 bg-muted/50 rounded-lg">
                   <p className="text-sm text-muted-foreground mb-1">Created</p>
-                  <p className="font-medium">{moment(new Date(booking.createdAt)).format("MMM DD, YYYY")}</p>
+                  <p className="font-medium">{moment(new Date(booking?.createdAt)).format("MMM DD, YYYY")}</p>
                 </div>
                 <div className="text-center p-4 bg-muted/50 rounded-lg">
                   <p className="text-sm text-muted-foreground mb-1">Last Updated</p>
-                  <p className="font-medium">{moment(new Date(booking.updatedAt)).format("MMM DD, YYYY")}</p>
+                  <p className="font-medium">{moment(new Date(booking?.updatedAt)).format("MMM DD, YYYY")}</p>
                 </div>
               </div>
             </div>

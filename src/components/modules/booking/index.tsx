@@ -477,11 +477,11 @@ export default function BookingPage() {
                     <div className="bg-green-500/10 border border-green-500/30 rounded p-6 text-center">
                       <p className="text-green-400 font-semibold mb-2">Your booking has been confirmed</p>
                       <p className="text-sm text-muted-foreground mb-4">
-                        A confirmation email has been sent to {userDetails.email}
+                        A confirmation email has been sent to {userDetails?.email}
                       </p>
                       <div className="space-y-2">
                         <p className="text-sm text-muted-foreground">Booking Reference:</p>
-                        <p className="text-lg text-foreground font-semibold">{createdBooking.id}</p>
+                        <p className="text-lg text-foreground font-semibold">{createdBooking?.bookingId}</p>
                       </div>
                     </div>
                     {!bookingCompleted && (
