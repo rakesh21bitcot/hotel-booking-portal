@@ -155,6 +155,7 @@ export const changePassword = async (passwordData: ChangePasswordRequest): Promi
     () => apiClient.post<{ message: string }>("/change-password", {
       currentPassword: passwordData.currentPassword,
       newPassword: passwordData.newPassword,
+      confirmPassword: passwordData.confirmPassword
     }),
     "Change Password"
   )
