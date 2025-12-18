@@ -195,47 +195,6 @@ export default function HotelDetailPage() {
             </div>
 
             <div className="flex gap-3">
-              <button
-                onClick={() => {
-                  if (!isAuthenticated) {
-                    forWarning("Please login or sign up to save favourites.")
-                    router.push(ROUTES.PUBLIC.LOGIN)
-                    return
-                  }
-                  if (isInCart) {
-                    dispatch(removeHotelFromCart(currentHotel?.id))
-                    setIsSaved(false)
-                  } else {
-                    dispatch(
-                      addHotelToCart({
-                        id: currentHotel.id,
-                        name: currentHotel.name,
-                        location: `${currentHotel.location.city}, ${currentHotel.location.country}`,
-                        image: currentHotel.images[0] || '',
-                        price: currentHotel.price,
-                        rating: currentHotel.rating,
-                        reviewCount: currentHotel.reviewCount,
-                      })
-                    )
-                    setIsSaved(true)
-                  }
-                }}
-                className="p-3 border border-border rounded-lg hover:border-primary transition"
-              >
-                <svg
-                  className={`w-5 h-5 ${isInCart || isSaved ? "fill-red-500 text-red-500" : ""}`}
-                  fill={isInCart || isSaved ? "currentColor" : "none"}
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                  />
-                </svg>
-              </button>
               <button className="p-3 border border-border rounded-lg hover:border-primary transition">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
