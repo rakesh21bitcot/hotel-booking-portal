@@ -1,11 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { useAppSelector, useAppDispatch } from "@/store/hook"
 import { HotelCard, SearchBar } from "./components"
 import { fetchHotels, HotelFilters } from "@/store/actions/hotel-actions"
 import { useAuth } from "../auth/hooks/useAuth"
-import { API_CONFIG } from "@/lib/config"
 
 
 export default function HotelComponent() {
@@ -45,14 +44,24 @@ export default function HotelComponent() {
   }, [dispatch, filters, selectedRating, isFeatured, currentPage])
 
   // Handle filter changes
-  const handlePriceRangeChange = (minPrice: number, maxPrice: number) => {
-    setFilters(prev => ({
-      ...prev,
-      minPrice,
-      maxPrice
-    }))
-    setCurrentPage(1) // Reset to first page when filters change
-  }
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  const handlePriceRangeChange = useCallback((minPrice: number, maxPrice: number) => {
+    // Clear existing timeout
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current)
+    }
+
+    // Set new timeout
+    debounceTimeoutRef.current = setTimeout(() => {
+      setFilters(prev => ({
+        ...prev,
+        minPrice,
+        maxPrice
+      }))
+      setCurrentPage(1) // Reset to first page when filters change
+    }, 300) // 300ms debounce delay
+  }, [])
 
   const handleRatingChange = (rating: number | null) => {
     setSelectedRating(rating)
