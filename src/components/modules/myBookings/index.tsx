@@ -154,7 +154,7 @@ export default function MyBookingsPage() {
                           e.stopPropagation()
                           handleCancelBooking(booking.id as string)
                         }}
-                        className="px-4 py-2 border border-border rounded-lg text-xs font-semibold text-muted-foreground hover:border-red-500 hover:text-red-500 transition"
+                        className="px-4 cursor-pointer py-2 border border-border rounded-lg text-xs font-semibold text-muted-foreground hover:border-red-500 hover:text-red-500 transition"
                       >
                         Cancel booking
                       </button>

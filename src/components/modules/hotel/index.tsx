@@ -178,7 +178,7 @@ export default function HotelComponent() {
               {/* Clear Filters */}
               <button
                 onClick={clearFilters}
-                className="w-full px-4 py-2 border border-border rounded text-sm font-semibold hover:border-primary hover:text-primary transition"
+                className="w-full cursor-pointer px-4 py-2 border border-border rounded text-sm font-semibold hover:border-primary hover:text-primary transition"
               >
                 Clear Filters
               </button>
@@ -214,7 +214,7 @@ export default function HotelComponent() {
 
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="md:hidden px-4 py-2 bg-card border border-border rounded text-sm flex items-center gap-2"
+                  className="md:hidden cursor-pointer px-4 py-2 bg-card border border-border rounded text-sm flex items-center gap-2"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
@@ -263,7 +263,7 @@ export default function HotelComponent() {
                 <p className="text-muted-foreground text-lg">No hotels found matching your criteria.</p>
                 <button
                   onClick={clearFilters}
-                  className="mt-4 px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition"
+                  className="mt-4 cursor-pointer px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition"
                 >
                   Clear Filters
                 </button>
@@ -276,7 +276,7 @@ export default function HotelComponent() {
                 <button
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   disabled={currentPage === 1 || hotelsLoading}
-                  className="px-4 py-2 border border-border rounded hover:border-primary transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 cursor-pointer border border-border rounded hover:border-primary transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
@@ -290,7 +290,7 @@ export default function HotelComponent() {
                       key={pageNum}
                       onClick={() => setCurrentPage(pageNum)}
                       disabled={hotelsLoading}
-                      className={`px-4 py-2 rounded transition ${
+                      className={`px-4 py-2 cursor-pointer rounded transition ${
                         currentPage === pageNum
                           ? 'bg-primary text-primary-foreground'
                           : 'border border-border hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed'
@@ -304,7 +304,7 @@ export default function HotelComponent() {
                 <button
                   onClick={() => setCurrentPage(prev => Math.min(hotelsTotalPages, prev + 1))}
                   disabled={currentPage === hotelsTotalPages || hotelsLoading}
-                  className="px-4 py-2 border border-border rounded hover:border-primary transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 cursor-pointer border border-border rounded hover:border-primary transition disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>

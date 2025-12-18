@@ -327,7 +327,7 @@ export default function Profile() {
                 </span>
               )}
             </div>
-            <label className="text-xs text-primary font-medium cursor-pointer hover:underline mt-1">
+            {/* <label className="text-xs text-primary font-medium cursor-pointer hover:underline mt-1">
               Add Photo
               <input
                 type="file"
@@ -338,7 +338,7 @@ export default function Profile() {
                   if (file) setPicture(URL.createObjectURL(file));
                 }}
               />
-            </label>
+            </label> */}
           </div>
           <div className="flex flex-col gap-1 sm:gap-2 md:ml-4 items-center sm:items-start pb-2 sm:pb-0">
             <div className="flex items-center gap-2">
@@ -369,7 +369,7 @@ export default function Profile() {
             <button
               key={tab.key}
               className={
-                'flex items-center gap-3 px-4 py-3 rounded-xl transition font-semibold text-left ' +
+                'flex cursor-pointer items-center gap-3 px-4 py-3 rounded-xl transition font-semibold text-left ' +
                 (activeTab === tab.key
                   ? 'bg-primary/20 text-primary border-primary border-2 shadow-md'
                   : 'text-foreground hover:text-primary hover:bg-primary/10 border border-transparent')
@@ -381,11 +381,11 @@ export default function Profile() {
               {tab.key === 'profile' && <span className="ml-auto w-2 h-2 bg-red-500 rounded-full" />}
             </button>
           ))}
-          <hr className="my-5 border-border/40" />
-          <button className="flex items-center gap-3 px-4 py-2 rounded-xl text-muted-foreground hover:text-primary hover:bg-primary/10 transition border border-transparent">
+          {/* <hr className="my-5 border-border/40" />
+          <button className="flex cursor-pointer items-center gap-3 px-4 py-2 rounded-xl text-muted-foreground hover:text-primary hover:bg-primary/10 transition border border-transparent">
             <FaLock className="text-lg" />
             <span>Reset Password</span>
-          </button>
+          </button> */}
         </aside>
 
         {/* Mobile/Tablet sidebar top */}
@@ -394,7 +394,7 @@ export default function Profile() {
             <button
               key={tab.key}
               className={
-                'flex flex-col items-center justify-center px-3 py-2 rounded-lg text-xs font-semibold transition ' +
+                'flex flex-col cursor-pointer items-center justify-center px-3 py-2 rounded-lg text-xs font-semibold transition ' +
                 (activeTab === tab.key
                   ? 'bg-primary/10 text-primary border border-primary'
                   : 'text-muted-foreground hover:text-primary hover:bg-primary/5')
@@ -429,7 +429,7 @@ export default function Profile() {
               <button
                 onClick={refreshUserData}
                 disabled={isLoading}
-                className="text-primary font-semibold text-xs sm:text-sm underline whitespace-nowrap hover:text-primary/80 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="text-primary cursor-pointer font-semibold text-xs sm:text-sm underline whitespace-nowrap hover:text-primary/80 disabled:opacity-50 disabled:cursor-not-allowed"
                 title="Refresh user data from server"
               >
                 {isLoading ? 'Refreshing...' : 'Refresh Data'}
@@ -437,7 +437,7 @@ export default function Profile() {
               {!profileData.city && (
                 <button
                   onClick={() => setActiveTab('profile')}
-                  className="text-primary font-semibold text-xs sm:text-sm underline whitespace-nowrap"
+                  className="text-primary cursor-pointer font-semibold text-xs sm:text-sm underline whitespace-nowrap"
                 >
                   Add City of Residence
                 </button>
@@ -629,14 +629,14 @@ export default function Profile() {
                       });
                       setProfileErrors([]);
                     }}
-                    className="px-6 py-2.5 rounded-md border border-border bg-background text-foreground text-sm font-semibold hover:bg-muted transition-colors"
+                    className="px-6 py-2.5 cursor-pointer rounded-md border border-border bg-background text-foreground text-sm font-semibold hover:bg-muted transition-colors"
                     disabled={isLoading}
                   >
                     Reset
                   </button>
                   <button
                     type="submit"
-                    className="px-8 py-2.5 rounded-md bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-8 py-2.5 cursor-pointer rounded-md bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={isLoading}
                   >
                     {isLoading ? 'Saving...' : 'Save Changes'}
@@ -687,7 +687,7 @@ export default function Profile() {
                     <button
                       type="button"
                       onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                      className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {showCurrentPassword ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
                     </button>
@@ -711,7 +711,7 @@ export default function Profile() {
                     <button
                       type="button"
                       onClick={() => setShowNewPassword(!showNewPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                      className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {showNewPassword ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
                     </button>
@@ -736,7 +736,7 @@ export default function Profile() {
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                      className="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {showConfirmPassword ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
                     </button>
@@ -775,14 +775,14 @@ export default function Profile() {
                       setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
                       setPasswordErrors([]);
                     }}
-                    className="px-6 py-2.5 rounded-md border border-border bg-background text-foreground text-sm font-semibold hover:bg-muted transition-colors"
+                    className="px-6 py-2.5 cursor-pointer rounded-md border border-border bg-background text-foreground text-sm font-semibold hover:bg-muted transition-colors"
                     disabled={isLoading}
                   >
                     Reset
                   </button>
                   <button
                     type="submit"
-                    className="px-8 py-2.5 rounded-md bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-8 py-2.5 cursor-pointer rounded-md bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={isLoading || !passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword || passwordData.newPassword !== passwordData.confirmPassword}
                   >
                     {isLoading ? 'Updating...' : 'Update Password'}
@@ -956,14 +956,14 @@ export default function Profile() {
                       });
                       setSettingsErrors([]);
                     }}
-                    className="px-6 py-2.5 rounded-md border border-border bg-background text-foreground text-sm font-semibold hover:bg-muted transition-colors"
+                    className="px-6 py-2.5 cursor-pointer rounded-md border border-border bg-background text-foreground text-sm font-semibold hover:bg-muted transition-colors"
                     disabled={isLoading}
                   >
                     Reset to Defaults
                   </button>
                   <button
                     type="submit"
-                    className="px-8 py-2.5 rounded-md bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-8 py-2.5 cursor-pointer rounded-md bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={isLoading}
                   >
                     {isLoading ? 'Saving...' : 'Save All Changes'}

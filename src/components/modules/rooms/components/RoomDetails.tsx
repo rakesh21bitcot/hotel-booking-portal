@@ -133,7 +133,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
                   <>
                     <button
                       onClick={prevImage}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition"
+                      className="absolute cursor-pointer left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition"
                     >
                       <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -141,7 +141,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
                     </button>
                     <button
                       onClick={nextImage}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition"
+                      className="absolute cursor-pointer right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition"
                     >
                       <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -163,7 +163,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
                     <button
                       key={i}
                       onClick={() => setImageIndex(i)}
-                      className={`h-20 w-28 rounded-lg overflow-hidden shrink-0 border-2 transition ${
+                      className={`h-20 w-28 cursor-pointer rounded-lg overflow-hidden shrink-0 border-2 transition ${
                         i === imageIndex ? "border-primary" : "border-border"
                       }`}
                     >
@@ -209,7 +209,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
                 </div>
 
                 <div className="flex gap-3">
-                  <button className="p-3 border border-border rounded-lg hover:border-primary transition">
+                  <button className="p-3 border cursor-pointer border-border rounded-lg hover:border-primary transition">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         strokeLinecap="round"
@@ -347,7 +347,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
                   <button
                     onClick={handleBookNow}
                     disabled={!checkIn || !checkOut}
-                    className="button-split-hover w-full px-6 py-4 text-primary-foreground rounded-lg font-semibold hover:bg-accent hover:text-primary-foreground transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="button-split-hover cursor-pointer w-full px-6 py-4 text-primary-foreground rounded-lg font-semibold hover:bg-accent hover:text-primary-foreground transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <span>Book Now</span>
                     

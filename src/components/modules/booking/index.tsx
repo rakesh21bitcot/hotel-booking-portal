@@ -25,6 +25,10 @@ export default function BookingPage() {
     }
   })()
 
+  if (!bookingDetails?.roomId) {
+    router.push(ROUTES.PUBLIC.HOTELS)
+  }
+
   const roomId = bookingDetails?.roomId || ''
   const hotelId = bookingDetails?.hotelId || ''
   const checkIn = bookingDetails?.checkIn || ''
@@ -232,8 +236,13 @@ export default function BookingPage() {
                           value={userDetails.firstName}
                           onChange={handleUserDetailsChange}
                           placeholder="John"
-                          className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
+                          className={`w-full px-4 py-3 bg-secondary border rounded focus:outline-none transition ${
+                            errors.firstName ? "border-red-500 focus:border-red-500" : "border-border focus:border-primary"
+                          }`}
                         />
+                        {errors.firstName && (
+                          <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
+                        )}
                       </div>
                       <div>
                         <label className="block text-sm font-semibold text-muted-foreground mb-2">Last Name</label>
@@ -243,8 +252,13 @@ export default function BookingPage() {
                           value={userDetails.lastName}
                           onChange={handleUserDetailsChange}
                           placeholder="Doe"
-                          className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
+                          className={`w-full px-4 py-3 bg-secondary border rounded focus:outline-none transition ${
+                            errors.lastName ? "border-red-500 focus:border-red-500" : "border-border focus:border-primary"
+                          }`}
                         />
+                        {errors.lastName && (
+                          <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
+                        )}
                       </div>
                     </div>
 
@@ -256,8 +270,13 @@ export default function BookingPage() {
                         value={userDetails.email}
                         onChange={handleUserDetailsChange}
                         placeholder="john@example.com"
-                        className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
+                        className={`w-full px-4 py-3 bg-secondary border rounded focus:outline-none transition ${
+                          errors.email ? "border-red-500 focus:border-red-500" : "border-border focus:border-primary"
+                        }`}
                       />
+                      {errors.email && (
+                        <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                      )}
                     </div>
 
                     <div>
@@ -269,8 +288,13 @@ export default function BookingPage() {
                         onChange={handleUserDetailsChange}
                         placeholder="1234567890"
                         maxLength={10}
-                        className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
+                        className={`w-full px-4 py-3 bg-secondary border rounded focus:outline-none transition ${
+                          errors.phoneNumber ? "border-red-500 focus:border-red-500" : "border-border focus:border-primary"
+                        }`}
                       />
+                      {errors.phoneNumber && (
+                        <p className="text-red-500 text-sm mt-1">{errors.phoneNumber}</p>
+                      )}
                     </div>
 
                     <div>
@@ -300,8 +324,13 @@ export default function BookingPage() {
                         onChange={(e) => handleCardDetailsChange(e)}
                         placeholder="123456789012"
                         maxLength={19}
-                        className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
+                        className={`w-full px-4 py-3 bg-secondary border rounded focus:outline-none transition ${
+                          errors.cardNumber ? "border-red-500 focus:border-red-500" : "border-border focus:border-primary"
+                        }`}
                       />
+                      {errors.cardNumber && (
+                        <p className="text-red-500 text-sm mt-1">{errors.cardNumber}</p>
+                      )}
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -311,7 +340,9 @@ export default function BookingPage() {
                           name="expiryMonth"
                           value={cardDetails.expiryMonth}
                           onChange={(e) => handleCardDetailsChange(e)}
-                          className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
+                          className={`w-full px-4 py-3 bg-secondary border rounded focus:outline-none transition ${
+                            errors.expiryMonth ? "border-red-500 focus:border-red-500" : "border-border focus:border-primary"
+                          }`}
                         >
                           <option value="">Month</option>
                           {Array.from({ length: 12 }, (_, i) => (
@@ -320,6 +351,9 @@ export default function BookingPage() {
                             </option>
                           ))}
                         </select>
+                        {errors.expiryMonth && (
+                          <p className="text-red-500 text-sm mt-1">{errors.expiryMonth}</p>
+                        )}
                       </div>
                       <div>
                         <label className="block text-sm font-semibold text-muted-foreground mb-2">Expiry Year</label>
@@ -327,7 +361,9 @@ export default function BookingPage() {
                           name="expiryYear"
                           value={cardDetails.expiryYear}
                           onChange={(e) => handleCardDetailsChange(e)}
-                          className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
+                          className={`w-full px-4 py-3 bg-secondary border rounded focus:outline-none transition ${
+                            errors.expiryYear ? "border-red-500 focus:border-red-500" : "border-border focus:border-primary"
+                          }`}
                         >
                           <option value="">Year</option>
                           {Array.from({ length: 10 }, (_, i) => {
@@ -339,6 +375,9 @@ export default function BookingPage() {
                             )
                           })}
                         </select>
+                        {errors.expiryYear && (
+                          <p className="text-red-500 text-sm mt-1">{errors.expiryYear}</p>
+                        )}
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4 mt-4">
@@ -352,8 +391,13 @@ export default function BookingPage() {
                           onChange={(e) => handleCardDetailsChange(e)}
                           placeholder="123"
                           maxLength={3}
-                          className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
+                          className={`w-full px-4 py-3 bg-secondary border rounded focus:outline-none transition ${
+                            errors.cvv ? "border-red-500 focus:border-red-500" : "border-border focus:border-primary"
+                          }`}
                         />
+                        {errors.cvv && (
+                          <p className="text-red-500 text-sm mt-1">{errors.cvv}</p>
+                        )}
                       </div>
                     </div>
 
@@ -365,8 +409,13 @@ export default function BookingPage() {
                         value={cardDetails.cardholderName}
                         onChange={(e) => handleCardDetailsChange(e)}
                         placeholder="John Doe"
-                        className="w-full px-4 py-3 bg-secondary border border-border rounded focus:border-primary focus:outline-none transition"
+                        className={`w-full px-4 py-3 bg-secondary border rounded focus:outline-none transition ${
+                          errors.cardholderName ? "border-red-500 focus:border-red-500" : "border-border focus:border-primary"
+                        }`}
                       />
+                      {errors.cardholderName && (
+                        <p className="text-red-500 text-sm mt-1">{errors.cardholderName}</p>
+                      )}
                     </div>
 
                     <label className="flex items-center gap-3">
@@ -472,16 +521,18 @@ export default function BookingPage() {
                   {!bookingCompleted && (
                     <>
                       <button
+                        type="button"
                         onClick={handlePrevStep}
                         disabled={step === "personal"}
-                        className="px-6 py-3 border border-border rounded font-semibold hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition"
+                        className="px-6 py-3 border cursor-pointer border-border rounded font-semibold hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition"
                       >
                         Previous
                       </button>
                       <button
-                       disabled={isLoading}
+                        type="button"
+                        disabled={isLoading}
                         onClick={step === "confirm" ? handleCompleteBooking : handleNextStep}
-                        className="flex-1 flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition"
+                        className="flex-1 flex cursor-pointer items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition"
                       >
                         {step === "confirm" ? "Confirm Booking" : "Continue"} {isLoading && <Loader2 className="w-4 h-4 animate-spin ml-2" />}
                       </button>
@@ -491,7 +542,7 @@ export default function BookingPage() {
                     <button
                       type="button"
                       onClick={() => router.push(ROUTES.PROTECTED.MYBOOKING)}
-                      className="w-full px-6 py-3 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition"
+                      className="w-full px-6 cursor-pointer py-3 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition"
                     >
                       View My Bookings
                     </button>
@@ -501,6 +552,7 @@ export default function BookingPage() {
             </div>
 
             {/* Sidebar - Price Breakdown */}
+            {!bookingCompleted && (
             <div>
               <PriceBreakdown roomPrice={roomPrice} nights={nights} tax={tax} fees={fees} discount={0} />
 
@@ -527,6 +579,7 @@ export default function BookingPage() {
                 </div>
               </div>
             </div>
+            )}
           </div>
         </div>
       </div>

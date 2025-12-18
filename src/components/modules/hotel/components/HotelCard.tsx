@@ -101,7 +101,7 @@ export default function HotelCard({
 
           {/* Overlay on Hover */}
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-            <button className="px-6 py-2 bg-primary text-primary-foreground rounded font-semibold">View Details</button>
+            <button className="px-6 cursor-pointer py-2 bg-primary text-primary-foreground rounded font-semibold">View Details</button>
           </div>
 
           {/* Badge */}
@@ -114,7 +114,7 @@ export default function HotelCard({
           {/* Wishlist Button */}
           <button
             onClick={(e) => handlefavourite(e)}
-            className="absolute top-4 right-4 p-2 rounded-full bg-white/20 backdrop-blur hover:bg-white/40 transition"
+            className="absolute cursor-pointer top-4 right-4 p-2 rounded-full bg-white/20 backdrop-blur hover:bg-white/40 transition"
           >
             <svg
               className={`w-5 h-5 ${isFavourite || favourite || isSaved ? "fill-red-500 text-red-500" : "text-white"}`}

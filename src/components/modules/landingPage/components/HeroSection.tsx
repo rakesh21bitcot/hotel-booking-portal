@@ -78,7 +78,7 @@ function HeroSection() {
 
         {/* Play Button - Right Side */}
         <button 
-          className={`absolute right-8 md:right-16 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-all duration-700 group ${
+          className={`absolute cursor-pointer right-8 md:right-16 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-all duration-700 group ${
             isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-0"
           }`}
           style={{ transitionDelay: "1000ms" }}

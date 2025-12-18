@@ -160,7 +160,7 @@ export function ResetPasswordForm() {
       <button
         type="submit"
         disabled={isLoading || !formData.token}
-        className="w-full bg-primary text-primary-foreground py-2 sm:py-2.5 rounded font-medium hover:bg-primary/90 disabled:opacity-50 transition-colors text-sm sm:text-base"
+        className="w-full cursor-pointer bg-primary text-primary-foreground py-2 sm:py-2.5 rounded font-medium hover:bg-primary/90 disabled:opacity-50 transition-colors text-sm sm:text-base"
       >
         {isLoading ? "Resetting..." : "Reset Password"}
       </button>

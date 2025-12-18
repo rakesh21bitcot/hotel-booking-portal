@@ -470,7 +470,7 @@ export default function ContactDetails() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="button-split-hover w-full px-6 py-4 text-primary-foreground rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl relative overflow-hidden group"
+                  className="button-split-hover cursor-pointer w-full px-6 py-4 text-primary-foreground rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl relative overflow-hidden group"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     {isSubmitting ? (

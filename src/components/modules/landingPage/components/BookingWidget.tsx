@@ -127,7 +127,7 @@ export default function BookingWidget() {
             <button
               type="button"
               onClick={() => setShowGuestDropdown(!showGuestDropdown)}
-              className="w-full px-4 py-3 pr-10 border border-gray-200 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-left flex items-center justify-between cursor-pointer"
+              className="w-full cursor-pointer px-4 py-3 pr-10 border border-gray-200 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-left flex items-center justify-between cursor-pointer"
             >
               <span className="text-sm text-gray-700">
                 {rooms} {rooms === 1 ? "room" : "rooms"}, {adults} {adults === 1 ? "adult" : "adults"}
@@ -152,7 +152,7 @@ export default function BookingWidget() {
                       <button
                         type="button"
                         onClick={() => setAdults(Math.max(1, adults - 1))}
-                        className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition"
+                        className="w-8 cursor-pointer h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
@@ -162,7 +162,7 @@ export default function BookingWidget() {
                       <button
                         type="button"
                         onClick={() => setAdults(adults + 1)}
-                        className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition"
+                        className="w-8 cursor-pointer h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -176,7 +176,7 @@ export default function BookingWidget() {
                       <button
                         type="button"
                         onClick={() => setChildren(Math.max(0, children - 1))}
-                        className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition"
+                        className="w-8 cursor-pointer h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
@@ -186,7 +186,7 @@ export default function BookingWidget() {
                       <button
                         type="button"
                         onClick={() => setChildren(children + 1)}
-                        className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition"
+                        className="w-8 cursor-pointer h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -197,7 +197,7 @@ export default function BookingWidget() {
                   <button
                     type="button"
                     onClick={() => setShowGuestDropdown(false)}
-                    className="w-full mt-2 px-4 py-2 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition text-sm"
+                    className="w-full cursor-pointer mt-2 px-4 py-2 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition text-sm"
                   >
                     Done
                   </button>
@@ -210,7 +210,7 @@ export default function BookingWidget() {
         {/* Explore More Button */}
         <button
           onClick={handleSearch}
-          className="button-split-hover px-8 py-3 rounded-lg font-semibold text-primary-foreground flex items-center justify-center gap-2 whitespace-nowrap h-[52px]"
+          className="button-split-hover cursor-pointer px-8 py-3 rounded-lg font-semibold text-primary-foreground flex items-center justify-center gap-2 whitespace-nowrap h-[52px]"
         >
           <span>EXPLORE MORE</span>
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

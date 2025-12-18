@@ -78,7 +78,7 @@ export default function HotelDetailPage() {
             <p className="text-muted-foreground mb-8">{error}</p>
             <button
               onClick={() => router.push('/hotels')}
-              className="px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition"
+              className="px-6 cursor-pointer py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition"
             >
               Back to Hotels
             </button>
@@ -98,7 +98,7 @@ export default function HotelDetailPage() {
             <p className="text-muted-foreground mb-8">The hotel you're looking for doesn't exist.</p>
             <button
               onClick={() => router.push('/hotels')}
-              className="px-6 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition"
+              className="px-6 cursor-pointer py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition"
             >
               Back to Hotels
             </button>
@@ -138,7 +138,7 @@ export default function HotelDetailPage() {
             {/* Navigation Buttons */}
             <button
               onClick={prevImage}
-              className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition"
+              className="absolute cursor-pointer left-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition"
             >
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -146,7 +146,7 @@ export default function HotelDetailPage() {
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition"
+              className="absolute cursor-pointer right-4 top-1/2 -translate-y-1/2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition"
             >
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -165,7 +165,7 @@ export default function HotelDetailPage() {
               <button
                 key={i}
                 onClick={() => setImageIndex(i)}
-                className={`h-20 w-28 rounded-lg overflow-hidden flex-shrink-0 border-2 transition ${
+                className={`h-20 cursor-pointer w-28 rounded-lg overflow-hidden flex-shrink-0 border-2 transition ${
                   i === imageIndex ? "border-primary" : "border-border"
                 }`}
               >
@@ -195,7 +195,7 @@ export default function HotelDetailPage() {
             </div>
 
             <div className="flex gap-3">
-              <button className="p-3 border border-border rounded-lg hover:border-primary transition">
+              <button className=" cursor-pointer p-3 border border-border rounded-lg hover:border-primary transition">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"

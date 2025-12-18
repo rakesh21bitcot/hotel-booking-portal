@@ -165,10 +165,14 @@ export default function Header() {
               </div>
               {showProfileDropdown && (
                 <div className="absolute right-0 mt-2 w-44 bg-black/95 text-white rounded-lg shadow-lg py-2 z-50 animate-fade-in border border-border">
-                  <Link href={ROUTES.PROTECTED.PROFILE} className="block px-4 py-2 hover:bg-primary/10">Profile</Link>
+                  <Link href={ROUTES.PROTECTED.PROFILE} className="block px-4 py-2 hover:bg-primary/10" onClick={() => setShowProfileDropdown(false)} >Profile</Link>
                   <button
-                    onClick={logout}
-                    className="w-full text-left px-4 py-2 text-muted-foreground hover:bg-destructive hover:text-white rounded-b"
+                    type="button"
+                    onClick={() => {
+                      logout()
+                      setShowProfileDropdown(false)
+                    }}
+                    className="w-full text-left cursor-pointer px-4 py-2 text-muted-foreground hover:bg-destructive hover:text-white rounded-b"
                   >Logout</button>
                 </div>
               )}
@@ -191,7 +195,7 @@ export default function Header() {
 
         {/* Mobile Menu Button */}
         <button 
-          className={`md:hidden p-2 transition-colors ${hasScrolled ? "text-white" : "text-white"}`} 
+          className={`md:hidden p-2 transition-colors cursor-pointer ${hasScrolled ? "text-white" : "text-white"}`} 
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           {isMenuOpen ? (
@@ -226,15 +230,7 @@ export default function Header() {
                 isActive(ROUTES.PUBLIC.HOTELS) ? "text-primary" : "text-white hover:text-primary"
               }`}
             >
-              Pages
-            </Link>
-            <Link 
-              href={ROUTES.PUBLIC.HOTELS} 
-              className={`text-sm transition ${
-                isActive(ROUTES.PUBLIC.HOTELS) ? "text-primary" : "text-white hover:text-primary"
-              }`}
-            >
-              Room
+              Hotels
             </Link>
             <Link 
               href={ROUTES.PUBLIC.DESTINATIONS} 
@@ -270,15 +266,44 @@ export default function Header() {
                 My Bookings
               </Link>
             )}
+            {isAuthenticated && (
+            <div className="relative">
+              <div className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-full cursor-pointer" onClick={() => setShowProfileDropdown((v) => !v)} ref={profileRef}>
+                <span className="w-8 h-8 flex items-center justify-center rounded-full bg-primary/20 text-primary font-semibold text-sm">
+                  {(user?.firstName || user?.email || "U").charAt(0).toUpperCase()}
+                </span>
+                <span className="text-sm text-white">
+                  {user?.firstName || user?.email || "Profile"}
+                </span>
+              </div>
+              {showProfileDropdown && (
+                <div className="absolute right-0 mt-2 w-44 bg-black/95 text-white rounded-lg shadow-lg py-2 z-50 animate-fade-in border border-border">
+                  <Link href={ROUTES.PROTECTED.PROFILE} className="block px-4 py-2 hover:bg-primary/10" onClick={() => setShowProfileDropdown(false)}>Profile</Link>
+                  <button
+                   type="button"
+                   onClick={() => {
+                     logout()
+                     setShowProfileDropdown(false)
+                   }}
+                    className="w-full text-left cursor-pointer px-4 py-2 text-muted-foreground hover:bg-destructive hover:text-white rounded-b"
+                  >Logout</button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Sign In / Join Button */}
+          {!isAuthenticated && (
             <Link
-              href={ROUTES.PUBLIC.HOTELS}
+              href={ROUTES.PUBLIC.LOGIN}
               className="button-split-hover px-8 py-3 rounded-lg font-semibold text-primary-foreground flex items-center justify-center gap-2 whitespace-nowrap h-[52px]"
             >
-              <span>EXPLORE MORE</span>
+              <span>Sign In/Sign Up?</span>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </Link>
+          )}
 
           </div>
         </div>
