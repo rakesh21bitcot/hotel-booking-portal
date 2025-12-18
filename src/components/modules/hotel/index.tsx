@@ -21,7 +21,7 @@ export default function HotelComponent() {
   const [showFilters, setShowFilters] = useState(false)
   const [filters, setFilters] = useState<HotelFilters>({
     location: "",
-    userId: user?.profile?.id,
+    userId: user?.id,
     minPrice: 0,
     maxPrice: 500,
     maxRating: 5,
