@@ -4,12 +4,16 @@ import { BOOKING_ACTIONS } from "@/store/actions/booking-actions"
 export interface BookingState {
   bookings: BookingResponse[]
   bookingsLoading: boolean
+  currentBooking: BookingResponse | null
+  currentBookingLoading: boolean
   error: string | null
 }
 
 const initialState: BookingState = {
   bookings: [],
   bookingsLoading: false,
+  currentBooking: null,
+  currentBookingLoading: false,
   error: null
 }
 
@@ -57,6 +61,25 @@ export const bookingReducer = (state: BookingState = initialState, action: any):
       return {
         ...state,
         bookings: []
+      }
+
+    case BOOKING_ACTIONS.SET_CURRENT_BOOKING_LOADING:
+      return {
+        ...state,
+        currentBookingLoading: action.payload
+      }
+
+    case BOOKING_ACTIONS.SET_CURRENT_BOOKING:
+      return {
+        ...state,
+        currentBooking: action.payload
+      }
+
+    case BOOKING_ACTIONS.CLEAR_CURRENT_BOOKING:
+      return {
+        ...state,
+        currentBooking: null,
+        currentBookingLoading: false
       }
 
     default:

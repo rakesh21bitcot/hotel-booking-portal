@@ -87,7 +87,7 @@ export default function MyBookingsPage() {
             {bookings?.map((booking) => (
               <article
                 key={booking.id}
-                onClick={() => router.push(`/hotel/${booking.hotelId}`)}
+                onClick={() => router.push(`/my-booking/${booking.id}`)}
                 className={`bg-card border rounded-lg overflow-hidden flex flex-col justify-between cursor-pointer  transition ${
                   booking.status === "Cancelled"
                     ? "border-red-500/50"

@@ -109,8 +109,23 @@ export const getUserBookings = async (): Promise<BookingResponse[]> => {
   if (!response || !response.success || !response.data) {
     throw new Error("Failed to fetch bookings")
   }
-  
+
   return response.data.bookings || []
+}
+
+/**
+ * Get single booking by ID
+ */
+export const getBookingById = async (bookingId: string): Promise<BookingResponse> => {
+  const response = await errorHandler.handleApiCall(
+    () => apiClient.get<{ booking: BookingResponse }>(`/mybookings/${bookingId}`),
+    "Get Booking Details"
+  )
+  if (!response || !response.success || !response.data) {
+    throw new Error("Failed to fetch booking details")
+  }
+
+  return response.data.booking
 }
 
 // ============================================
@@ -120,11 +135,14 @@ export const getUserBookings = async (): Promise<BookingResponse[]> => {
 export const BOOKING_ACTIONS = {
   SET_BOOKINGS_LOADING: 'SET_BOOKINGS_LOADING',
   SET_BOOKINGS: 'SET_BOOKINGS',
+  SET_CURRENT_BOOKING_LOADING: 'SET_CURRENT_BOOKING_LOADING',
+  SET_CURRENT_BOOKING: 'SET_CURRENT_BOOKING',
   ADD_BOOKING: 'ADD_BOOKING',
   UPDATE_BOOKING: 'UPDATE_BOOKING',
   SET_BOOKING_ERROR: 'SET_BOOKING_ERROR',
   CLEAR_BOOKING_ERROR: 'CLEAR_BOOKING_ERROR',
-  CLEAR_BOOKINGS: 'CLEAR_BOOKINGS'
+  CLEAR_BOOKINGS: 'CLEAR_BOOKINGS',
+  CLEAR_CURRENT_BOOKING: 'CLEAR_CURRENT_BOOKING'
 } as const
 
 // ============================================
@@ -162,6 +180,20 @@ export const clearBookingError = () => ({
 
 export const clearBookings = () => ({
   type: BOOKING_ACTIONS.CLEAR_BOOKINGS
+})
+
+export const setCurrentBookingLoading = (loading: boolean) => ({
+  type: BOOKING_ACTIONS.SET_CURRENT_BOOKING_LOADING,
+  payload: loading
+})
+
+export const setCurrentBooking = (booking: BookingResponse) => ({
+  type: BOOKING_ACTIONS.SET_CURRENT_BOOKING,
+  payload: booking
+})
+
+export const clearCurrentBooking = () => ({
+  type: BOOKING_ACTIONS.CLEAR_CURRENT_BOOKING
 })
 
 // ============================================
@@ -227,6 +259,28 @@ export const fetchUserBookings = () => {
       throw error
     } finally {
       dispatch(setBookingsLoading(false))
+    }
+  }
+}
+
+/**
+ * Fetch single booking by ID with Redux integration
+ */
+export const fetchBookingById = (bookingId: string) => {
+  return async (dispatch: any) => {
+    try {
+      dispatch(setCurrentBookingLoading(true))
+      dispatch(clearBookingError())
+
+      const booking = await getBookingById(bookingId)
+
+      dispatch(setCurrentBooking(booking))
+      return booking
+    } catch (error: any) {
+      dispatch(setBookingError(error.message || 'Failed to fetch booking details'))
+      throw error
+    } finally {
+      dispatch(setCurrentBookingLoading(false))
     }
   }
 }
