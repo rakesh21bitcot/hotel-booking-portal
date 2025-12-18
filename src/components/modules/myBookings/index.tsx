@@ -98,9 +98,9 @@ export default function MyBookingsPage() {
                   />
                   <span
                     className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold ${
-                      booking.status === "confirmed"
+                      booking.status === "Confirmed"
                         ? "bg-green-500/80 text-black"
-                        : booking.status === "cancelled"
+                        : booking.status === "Cancelled"
                         ? "bg-red-500/80 text-black"
                         : "bg-yellow-500/80 text-black"
                     }`}
@@ -148,7 +148,7 @@ export default function MyBookingsPage() {
                       <p className="text-xl font-bold text-primary">${booking?.totalPrice?.toFixed(2) || '100'}</p>
                     </div>
 
-                    {booking.status !== "cancelled" && (
+                    {booking.status !== "Cancelled" && booking.status !== "Ongoing" && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation()

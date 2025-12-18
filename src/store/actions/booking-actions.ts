@@ -28,7 +28,7 @@ export interface BookingResponse {
   email: string
   phoneNumber: string
   totalPrice: number;
-  status: 'confirmed' | 'cancelled' | 'pending'
+  status: 'Confirmed' | 'Cancelled' | 'Pending' | 'Ongoing'
   createdAt: string
   updatedAt: string
   hotel?: {
