@@ -53,7 +53,7 @@ export default function SearchBar({
             className="bg-transparent outline-none w-full text-sm"
           />
         </div>
-        <div className="flex-1 flex items-center gap-2 bg-secondary rounded px-4">
+        <div className="flex-1 flex items-center gap-2 bg-secondary cursor-pointer rounded px-4">
           <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
@@ -66,7 +66,7 @@ export default function SearchBar({
             type="date"
             value={checkIn}
             onChange={(e) => setCheckIn(e.target.value)}
-            className="bg-transparent outline-none w-full text-sm"
+            className="bg-transparent cursor-pointer outline-none w-full text-sm"
           />
         </div>
         <button

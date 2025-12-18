@@ -140,7 +140,7 @@ export default function HotelComponent() {
                     max="1000"
                     value={filters.maxPrice || 500}
                     onChange={(e) => handlePriceRangeChange(filters.minPrice || 0, Number.parseInt(e.target.value))}
-                    className="w-full"
+                    className="w-full cursor-pointer"
                   />
                   <div className="flex justify-between text-sm text-muted-foreground">
                     <span>${filters.minPrice || 0}</span>
@@ -212,13 +212,13 @@ export default function HotelComponent() {
                     setFilters(prev => ({ ...prev, sortBy }))
                     setCurrentPage(1)
                   }}
-                  className="px-4 py-2 bg-card border border-border rounded text-sm"
+                  className="px-4 py-2 bg-card cursor-pointer border border-border rounded text-sm"
                   disabled={hotelsLoading}
                 >
-                  <option value="featured">Featured</option>
-                  <option value="price_low_to_high">Price: Low to High</option>
-                  <option value="price_high_to_low">Price: High to Low</option>
-                  <option value="highest_rating">Highest Rating</option>
+                  <option className="cursor-pointer" value="featured">Default</option>
+                  <option className="cursor-pointer" value="price_low_to_high">Price: Low to High</option>
+                  <option className="cursor-pointer" value="price_high_to_low">Price: High to Low</option>
+                  <option className="cursor-pointer" value="highest_rating">Highest Rating</option>
                 </select>
 
                 <button

@@ -51,6 +51,10 @@ export interface BookingResponse {
     name: string
     type: string
     price: number
+    beds: {
+      type: string;
+      count: string;
+    }[]
   }
 }
 

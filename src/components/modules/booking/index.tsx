@@ -2,7 +2,7 @@
 
 import type React from "react"
 import PriceBreakdown from "./PriceBreakdown"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "@/store/hook"
 import { createBookingWithRedux } from "@/store/actions/booking-actions"
 import { useRouter } from "next/navigation"
@@ -25,9 +25,11 @@ export default function BookingPage() {
     }
   })()
 
-  if (!bookingDetails?.roomId) {
-    router.push(ROUTES.PUBLIC.HOTELS)
-  }
+  useEffect(() => {
+    if (!bookingDetails?.roomId) {
+      router.push(ROUTES.PUBLIC.HOTELS)
+    }
+  },[])
 
   const roomId = bookingDetails?.roomId || ''
   const hotelId = bookingDetails?.hotelId || ''
@@ -523,8 +525,8 @@ export default function BookingPage() {
                       <button
                         type="button"
                         onClick={handlePrevStep}
-                        disabled={step === "personal"}
-                        className="px-6 py-3 border cursor-pointer border-border rounded font-semibold hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition"
+                        disabled={step === "personal" || isLoading}
+                        className="px-6 py-3 border cursor-pointer border-border rounded font-semibold hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition disabled:cursor-not-allowed"
                       >
                         Previous
                       </button>
@@ -532,7 +534,7 @@ export default function BookingPage() {
                         type="button"
                         disabled={isLoading}
                         onClick={step === "confirm" ? handleCompleteBooking : handleNextStep}
-                        className="flex-1 flex cursor-pointer items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition"
+                        className="flex-1 flex cursor-pointer items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded font-semibold hover:bg-accent transition disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {step === "confirm" ? "Confirm Booking" : "Continue"} {isLoading && <Loader2 className="w-4 h-4 animate-spin ml-2" />}
                       </button>

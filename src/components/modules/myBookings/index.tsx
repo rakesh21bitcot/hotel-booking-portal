@@ -7,6 +7,7 @@ import { fetchUserBookings, cancelBookingWithRedux } from "@/store/actions/booki
 import { useRouter } from "next/navigation"
 import { openConfirmDialog } from "@/utils/CommonService"
 import { toast } from "sonner"
+import moment from 'moment'
 
 export default function MyBookingsPage() {
   const dispatch = useAppDispatch()
@@ -87,7 +88,11 @@ export default function MyBookingsPage() {
               <article
                 key={booking.id}
                 onClick={() => router.push(`/hotel/${booking.hotelId}`)}
-                className="bg-card border border-border rounded-lg overflow-hidden flex flex-col justify-between cursor-pointer hover:border-primary/60 transition"
+                className={`bg-card border rounded-lg overflow-hidden flex flex-col justify-between cursor-pointer  transition ${
+                  booking.status === "Cancelled"
+                    ? "border-red-500/50"
+                    : "border-border hover:border-primary/60"
+                }`}
               >
                 {/* Image */}
                 <div className="relative w-full aspect-video overflow-hidden">
@@ -126,11 +131,11 @@ export default function MyBookingsPage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Check-in</span>
-                      <span className="text-foreground font-medium">{new Date(booking.checkIn).toLocaleDateString()}</span>
+                      <span className="text-foreground font-medium">{moment(new Date(booking.checkIn)).format("DD, MMM, yyyy")}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Check-out</span>
-                      <span className="text-foreground font-medium">{new Date(booking.checkOut).toLocaleDateString()}</span>
+                      <span className="text-foreground font-medium">{moment(new Date(booking.checkOut)).format("DD, MMM, yyyy")}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Guests</span>
@@ -138,14 +143,14 @@ export default function MyBookingsPage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Room</span>
-                      <span className="text-foreground font-medium">{booking.room?.name || booking.room?.type || "Room"}</span>
+                      <span className="text-foreground font-medium">{booking.room?.beds[0].type}</span>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between pt-2">
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">Total amount</p>
-                      <p className="text-xl font-bold text-primary">${booking?.totalPrice?.toFixed(2) || '100'}</p>
+                      <p className="text-xl font-bold text-primary">${booking?.totalPrice?.toFixed(2) || ''}</p>
                     </div>
 
                     {booking.status !== "Cancelled" && booking.status !== "Ongoing" && (
