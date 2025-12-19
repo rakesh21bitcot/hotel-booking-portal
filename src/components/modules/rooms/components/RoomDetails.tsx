@@ -312,7 +312,7 @@ export default function RoomDetails({ room, hotel }: RoomDetailsProps) {
                       type="date"
                       value={checkOut}
                       onChange={(e) => setCheckOut(e.target.value)}
-                      min={checkIn || new Date().toISOString().split('T')[0]}
+                      min={checkIn ? new Date(new Date(checkIn).getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}
                       className="w-full px-4 py-3 cursor-pointer border border-border rounded-lg bg-secondary text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
                   </div>
