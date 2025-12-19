@@ -900,3 +900,13 @@ input:focus,
 textarea:focus {
   animation: inputGlow 2s ease-in-out infinite;
 }
+
+
+.calender_icon::-webkit-calendar-picker-indicator {
+  filter: brightness(0) invert(1);
+  }
+
+  /* Firefox (icon follows text color) */
+  .calender_icon {
+    color: white;
+  }

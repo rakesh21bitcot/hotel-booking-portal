@@ -53,20 +53,12 @@ export default function SearchBar({
             className="bg-transparent outline-none w-full text-sm"
           />
         </div>
-        <div className="flex-1 flex items-center gap-2 bg-secondary cursor-pointer rounded px-4">
-          <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
+        <div className="flex-1 flex items-center bg-secondary cursor-pointer rounded px-4">
           <input
             type="date"
             value={checkIn}
             onChange={(e) => setCheckIn(e.target.value)}
-            className="bg-transparent cursor-pointer outline-none w-full text-sm"
+            className="bg-transparent calender_icon outline-none w-full text-sm cursor-pointer [&::-webkit-calendar-picker-indicator]:text-primary! [&::-webkit-calendar-picker-indicator]:order-first! [&::-webkit-calendar-picker-indicator]:mr-2!"
           />
         </div>
         <button
@@ -115,20 +107,12 @@ export default function SearchBar({
       {/* Check-in Date */}
       <div className="flex flex-col">
         <label className="text-xs text-muted-foreground mb-2 font-semibold">Check-in</label>
-        <div className="flex items-center gap-2 bg-secondary rounded px-4 py-3">
-          <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
+        <div className="bg-secondary rounded px-4 py-3">
           <input
             type="date"
             value={checkIn}
             onChange={(e) => setCheckIn(e.target.value)}
-            className="bg-transparent outline-none w-full text-foreground"
+            className="bg-transparent outline-none w-full text-foreground cursor-pointer [&::-webkit-calendar-picker-indicator]:text-primary! [&::-webkit-calendar-picker-indicator]:order-first! [&::-webkit-calendar-picker-indicator]:mr-2!"
           />
         </div>
       </div>
@@ -136,20 +120,12 @@ export default function SearchBar({
       {/* Check-out Date */}
       <div className="flex flex-col">
         <label className="text-xs text-muted-foreground mb-2 font-semibold">Check-out</label>
-        <div className="flex items-center gap-2 bg-secondary rounded px-4 py-3">
-          <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
+        <div className="bg-secondary rounded px-4 py-3">
           <input
             type="date"
             value={checkOut}
             onChange={(e) => setCheckOut(e.target.value)}
-            className="bg-transparent outline-none w-full text-foreground"
+            className="bg-transparent outline-none w-full text-foreground cursor-pointer [&::-webkit-calendar-picker-indicator]:text-primary! [&::-webkit-calendar-picker-indicator]:order-first! [&::-webkit-calendar-picker-indicator]:mr-2!"
           />
         </div>
       </div>

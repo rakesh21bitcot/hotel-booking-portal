@@ -11,10 +11,12 @@ import { errorHandler } from "@/lib/error-handler"
 import { toast } from "sonner"
 import { ROUTES } from "@/utils/constants"
 import { forSuccess } from "@/utils/CommonService"
+import { Eye, EyeOff } from "lucide-react"
 
 export function LoginForm() {
   const router = useRouter()
   const { login, isLoading } = useAuth()
+  const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState<LoginInput>({
     email: "",
     password: "",
@@ -71,7 +73,7 @@ export function LoginForm() {
         {errors.email && <p className="text-destructive text-sm mt-1">{errors.email}</p>}
       </div>
 
-      <div>
+      <div className="relative">
         <div className="flex items-center justify-between mb-2">
           <label htmlFor="password" className="block text-sm font-medium">
             Password
@@ -79,7 +81,7 @@ export function LoginForm() {
         </div>
         
         <input
-          type="password"
+          type={showPassword ? "text" : "password"}
           id="password"
           name="password"
           value={formData.password}
@@ -87,6 +89,14 @@ export function LoginForm() {
           placeholder="Enter your password"
           className="w-full px-4 py-2 bg-card border border-border rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
+         <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-3 top-9 text-primary"
+          tabIndex={-1}
+        >
+          {showPassword ? <EyeOff /> : <Eye />}
+        </button>
         <div
           className={
             errors.password

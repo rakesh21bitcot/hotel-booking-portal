@@ -23,6 +23,20 @@ export default function Header() {
     setMounted(true);
   }, []);
 
+  // Handle click outside to close profile dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node) && showProfileDropdown) {
+        setShowProfileDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showProfileDropdown]);
+
   const isActive = (path: string) => pathname === path
 
   useEffect(() => {
@@ -159,8 +173,8 @@ export default function Header() {
           )}
 
           {mounted && isAuthenticated && (
-            <div className="relative">
-              <div className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-full cursor-pointer" onClick={() => setShowProfileDropdown((v) => !v)} ref={profileRef}>
+            <div className="relative" ref={profileRef}>
+              <div className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-full cursor-pointer" onClick={() => setShowProfileDropdown((v) => !v)}>
                 <span className="w-8 h-8 flex items-center justify-center rounded-full bg-primary/20 text-primary font-semibold text-sm">
                   {(user?.firstName || user?.email || "U").charAt(0).toUpperCase()}
                 </span>
@@ -272,8 +286,8 @@ export default function Header() {
               </Link>
             )}
             {mounted && isAuthenticated && (
-            <div className="relative">
-              <div className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-full cursor-pointer" onClick={() => setShowProfileDropdown((v) => !v)} ref={profileRef}>
+            <div className="relative" ref={profileRef}>
+              <div className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-full cursor-pointer" onClick={() => setShowProfileDropdown((v) => !v)}>
                 <span className="w-8 h-8 flex items-center justify-center rounded-full bg-primary/20 text-primary font-semibold text-sm">
                   {(user?.firstName || user?.email || "U").charAt(0).toUpperCase()}
                 </span>

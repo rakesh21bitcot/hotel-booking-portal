@@ -9,6 +9,7 @@ import { errorHandler } from "@/lib/error-handler"
 import { toast } from "sonner"
 import { ROUTES } from "@/utils/constants"
 import Link from "next/link"
+import { Eye, EyeOff } from "lucide-react"
 
 export function ResetPasswordForm() {
   const router = useRouter()
@@ -21,6 +22,7 @@ export function ResetPasswordForm() {
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [showPassword, setShowPassword] = useState({password: false, confirmPassword: false})
 
   useEffect(() => {
     const token = searchParams.get("token")
@@ -123,12 +125,12 @@ export function ResetPasswordForm() {
       </p>
     </div>
     <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto space-y-6">
-      <div>
+      <div className="relative">
         <label htmlFor="password" className="block text-sm font-medium mb-2">
           New Password
         </label>
         <input
-          type="password"
+          type={showPassword.password ? "text" : "password"}
           id="password"
           name="password"
           value={formData.password}
@@ -136,15 +138,23 @@ export function ResetPasswordForm() {
           placeholder="Enter new password (min 8 characters)"
           className="w-full px-4 py-2 sm:py-2.5 bg-card border border-border rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm sm:text-base"
         />
+        <button
+          type="button"
+          onClick={() => setShowPassword({...showPassword, password: !showPassword.password})}
+          className="absolute right-3 top-10 text-primary"
+          tabIndex={-1}
+        >
+          {showPassword.password ? <EyeOff /> : <Eye />}
+        </button>
         {errors.password && <p className="text-destructive text-sm mt-1">{errors.password}</p>}
       </div>
 
-      <div>
+      <div className="relative">
         <label htmlFor="confirmPassword" className="block text-sm font-medium mb-2">
           Confirm New Password
         </label>
         <input
-          type="password"
+         type={showPassword.confirmPassword ? "text" : "password"}
           id="confirmPassword"
           name="confirmPassword"
           value={formData.confirmPassword}
@@ -152,6 +162,14 @@ export function ResetPasswordForm() {
           placeholder="Confirm new password"
           className="w-full px-4 py-2 sm:py-2.5 bg-card border border-border rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm sm:text-base"
         />
+         <button
+          type="button"
+          onClick={() => setShowPassword({...showPassword, confirmPassword: !showPassword.confirmPassword})}
+          className="absolute right-3 top-10 text-primary"
+          tabIndex={-1}
+        >
+          {showPassword.confirmPassword ? <EyeOff /> : <Eye />}
+        </button>
         {errors.confirmPassword && (
           <p className="text-destructive text-sm mt-1">{errors.confirmPassword}</p>
         )}

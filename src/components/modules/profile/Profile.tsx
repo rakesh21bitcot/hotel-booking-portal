@@ -1,13 +1,13 @@
 'use client'
 import { useState, useEffect } from "react";
-import { FaUser, FaLock, FaCog, FaBell, FaEnvelope, FaShieldAlt, FaGlobe, FaPalette, FaEye, FaEyeSlash, FaCheck, FaTimes } from 'react-icons/fa';
+import { FaUser, FaLock, FaCog, FaBell, FaEnvelope, FaEye, FaEyeSlash, FaCheck, FaTimes } from 'react-icons/fa';
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useTheme } from "@/components/providers/ThemeProvider";
-import { useAppSelector, useAppDispatch } from "@/store/hook";
-import { login as loginAction, updateUser } from "@/store/reducers/authReducer";
-import { getProfile, updateProfile, updateProfileWithRedux, getSettings, updateSettings, changePassword, validateProfileData, validatePasswordData, validateSettingsData, ProfileData, SettingsData, ChangePasswordRequest } from "@/store/actions/profile-actions";
+import {  useAppDispatch } from "@/store/hook";
+import { updateUser } from "@/store/reducers/authReducer";
+import { getProfile, updateProfileWithRedux, getSettings, updateSettings, changePassword, validateProfileData, validatePasswordData, validateSettingsData, ProfileData, SettingsData, ChangePasswordRequest } from "@/store/actions/profile-actions";
 import { useAuth } from "../auth/hooks/useAuth";
 
 const TABS = [
@@ -613,7 +613,7 @@ export default function Profile() {
                 </div>
                 
                 <div className="flex flex-col sm:flex-row gap-3 sm:justify-end pt-4 border-t border-border">
-                  <button
+                  {/* <button
                     type="button"
                     onClick={() => {
                       setProfileData({
@@ -633,7 +633,7 @@ export default function Profile() {
                     disabled={isLoading}
                   >
                     Reset
-                  </button>
+                  </button> */}
                   <button
                     type="submit"
                     className="px-8 py-2.5 cursor-pointer rounded-md bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
@@ -769,7 +769,7 @@ export default function Profile() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 sm:justify-end pt-4 border-t border-border">
-                  <button
+                  {/* <button
                     type="button"
                     onClick={() => {
                       setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
@@ -779,7 +779,7 @@ export default function Profile() {
                     disabled={isLoading}
                   >
                     Reset
-                  </button>
+                  </button> */}
                   <button
                     type="submit"
                     className="px-8 py-2.5 cursor-pointer rounded-md bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
@@ -941,7 +941,7 @@ export default function Profile() {
 
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-3 sm:justify-end pt-6 border-t border-border">
-                  <button
+                  {/* <button
                     type="button"
                     onClick={() => {
                       // Reset to default settings
@@ -960,7 +960,7 @@ export default function Profile() {
                     disabled={isLoading}
                   >
                     Reset to Defaults
-                  </button>
+                  </button> */}
                   <button
                     type="submit"
                     className="px-8 py-2.5 cursor-pointer rounded-md bg-primary text-primary-foreground text-sm font-bold hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"

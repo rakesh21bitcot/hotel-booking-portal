@@ -8,6 +8,7 @@ import { registerSchema, type RegisterInput } from "@/utils/validators"
 import { errorHandler } from "@/lib/error-handler"
 import { toast } from "sonner"
 import { ROUTES } from "@/utils/constants"
+import { Eye, EyeOff } from "lucide-react"
 
 export function RegisterForm() {
   const router = useRouter()
@@ -19,6 +20,7 @@ export function RegisterForm() {
     password: "",
     confirmPassword: "",
   })
+  const [showPassword, setShowPassword] = useState({password: false, confirmPassword: false})
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +47,7 @@ export function RegisterForm() {
       if (error instanceof Error) {
         try {
           const parsed = JSON.parse(error.message)
+          debugger
           if (Array.isArray(parsed) && parsed[0]) {
             setErrors({ [parsed[0].path[0]]: parsed[0].message })
           }
@@ -108,35 +111,51 @@ export function RegisterForm() {
         {errors.email && <p className="text-destructive text-sm mt-1">{errors.email}</p>}
       </div>
 
-      <div>
+      <div className="relative">
         <label htmlFor="password" className="block text-sm font-medium mb-2">
           Password
         </label>
         <input
-          type="password"
+          type={showPassword.password ? "text" : "password"}
           id="password"
           name="password"
           value={formData.password}
           onChange={handleChange}
           placeholder="Enter password (min 8 characters)"
-          className="w-full px-4 py-2 bg-card border border-border rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          className="w-full px-4 py-2 bg-card border border-border rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 pr-10"
         />
+        <button
+          type="button"
+          onClick={() => setShowPassword({...showPassword, password: !showPassword.password})}
+          className="absolute right-3 top-9 text-primary"
+          tabIndex={-1}
+        >
+          {showPassword.password ? <EyeOff /> : <Eye />}
+        </button>
         {errors.password && <p className="text-destructive text-sm mt-1">{errors.password}</p>}
       </div>
 
-      <div>
+      <div className="relative">
         <label htmlFor="confirmPassword" className="block text-sm font-medium mb-2">
           Confirm Password
         </label>
         <input
-          type="password"
+          type={showPassword.confirmPassword ? "text" : "password"}
           id="confirmPassword"
           name="confirmPassword"
           value={formData.confirmPassword}
           onChange={handleChange}
           placeholder="Confirm password"
-          className="w-full px-4 py-2 bg-card border border-border rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          className="w-full px-4 py-2 bg-card border border-border rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 pr-10"
         />
+        <button
+          type="button"
+          onClick={() => setShowPassword({...showPassword, confirmPassword: !showPassword.confirmPassword})}
+          className="absolute right-3 top-9 text-primary"
+          tabIndex={-1}
+        >
+          {showPassword.confirmPassword ? <EyeOff /> : <Eye />}
+        </button>
         {errors.confirmPassword && <p className="text-destructive text-sm mt-1">{errors.confirmPassword}</p>}
       </div>
 
