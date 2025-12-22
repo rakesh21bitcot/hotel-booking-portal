@@ -153,7 +153,7 @@ export default function MyBookingsPage() {
                       <p className="text-xl font-bold text-primary">${booking?.totalPrice?.toFixed(2) || ''}</p>
                     </div>
 
-                    {booking.status !== "Cancelled" && booking.status !== "Ongoing" && (
+                    {booking.status !== "Cancelled" && booking.status !== "Ongoing" && booking.status !== "Completed" && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
