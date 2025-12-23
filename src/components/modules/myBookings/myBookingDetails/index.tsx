@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import moment from 'moment'
 import { useParams } from "next/navigation"
@@ -10,12 +10,15 @@ import { ROUTES } from "@/utils/constants"
 import { useAppSelector, useAppDispatch } from "@/store/hook"
 import { fetchBookingById, clearCurrentBooking } from "@/store/actions/booking-actions"
 import { ArrowLeft, Calendar, Users, MapPin, Phone, Mail, Bed } from "lucide-react"
+import ReviewForm from "../components/ReviewForm"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
 
 export default function MyBookingDetailsPage() {
   const params = useParams()
   const bookingId = params.id as string
   const dispatch = useAppDispatch()
   const router = useRouter()
+  const [showReviewForm, setShowReviewForm] = useState(false)
 
   const { currentBooking, currentBookingLoading, error } = useAppSelector((state) => state.booking)
 
@@ -93,6 +96,12 @@ export default function MyBookingDetailsPage() {
   const checkInDate = moment(new Date(booking.checkIn))
   const checkOutDate = moment(new Date(booking.checkOut))
   const nights = checkOutDate.diff(checkInDate, 'days')
+
+  const handleReviewSubmitted = async () => {
+    setShowReviewForm(false)
+    await dispatch(fetchBookingById(bookingId))
+    toast.success("Review submitted successfully!")
+  }
 
   return (
     <main className="bg-black min-h-screen">
@@ -257,6 +266,52 @@ export default function MyBookingDetailsPage() {
             </div>
           </div>
         </div>
+
+        {/* Review Section for Completed Bookings */}
+        {booking.status === "Completed" && (
+          <div className="mt-8">
+            <div className="bg-card border border-border rounded-lg p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-serif text-xl font-semibold text-foreground mb-2">
+                    Share Your Experience
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Help other travelers by writing a review about your stay at {booking.hotel?.name}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowReviewForm(true)}
+                  className="px-6 cursor-pointer py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition"
+                >
+                  Write a Review
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Review Form Modal Popup */}
+        {booking.status === "Completed" && (
+          <Dialog
+            open={showReviewForm}
+            onOpenChange={(open) => {
+              if (!open) {
+                setShowReviewForm(false)
+              }
+            }}
+          >
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <ReviewForm
+                bookingId={booking.id}
+                hotelId={booking.hotelId}
+                hotelName={booking.hotel?.name || "Hotel"}
+                onReviewSubmitted={handleReviewSubmitted}
+                onCancel={() => setShowReviewForm(false)}
+              />
+            </DialogContent>
+          </Dialog>
+        )}
       </section>
     </main>
   )

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 import { useAppSelector, useAppDispatch } from "@/store/hook"
 import { fetchUserBookings, cancelBookingWithRedux } from "@/store/actions/booking-actions"
@@ -8,12 +8,15 @@ import { useRouter } from "next/navigation"
 import { openConfirmDialog } from "@/utils/CommonService"
 import { toast } from "sonner"
 import moment from 'moment'
+import ReviewForm from "./components/ReviewForm"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
 
 export default function MyBookingsPage() {
   const dispatch = useAppDispatch()
   const { user } = useAppSelector((state) => state.auth)
   const { bookings, bookingsLoading, error } = useAppSelector((state) => state.booking)
   const router = useRouter()
+  const [openReviewFormId, setOpenReviewFormId] = useState<string | null>(null)
 
   useEffect(() => {
     if (user?.id) {
@@ -42,6 +45,11 @@ export default function MyBookingsPage() {
         console.log("Cancel action cancelled")
       },
     })
+  }
+
+  const handleReviewSubmitted = async () => {
+    setOpenReviewFormId(null)
+    await dispatch(fetchUserBookings())
   }
   
 
@@ -83,17 +91,18 @@ export default function MyBookingsPage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {bookings?.map((booking) => (
-              <article
-                key={booking.id}
-                onClick={() => router.push(`/my-booking/${booking.id}`)}
-                className={`bg-card border rounded-lg overflow-hidden flex flex-col justify-between cursor-pointer  transition ${
-                  booking.status === "Cancelled"
-                    ? "border-red-500/50"
-                    : "border-border hover:border-primary/60"
-                }`}
-              >
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {bookings?.map((booking) => (
+                <div key={booking.id} className="space-y-4">
+                  <article
+                    onClick={() => router.push(`/my-booking/${booking.id}`)}
+                    className={`bg-card border rounded-lg overflow-hidden flex flex-col justify-between cursor-pointer transition ${
+                      booking.status === "Cancelled"
+                        ? "border-red-500/50"
+                        : "border-border hover:border-primary/60"
+                    }`}
+                  >
                 {/* Image */}
                 <div className="relative w-full aspect-video overflow-hidden">
                   <img
@@ -147,29 +156,66 @@ export default function MyBookingsPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2">
-                    <div>
-                      <p className="text-xs text-muted-foreground mb-1">Total amount</p>
-                      <p className="text-xl font-bold text-primary">${booking?.totalPrice?.toFixed(2) || ''}</p>
-                    </div>
+                    <div className="flex items-center justify-between pt-2">
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">Total amount</p>
+                        <p className="text-xl font-bold text-primary">${booking?.totalPrice?.toFixed(2) || ''}</p>
+                      </div>
 
-                    {booking.status !== "Cancelled" && booking.status !== "Ongoing" && booking.status !== "Completed" && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleCancelBooking(booking.id as string)
-                        }}
-                        className="px-4 cursor-pointer py-2 border border-border rounded-lg text-xs font-semibold text-muted-foreground hover:border-red-500 hover:text-red-500 transition"
-                      >
-                        Cancel booking
-                      </button>
-                    )}
+                      {booking.status === "Completed" ? (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setOpenReviewFormId(booking.id)
+                          }}
+                          className="px-4 cursor-pointer py-2 bg-primary text-primary-foreground rounded-lg text-xs font-semibold hover:bg-primary/90 transition"
+                        >
+                          Write a Review
+                        </button>
+                      ) : booking.status !== "Cancelled" && booking.status !== "Ongoing" ? (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleCancelBooking(booking.id as string)
+                          }}
+                          className="px-4 cursor-pointer py-2 border border-border rounded-lg text-xs font-semibold text-muted-foreground hover:border-red-500 hover:text-red-500 transition"
+                        >
+                          Cancel booking
+                        </button>
+                      ) : null}
+                    </div>
                   </div>
-                </div>
-              </article>
+                </article>
+              </div>
             ))}
+            </div>
           </div>
         )}
+
+        {/* Review Form Modal Popup */}
+        {bookings?.map((booking) => (
+          booking.status === "Completed" && (
+            <Dialog
+              key={booking.id}
+              open={openReviewFormId === booking.id}
+              onOpenChange={(open) => {
+                if (!open) {
+                  setOpenReviewFormId(null)
+                }
+              }}
+            >
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                <ReviewForm
+                  bookingId={booking.id}
+                  hotelId={booking.hotelId}
+                  hotelName={booking.hotel?.name || "Hotel"}
+                  onReviewSubmitted={handleReviewSubmitted}
+                  onCancel={() => setOpenReviewFormId(null)}
+                />
+              </DialogContent>
+            </Dialog>
+          )
+        ))}
       </section>
     </main>
   )

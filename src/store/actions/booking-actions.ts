@@ -67,6 +67,24 @@ export interface CardDetails {
   cardholderName: string
 }
 
+export interface ReviewData {
+  bookingId: string
+  hotelId: string
+  rating: number
+  comment: string
+}
+
+export interface ReviewResponse {
+  id: string
+  bookingId: string
+  hotelId: string
+  userId: number
+  rating: number
+  comment: string
+  createdAt: string
+  updatedAt: string
+}
+
 // ============================================
 // BOOKING ACTIONS
 // ============================================
@@ -127,6 +145,20 @@ export const getBookingById = async (bookingId: string): Promise<BookingResponse
   }
 
   return response.data.booking
+}
+
+/**
+ * Create a review for a completed booking
+ */
+export const createReview = async (reviewData: ReviewData): Promise<ReviewResponse> => {
+  const response = await errorHandler.handleApiCall(
+    () => apiClient.post<{ review: ReviewResponse }>('/review', reviewData),
+    "Create Review"
+  )
+  if (!response || !response.success || !response.data) {
+    throw new Error("Failed to create review")
+  }
+  return response.data.review
 }
 
 // ============================================
@@ -282,6 +314,23 @@ export const fetchBookingById = (bookingId: string) => {
       throw error
     } finally {
       dispatch(setCurrentBookingLoading(false))
+    }
+  }
+}
+
+/**
+ * Create review with Redux integration
+ */
+export const createReviewWithRedux = (reviewData: ReviewData) => {
+  return async (dispatch: any) => {
+    try {
+      dispatch(clearBookingError())
+
+      const review = await createReview(reviewData)
+      return review
+    } catch (error: any) {
+      dispatch(setBookingError(error.message || 'Failed to create review'))
+      throw error
     }
   }
 }

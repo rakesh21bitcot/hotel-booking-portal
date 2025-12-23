@@ -105,8 +105,20 @@ export default function HotelComponent() {
       
 
       {/* Search Bar */}
-      <div className="pt-24 pb-12 bg-secondary border-b border-border" >
-        <div className="max-w-7xl mx-auto px-4">
+      <div className="relative pt-24 pb-12 overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0 z-0">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: "url('/luxury-hotel-lobby.png')",
+              filter: "blur(2px)",
+            }}
+          />
+          <div className="absolute inset-0 bg-black/60" />
+        </div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4">
           <SearchBar
             compact
             location={searchLocation}

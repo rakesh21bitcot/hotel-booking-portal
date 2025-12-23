@@ -910,3 +910,6 @@ textarea:focus {
   .calender_icon {
     color: white;
   }
+  button[type="button"] {
+    cursor: pointer;
+  }
