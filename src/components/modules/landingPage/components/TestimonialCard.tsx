@@ -36,7 +36,7 @@ function TestimonialCard({
     >
       {/* Header */}
       <div className="flex items-center gap-4 mb-4">
-        <img src={avatar || "/placeholder.svg"} alt={user_name} className="w-12 h-12 rounded-full object-cover" />
+        <img src={"https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"} alt={user_name} className="w-12 h-12 rounded-full object-cover" />
         <div>
           <h4 className="font-semibold text-foreground">{user_name}</h4>
           <p className="text-xs text-muted-foreground">{role}</p>
@@ -56,7 +56,15 @@ function TestimonialCard({
       <p className="text-foreground text-sm mb-4 leading-relaxed">"{comment}"</p>
 
       {/* Date */}
-      <p className="text-xs text-muted-foreground">{date}</p>
+      <p className="text-xs text-muted-foreground">
+        {typeof date === "string"
+          ? new Date(date).toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "short",
+              day: "numeric"
+            })
+          : ""}
+      </p>
     </div>
   )
 }

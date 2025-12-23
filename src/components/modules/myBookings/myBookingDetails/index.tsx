@@ -11,7 +11,7 @@ import { useAppSelector, useAppDispatch } from "@/store/hook"
 import { fetchBookingById, clearCurrentBooking } from "@/store/actions/booking-actions"
 import { ArrowLeft, Calendar, Users, MapPin, Phone, Mail, Bed } from "lucide-react"
 import ReviewForm from "../components/ReviewForm"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 export default function MyBookingDetailsPage() {
   const params = useParams()
@@ -101,6 +101,11 @@ export default function MyBookingDetailsPage() {
     setShowReviewForm(false)
     await dispatch(fetchBookingById(bookingId))
     toast.success("Review submitted successfully!")
+  }
+
+  const getExistingReview = (booking: any) => {
+    if (!booking.hotel?.reviews) return null
+    return booking.hotel.reviews.find((review: any) => review.bookingId === booking.id)
   }
 
   return (
@@ -284,7 +289,7 @@ export default function MyBookingDetailsPage() {
                   onClick={() => setShowReviewForm(true)}
                   className="px-6 cursor-pointer py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition"
                 >
-                  Write a Review
+                  {getExistingReview(booking) ? "Edit Review" : "Write a Review"}
                 </button>
               </div>
             </div>
@@ -302,12 +307,22 @@ export default function MyBookingDetailsPage() {
             }}
           >
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader className="sr-only">
+                <DialogTitle>
+                  {getExistingReview(booking) ? "Edit Your Review" : "Write a Review"}
+                </DialogTitle>
+              </DialogHeader>
               <ReviewForm
                 bookingId={booking.id}
                 hotelId={booking.hotelId}
                 hotelName={booking.hotel?.name || "Hotel"}
                 onReviewSubmitted={handleReviewSubmitted}
                 onCancel={() => setShowReviewForm(false)}
+                existingReview={getExistingReview(booking) ? {
+                  id: getExistingReview(booking).id,
+                  rating: getExistingReview(booking).rating,
+                  comment: getExistingReview(booking).comment
+                } : undefined}
               />
             </DialogContent>
           </Dialog>

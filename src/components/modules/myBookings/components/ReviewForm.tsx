@@ -4,7 +4,7 @@ import { useState } from "react"
 import { toast } from "sonner"
 import { Star, X } from "lucide-react"
 import { useAppDispatch } from "@/store/hook"
-import { createReviewWithRedux } from "@/store/actions/booking-actions"
+import { createReviewWithRedux, editReviewWithRedux } from "@/store/actions/booking-actions"
 
 interface ReviewFormProps {
   bookingId: string
@@ -13,6 +13,7 @@ interface ReviewFormProps {
   onReviewSubmitted: () => void
   onCancel?: () => void
   existingReview?: {
+    id: string
     rating: number
     comment: string
   }
@@ -34,7 +35,7 @@ export default function ReviewForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (rating === 0) {
       toast.error("Please select a rating")
       return
@@ -47,14 +48,22 @@ export default function ReviewForm({
 
     setIsSubmitting(true)
     try {
-      await dispatch(createReviewWithRedux({
-        bookingId,
-        hotelId,
-        rating,
-        comment: comment.trim()
-      }))
-
-      toast.success("Review submitted successfully!")
+      if (existingReview) {
+        // Edit existing review
+        await dispatch(editReviewWithRedux(existingReview.id, {
+          rating,
+          comment: comment.trim()
+        }))
+        toast.success("Review updated successfully!")
+      } else {
+        // Create new review
+        await dispatch(createReviewWithRedux(hotelId, {
+          bookingId,
+          rating,
+          comment: comment.trim()
+        }))
+        toast.success("Review submitted successfully!")
+      }
       onReviewSubmitted()
     } catch (error: any) {
       toast.error(error.message || "Failed to submit review")
@@ -68,7 +77,7 @@ export default function ReviewForm({
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="font-serif text-xl font-semibold text-foreground mb-1">
-            {existingReview ? "Your Review" : "Write a Review"}
+            {existingReview ? "Edit Your Review" : "Write a Review"}
           </h3>
           <p className="text-sm text-muted-foreground">{hotelName}</p>
         </div>
@@ -86,13 +95,10 @@ export default function ReviewForm({
               <button
                 key={star}
                 type="button"
-                onClick={() => !existingReview && setRating(star)}
-                onMouseEnter={() => !existingReview && setHoveredRating(star)}
-                onMouseLeave={() => !existingReview && setHoveredRating(0)}
-                disabled={existingReview !== undefined}
-                className={`transition-transform ${
-                  existingReview ? 'cursor-default' : 'cursor-pointer hover:scale-110'
-                }`}
+                onClick={() => setRating(star)}
+                onMouseEnter={() => setHoveredRating(star)}
+                onMouseLeave={() => setHoveredRating(0)}
+                className="cursor-pointer hover:scale-110 transition-transform"
               >
                 <Star
                   className={`w-8 h-8 ${
@@ -119,29 +125,27 @@ export default function ReviewForm({
           <textarea
             id="comment"
             value={comment}
-            onChange={(e) => !existingReview && setComment(e.target.value.slice(0, 500))}
-            disabled={existingReview !== undefined}
+            onChange={(e) => setComment(e.target.value.slice(0, 500))}
             placeholder="Share your experience with this hotel..."
             rows={5}
-            className="w-full px-4 py-3 bg-background border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed resize-none"
+            className="w-full px-4 py-3 bg-background border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
             required
             minLength={10}
-            maxLength={500}
+            maxLength={200}
           />
           <p className="mt-1 text-xs text-muted-foreground">
-            {comment.length}/500 characters (minimum 10)
+            {comment.length}/200 characters (minimum 10)
           </p>
         </div>
 
         {/* Submit Button */}
-        {!existingReview && (
           <div className="flex gap-3">
             <button
               type="submit"
               disabled={isSubmitting || rating === 0 || comment.trim().length < 10}
               className="flex-1 cursor-pointer px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? "Submitting..." : "Submit Review"}
+              {isSubmitting ? "Submitting..." : (existingReview ? "Update Review" : "Submit Review")}
             </button>
             {onCancel && (
               <button
@@ -153,7 +157,6 @@ export default function ReviewForm({
               </button>
             )}
           </div>
-        )}
       </form>
     </div>
   )

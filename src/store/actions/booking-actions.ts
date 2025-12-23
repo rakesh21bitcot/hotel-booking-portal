@@ -1,6 +1,6 @@
 import { apiClient } from "@/lib/api-client"
 import { errorHandler } from "@/lib/error-handler"
-import { Images } from "./hotel-actions"
+import { Images, Reviews } from "./hotel-actions"
 
 export interface BookingData {
   userId: number
@@ -46,6 +46,7 @@ export interface BookingResponse {
       }
     }
     images: Images[]
+    reviews: Reviews[]
   }
   room?: {
     id: string
@@ -68,10 +69,9 @@ export interface CardDetails {
 }
 
 export interface ReviewData {
-  bookingId: string
-  hotelId: string
   rating: number
   comment: string
+  bookingId: string
 }
 
 export interface ReviewResponse {
@@ -150,13 +150,27 @@ export const getBookingById = async (bookingId: string): Promise<BookingResponse
 /**
  * Create a review for a completed booking
  */
-export const createReview = async (reviewData: ReviewData): Promise<ReviewResponse> => {
+export const createReview = async (hotelId: string, reviewData: ReviewData): Promise<ReviewResponse> => {
   const response = await errorHandler.handleApiCall(
-    () => apiClient.post<{ review: ReviewResponse }>('/review', reviewData),
+    () => apiClient.post<{ review: ReviewResponse }>(`/hotel/${hotelId}/reviews`, reviewData),
     "Create Review"
   )
   if (!response || !response.success || !response.data) {
     throw new Error("Failed to create review")
+  }
+  return response.data.review
+}
+
+/**
+ * Edit an existing review
+ */
+export const editReview = async (reviewId: string, reviewData: Omit<ReviewData, 'bookingId'>): Promise<ReviewResponse> => {
+  const response = await errorHandler.handleApiCall(
+    () => apiClient.put<{ review: ReviewResponse }>(`/hotel/reviews/${reviewId}`, reviewData),
+    "Edit Review"
+  )
+  if (!response || !response.success || !response.data) {
+    throw new Error("Failed to edit review")
   }
   return response.data.review
 }
@@ -321,15 +335,32 @@ export const fetchBookingById = (bookingId: string) => {
 /**
  * Create review with Redux integration
  */
-export const createReviewWithRedux = (reviewData: ReviewData) => {
+export const createReviewWithRedux = (hotelId: string, reviewData: ReviewData) => {
   return async (dispatch: any) => {
     try {
       dispatch(clearBookingError())
 
-      const review = await createReview(reviewData)
+      const review = await createReview(hotelId, reviewData)
       return review
     } catch (error: any) {
       dispatch(setBookingError(error.message || 'Failed to create review'))
+      throw error
+    }
+  }
+}
+
+/**
+ * Edit review with Redux integration
+ */
+export const editReviewWithRedux = (reviewId: string, reviewData: Omit<ReviewData, 'bookingId'>) => {
+  return async (dispatch: any) => {
+    try {
+      dispatch(clearBookingError())
+
+      const review = await editReview(reviewId, reviewData)
+      return review
+    } catch (error: any) {
+      dispatch(setBookingError(error.message || 'Failed to edit review'))
       throw error
     }
   }

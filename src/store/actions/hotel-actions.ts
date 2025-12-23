@@ -72,6 +72,7 @@ export interface Reviews {
   comment: string;
   id: string;
   rating: number;
+  bookingId: string;
 }
 
 export interface Room {
