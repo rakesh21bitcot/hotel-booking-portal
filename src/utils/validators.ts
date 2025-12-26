@@ -39,12 +39,12 @@ export const forgotPasswordSchema = z.object({
 
 export const resetPasswordSchema = z
   .object({
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    newPassword: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string(),
     token: z.string().min(1, "Reset token is required"),
-    email: z.string().email("Invalid email address").optional(),
+    email: z.string().email("Invalid email address"),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
   })
@@ -55,3 +55,9 @@ export type BookingInput = z.infer<typeof bookingSchema>
 export type SearchInput = z.infer<typeof searchSchema>
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>
+
+export type ResetPasswordApiPayload = {
+  email: string
+  token: string
+  newPassword: string
+}

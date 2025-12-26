@@ -2,7 +2,7 @@ import { API_CONFIG } from "../config"
 import { storage } from "../storage"
 import type { ApiResponse } from "@/types/api"
 import type { AuthCredentials, AuthResponse, User } from "@/types/auth"
-import type { ForgotPasswordInput, ResetPasswordInput, RegisterInput } from "@/utils/validators"
+import type { ForgotPasswordInput, ResetPasswordInput, RegisterInput, ResetPasswordApiPayload } from "@/utils/validators"
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
 
@@ -159,7 +159,7 @@ export const authApis = {
     })
   },
 
-  resetPassword: async (payload: ResetPasswordInput): Promise<ApiResponse<{ message: string }>> => {
+  resetPassword: async (payload: ResetPasswordApiPayload): Promise<ApiResponse<{ message: string }>> => {
     return request<{ message: string }>("/reset-password", {
       method: "POST",
       body: JSON.stringify(payload),

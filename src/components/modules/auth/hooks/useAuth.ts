@@ -9,7 +9,7 @@ import { clearFavourites } from "@/store/actions/favourite-actions"
 import { clearBookings } from "@/store/actions/booking-actions"
 import type { LoginInput } from "@/utils/validators"
 import type { RegisterInput } from "@/utils/validators"
-import type { ForgotPasswordInput, ResetPasswordInput } from "@/utils/validators"
+import type { ForgotPasswordInput, ResetPasswordInput, ResetPasswordApiPayload } from "@/utils/validators"
 import { forSuccess, openConfirmDialog } from "@/utils/CommonService"
 import { ROUTES } from "@/utils/constants"
 import { authApis } from "@/lib/APIs/authApis"
@@ -221,7 +221,7 @@ export function useAuth() {
     }
   }
 
-  const resetPassword = async (data: ResetPasswordInput) => {
+  const resetPassword = async (data: ResetPasswordApiPayload) => {
     setIsLoading(true)
     try {
       const response = await authApis.resetPassword(data)

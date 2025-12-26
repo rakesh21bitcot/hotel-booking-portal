@@ -4,7 +4,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "../hooks/useAuth"
-import { resetPasswordSchema, type ResetPasswordInput } from "@/utils/validators"
+import { resetPasswordSchema, type ResetPasswordInput, type ResetPasswordApiPayload } from "@/utils/validators"
 import { errorHandler } from "@/lib/error-handler"
 import { toast } from "sonner"
 import { ROUTES } from "@/utils/constants"
@@ -16,25 +16,21 @@ export function ResetPasswordForm() {
   const searchParams = useSearchParams()
   const { resetPassword, isLoading } = useAuth()
   const [formData, setFormData] = useState<ResetPasswordInput>({
-    password: "",
+    newPassword: "",
     confirmPassword: "",
     token: "",
+    email: "",
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [showPassword, setShowPassword] = useState({password: false, confirmPassword: false})
+  const [showPassword, setShowPassword] = useState({newPassword: false, confirmPassword: false})
 
   useEffect(() => {
     const token = searchParams.get("token")
     const email = searchParams.get("email")
-    console.log("URL search params - token:", token, "email:", email)
 
-    if (token) {
-      const updateData: any = { token }
-      if (email) {
-        updateData.email = email
-      }
-      setFormData((prev) => ({ ...prev, ...updateData }))
+    if (token && email) {
+      setFormData((prev) => ({ ...prev, token, email }))
     } else {
       toast.error("Invalid reset link. Please request a new one.")
       router.push(ROUTES.PUBLIC.FORGOT_PASSWORD)
@@ -60,9 +56,14 @@ export function ResetPasswordForm() {
     }
 
     try {
-      console.log("Form data before validation:", formData)
       const validated = resetPasswordSchema.parse(formData)
-      const result = await resetPassword(validated)
+      // Extract only the fields needed for the API request
+      const payload: ResetPasswordApiPayload = {
+        email: validated.email,
+        token: validated.token,
+        newPassword: validated.newPassword
+      }
+      const result = await resetPassword(payload)
 
       if (result.payload) {
         setIsSubmitted(true)
@@ -134,27 +135,27 @@ export function ResetPasswordForm() {
     </div>
     <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto space-y-6">
       <div className="relative">
-        <label htmlFor="password" className="block text-sm font-medium mb-2">
+        <label htmlFor="newPassword" className="block text-sm font-medium mb-2">
           New Password
         </label>
         <input
-          type={showPassword.password ? "text" : "password"}
-          id="password"
-          name="password"
-          value={formData.password}
+          type={showPassword.newPassword ? "text" : "password"}
+          id="newPassword"
+          name="newPassword"
+          value={formData.newPassword}
           onChange={handleChange}
           placeholder="Enter new password (min 8 characters)"
           className="w-full px-4 py-2 sm:py-2.5 bg-card border border-border rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm sm:text-base"
         />
         <button
           type="button"
-          onClick={() => setShowPassword({...showPassword, password: !showPassword.password})}
+          onClick={() => setShowPassword({...showPassword, newPassword: !showPassword.newPassword})}
           className="absolute right-3 top-10 text-primary"
           tabIndex={-1}
         >
-          {showPassword.password ? <EyeOff /> : <Eye />}
+          {showPassword.newPassword ? <EyeOff /> : <Eye />}
         </button>
-        {errors.password && <p className="text-destructive text-sm mt-1">{errors.password}</p>}
+        {errors.newPassword && <p className="text-destructive text-sm mt-1">{errors.newPassword}</p>}
       </div>
 
       <div className="relative">
@@ -162,7 +163,7 @@ export function ResetPasswordForm() {
           Confirm New Password
         </label>
         <input
-         type={showPassword.confirmPassword ? "text" : "password"}
+          type={showPassword.confirmPassword ? "text" : "password"}
           id="confirmPassword"
           name="confirmPassword"
           value={formData.confirmPassword}
@@ -170,7 +171,7 @@ export function ResetPasswordForm() {
           placeholder="Confirm new password"
           className="w-full px-4 py-2 sm:py-2.5 bg-card border border-border rounded focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm sm:text-base"
         />
-         <button
+        <button
           type="button"
           onClick={() => setShowPassword({...showPassword, confirmPassword: !showPassword.confirmPassword})}
           className="absolute right-3 top-10 text-primary"
