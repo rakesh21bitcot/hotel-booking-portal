@@ -19,6 +19,7 @@ export function ResetPasswordForm() {
     password: "",
     confirmPassword: "",
     token: "",
+    email: ""
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -27,7 +28,7 @@ export function ResetPasswordForm() {
   useEffect(() => {
     const token = searchParams.get("token")
     const email = searchParams.get("email")
-    if (token) {
+    if (token && email) {
       setFormData((prev) => ({ ...prev, token, email }))
     } else {
       toast.error("Invalid reset link. Please request a new one.")
