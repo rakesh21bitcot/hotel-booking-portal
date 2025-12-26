@@ -26,8 +26,9 @@ export function ResetPasswordForm() {
 
   useEffect(() => {
     const token = searchParams.get("token")
+    const email = searchParams.get("email")
     if (token) {
-      setFormData((prev) => ({ ...prev, token }))
+      setFormData((prev) => ({ ...prev, token, email }))
     } else {
       toast.error("Invalid reset link. Please request a new one.")
       router.push(ROUTES.PUBLIC.FORGOT_PASSWORD)
