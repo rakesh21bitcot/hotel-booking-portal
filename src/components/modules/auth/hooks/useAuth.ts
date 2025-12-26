@@ -198,7 +198,7 @@ export function useAuth() {
           ])
         )
       }
-
+      forSuccess("Password reset link sent to your email.")
       return {
         payload: {
           email: data.email,
@@ -238,7 +238,7 @@ export function useAuth() {
           ])
         )
       }
-
+      forSuccess("Password reset successfully.")
       return {
         payload: {
           message: response.data?.message || "Password reset successfully",
