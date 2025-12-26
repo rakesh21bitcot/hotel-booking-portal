@@ -19,7 +19,6 @@ export function ResetPasswordForm() {
     password: "",
     confirmPassword: "",
     token: "",
-    email: ""
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -28,8 +27,14 @@ export function ResetPasswordForm() {
   useEffect(() => {
     const token = searchParams.get("token")
     const email = searchParams.get("email")
-    if (token && email) {
-      setFormData((prev) => ({ ...prev, token, email }))
+    console.log("URL search params - token:", token, "email:", email)
+
+    if (token) {
+      const updateData: any = { token }
+      if (email) {
+        updateData.email = email
+      }
+      setFormData((prev) => ({ ...prev, ...updateData }))
     } else {
       toast.error("Invalid reset link. Please request a new one.")
       router.push(ROUTES.PUBLIC.FORGOT_PASSWORD)
@@ -55,6 +60,7 @@ export function ResetPasswordForm() {
     }
 
     try {
+      console.log("Form data before validation:", formData)
       const validated = resetPasswordSchema.parse(formData)
       const result = await resetPassword(validated)
 

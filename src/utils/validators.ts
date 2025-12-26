@@ -42,7 +42,7 @@ export const resetPasswordSchema = z
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string(),
     token: z.string().min(1, "Reset token is required"),
-    email: z.string().email("Invalid email address"),
+    email: z.string().email("Invalid email address").optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
